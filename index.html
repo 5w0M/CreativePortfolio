@@ -599,9 +599,13 @@
                 <li>Handled editing and typography</li>
                 <li>Book project bringing diverse voices into a shared narrative universe</li>
               </ul>
-              <div class="pdf-embed">
-                <iframe src="260513_SOGNO.pdf" title="Sognetti excerpt" loading="lazy" style="width:100%; height:350px; border:none; display:block;"></iframe>
+             <div class="pdf-embed" style="background: #faf8f4; border-radius: 20px; padding: 1rem; text-align: center; border: 1px solid #ece3da;">
+              <iframe src="260513_SOGNO.pdf" title="Sognetti excerpt" loading="lazy" style="width:100%; height:350px; border:none; display:block;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+              </iframe>
+              <div style="display:none; padding: 2rem; text-align: center;">
+                <p>📄 <a href="260513_SOGNO.pdf" target="_blank" style="color: #b45f3b;">Click here to view PDF</a></p>
               </div>
+            </div>
             </div>
           </div>
         </div>
@@ -878,11 +882,9 @@
 </script>
 <!-- ================================ -->
 <script>
-  // Automatically convert all PDF iframes to Google Docs Viewer
+  // Fix PDF embeds - handle spaces and local files
   document.addEventListener('DOMContentLoaded', function() {
     const pdfIframes = document.querySelectorAll('.pdf-embed iframe');
-    const currentUrl = window.location.href;
-    const baseUrl = currentUrl.substring(0, currentUrl.lastIndexOf('/') + 1);
     
     pdfIframes.forEach(iframe => {
       let pdfSrc = iframe.src;
@@ -890,38 +892,33 @@
       // Skip if already a Google Docs URL
       if (pdfSrc.includes('docs.google.com')) return;
       
-      // Get the PDF filename from src
-      let pdfFilename = pdfSrc;
-      if (!pdfSrc.startsWith('http')) {
-        pdfFilename = pdfSrc; // relative path
-      } else if (pdfSrc.startsWith(window.location.origin)) {
-        pdfFilename = pdfSrc.replace(window.location.origin + '/', '');
-      }
+      // Get the filename from src
+      let filename = pdfSrc.split('/').pop();
       
-      // Extract just the filename
-      const filename = pdfFilename.split('/').pop();
+      // Fix spaces in filename - encode them properly
+      filename = filename.replace(/ /g, '%20');
       
-      // Map of your actual PDF files
-      const pdfFiles = {
-        '260513_SOGNO.pdf': '260513_SOGNO.pdf',
-        'Thesis.pdf': 'Thesis.pdf',
-        'gecco2023_paper.pdf': 'gecco2023_paper.pdf',
-        'Capturing the facets of evolvability in a mechanistic framework (1).pdf': 'Capturing the facets of evolvability in a mechanistic framework (1).pdf',
-        'DollosLaw.pdf': 'DollosLaw.pdf',
-        'Crickets.pdf': 'Crickets.pdf'
-      };
-      
-      // Find matching PDF
-      let actualFile = filename;
-      for (const [key, value] of Object.entries(pdfFiles)) {
-        if (filename.includes(key) || key.includes(filename)) {
-          actualFile = value;
-          break;
-        }
-      }
+      // Get the current base URL
+      let baseUrl = window.location.href;
+      baseUrl = baseUrl.substring(0, baseUrl.lastIndexOf('/') + 1);
       
       // Construct full URL
-      const fullPdfUrl = baseUrl + actualFile;
+      let fullPdfUrl = baseUrl + filename;
+      
+      // If on local file system, show a message instead
+      if (fullPdfUrl.startsWith('file://')) {
+        // Replace iframe with a message
+        const wrapper = iframe.parentElement;
+        wrapper.innerHTML = `
+          <div style="background: #faf8f4; border-radius: 20px; padding: 2rem; text-align: center; border: 1px solid #ece3da;">
+            <p style="color: #b87c54; margin-bottom: 0.5rem;">📄 PDF Preview</p>
+            <p style="font-size: 0.85rem; color: #8f7f6e;">For best experience, <a href="${fullPdfUrl}" target="_blank" style="color: #b45f3b;">open PDF directly</a> or upload to GitHub Pages</p>
+          </div>
+        `;
+        return;
+      }
+      
+      // Use Google Docs Viewer
       iframe.src = `https://docs.google.com/viewer?embedded=true&url=${encodeURIComponent(fullPdfUrl)}`;
     });
   });
