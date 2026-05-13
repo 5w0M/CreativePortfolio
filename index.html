@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Stefano Tiso · Narrative Design Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #fefcf8;
+      color: #1f1e1c;
+      line-height: 1.5;
+      scroll-behavior: smooth;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    /* header & nav */
+    header {
+      background: rgba(254, 252, 248, 0.92);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid #eae6df;
+      padding: 1rem 0;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .logo h1 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      background: linear-gradient(135deg, #2b2a27, #6b4e3a);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      font-weight: 500;
+      color: #3d3a35;
+      transition: color 0.2s;
+      font-size: 0.95rem;
+    }
+
+    .nav-links a:hover {
+      color: #b45f3b;
+    }
+
+    /* sections */
+    section {
+      padding: 5rem 0;
+      border-bottom: 1px solid #f0ede8;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 2rem;
+      position: relative;
+      display: inline-block;
+    }
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 48px;
+      height: 3px;
+      background: #d4b28c;
+      border-radius: 4px;
+    }
+
+    /* hero */
+    .hero {
+      padding: 4rem 0 3rem;
+      background: linear-gradient(145deg, #fffbf5 0%, #faf6ef 100%);
+      border-bottom: none;
+    }
+    .hero-content {
+      max-width: 780px;
+    }
+    .hero-tag {
+      display: inline-block;
+      background: #eae2d7;
+      padding: 0.25rem 0.85rem;
+      border-radius: 40px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #5a3e2b;
+      margin-bottom: 1.2rem;
+    }
+    .hero h2 {
+      font-size: 3.5rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+    .hero p {
+      font-size: 1.2rem;
+      color: #4a453e;
+      margin-bottom: 2rem;
+      max-width: 600px;
+    }
+    .pill-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 0.5rem;
+    }
+    .pill {
+      background: #ffffffd9;
+      border: 1px solid #e2dbd1;
+      padding: 0.3rem 1rem;
+      border-radius: 60px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #5d4a38;
+    }
+
+    /* cards grid */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
+      margin-top: 1rem;
+    }
+    .project-card {
+      background: white;
+      border-radius: 28px;
+      box-shadow: 0 12px 28px -8px rgba(0,0,0,0.05);
+      transition: transform 0.2s ease, box-shadow 0.2s;
+      overflow: hidden;
+      border: 1px solid #ede8e1;
+    }
+    .project-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 24px 40px -12px rgba(0,0,0,0.12);
+    }
+    .card-content {
+      padding: 1.8rem;
+    }
+    .project-title {
+      font-size: 1.6rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .project-meta {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #b87c54;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+    .project-desc {
+      color: #3b3a37;
+      margin-bottom: 1.4rem;
+      font-size: 0.95rem;
+    }
+    .image-placeholder {
+      background: #f3efe9;
+      height: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      color: #8f7a67;
+      overflow: hidden;
+    }
+    .image-placeholder img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: 0.2s;
+    }
+    .btn-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-weight: 500;
+      color: #b45f3b;
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: 0.2s;
+    }
+    .btn-link:hover {
+      border-bottom-color: #b45f3b;
+    }
+
+    /* two column layout */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+    .skill-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.02);
+    }
+    .skill-table td, .skill-table th {
+      padding: 0.9rem 1.2rem;
+      border-bottom: 1px solid #ece5dd;
+      text-align: left;
+    }
+    .skill-table th {
+      background: #faf6f0;
+      font-weight: 600;
+      width: 120px;
+    }
+    .education-item {
+      margin-bottom: 1.8rem;
+    }
+    .contact-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.8rem;
+      margin-top: 1.5rem;
+    }
+    .contact-links a {
+      color: #2b2a27;
+      text-decoration: none;
+      font-weight: 500;
+      border-bottom: 1px dashed #cdbcab;
+    }
+    footer {
+      text-align: center;
+      padding: 2.5rem 0;
+      color: #8f7f6e;
+      font-size: 0.8rem;
+    }
+    @media (max-width: 720px) {
+      .container { padding: 0 1.5rem; }
+      .hero h2 { font-size: 2.4rem; }
+      .two-col { grid-template-columns: 1fr; }
+      .nav-links { gap: 1rem; }
+      section { padding: 3rem 0; }
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="container">
+    <nav>
+      <div class="logo"><h1>Stefano Tiso</h1></div>
+      <ul class="nav-links">
+        <li><a href="#work">Work</a></li>
+        <li><a href="#practice">Practice</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-tag">narrative design · interactive storytelling · playful learning</div>
+        <h2>Stefano Tiso</h2>
+        <p>I’m a narrative designer and interactive storyteller creating joyful, playful learning experiences for children.<br>I also volunteer-teach game programming (ages 6–12) and work comfortably across writing, design, and implementation.</p>
+        <div class="pill-list">
+          <span class="pill">🇫🇷 French (native)</span>
+          <span class="pill">🇬🇧 English (native)</span>
+          <span class="pill">Unity · C#</span>
+          <span class="pill">Dialogue trees</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Selected Work -->
+  <section id="work">
+    <div class="container">
+      <h2 class="section-title">Selected work</h2>
+      <div class="projects-grid">
+        <!-- Sognetti project -->
+        <div class="project-card">
+          <div class="card-content">
+            <div class="project-title">Sognetti</div>
+            <div class="project-meta">2025–present · Author, Editor, Art director</div>
+            <div class="project-desc">
+              Collective literary anthology. Curated texts from multiple writers; wrote the majority of stories; handled editing and typography. A book project bringing diverse voices into a shared narrative universe.
+            </div>
+            <a href="260513_SOGNO.pdf" class="btn-link" target="_blank">📄 Read excerpt →</a>
+          </div>
+        </div>
+
+        <!-- Passage technique -->
+        <div class="project-card">
+          <div class="image-placeholder">
+            <img src="GRANDE_CARTE_FINALE_1.png" alt="Passage technique map preview" onerror="this.src='https://placehold.co/600x300/f3efe9/8f7a67?text=map+preview'">
+          </div>
+          <div class="card-content">
+            <div class="project-title">Passage technique</div>
+            <div class="project-meta">2026–present · Narrative video game</div>
+            <div class="project-desc">
+              Branching narrative set in a parallel Briançon after a strange climatic collapse. Interactive map with moving characters and dialogue-driven choices. Hand‑crafted dialogue trees, narrative coherence, authentic cultural elements.
+            </div>
+            <div style="margin-top: 0.8rem;">
+              <img src="Screenshot_2.png" alt="dialogue screenshot" style="max-width: 100%; border-radius: 16px; margin-top: 0.5rem;" onerror="this.style.display='none'">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Practice & Teaching -->
+  <section id="practice">
+    <div class="container">
+      <h2 class="section-title">Practice</h2>
+      <div class="two-col">
+        <div class="practice-card" style="background: white; border-radius: 24px; padding: 1.8rem; box-shadow: 0 6px 12px -6px rgba(0,0,0,0.05);">
+          <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem;">🧩 Teaching (2020–2023)</h3>
+          <p style="color: #4f4a43;">Volunteer teacher — game programming for children. Weekly Unity/C# workshops for ages 6–12; progressive learning sequences combining craft, curiosity, and play.</p>
+        </div>
+        <div class="practice-card" style="background: white; border-radius: 24px; padding: 1.8rem; box-shadow: 0 6px 12px -6px rgba(0,0,0,0.05);">
+          <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem;">🎭 TTRPG & theatre (2009–present)</h3>
+          <p style="color: #4f4a43;">Campaign GMing and homebrew worlds; theatre writing, acting, and directing — including immersive one‑spectator performances.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills + Education -->
+  <section id="skills">
+    <div class="container">
+      <h2 class="section-title">Skills & education</h2>
+      <div class="two-col">
+        <div>
+          <table class="skill-table">
+            <tr><th>Narrative</th><td>Script editing, dialogue trees, interactive narrative design, worldbuilding, editorial leadership</td></tr>
+            <tr><th>Technical</th><td>Unity (C#), Python, LangGraph, text-based scripting, multimodal (sound + image)</td></tr>
+            <tr><th>Collaboration</th><td>Iteration, feedback loops, documentation, cross‑discipline communication</td></tr>
+          </table>
+        </div>
+        <div>
+          <div class="education-item"><strong>PhD in Computational Biology</strong><br>University of Groningen (2019–2024)</div>
+          <div class="education-item"><strong>Erasmus Mundus Master's</strong><br>LMU Munich, Groningen, Montpellier (2016–2018)</div>
+          <div style="margin-top: 1rem; font-style: italic; color: #6b5a4b;">📄 References available upon request.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact">
+    <div class="container">
+      <h2 class="section-title">Contact</h2>
+      <div class="contact-links">
+        <a href="mailto:stefano.tiso.evo@gmail.com">📧 stefano.tiso.evo@gmail.com</a>
+        <a href="tel:+33763935724">📞 +33 7 63 93 57 24</a>
+        <a href="https://www.linkedin.com/in/stefano-tiso-evo-data" target="_blank">🔗 LinkedIn</a>
+        <a href="https://github.com/swom" target="_blank">🐙 GitHub</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="container">
+    Stefano Tiso — Narrative design · playful learning
+  </div>
+</footer>
+</body>
+</html>
