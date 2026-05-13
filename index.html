@@ -13,7 +13,30 @@
       padding: 0;
       box-sizing: border-box;
     }
-
+    /* Collapsible card styles */
+    .card-header {
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.8rem;
+      background: white;
+      border-radius: 28px 28px 0 0;
+    }
+    .toggle-icon {
+      font-size: 1.2rem;
+      color: #b87c54;
+      transition: transform 0.2s ease;
+    }
+    .card-content-inner {
+      padding: 0 1.8rem 1.8rem 1.8rem;
+    }
+    .card-content-inner.collapsed {
+      display: none;
+    }
+    .card-content-inner.expanded {
+      display: block;
+    }
     body {
       font-family: 'Inter', sans-serif;
       background: #fefcf8;
@@ -425,10 +448,10 @@
     </div>
   </section>
 
-  <!-- Selected Work -->
+  <!-- Creative Work -->
   <section id="work">
     <div class="container">
-      <h2 class="section-title">Selected work</h2>
+      <h2 class="section-title">Creative work</h2>
       <div class="projects-grid">
         <!-- Sognetti: uses sognetti.png if available -->
         <div class="project-card">
@@ -468,6 +491,139 @@
               <img src="Animation.gif" alt="game animation" style="max-width: 100%; border-radius: 16px; margin-top: 0.5rem; border: 1px solid #f0eae2;" onerror="this.style.display='none'">
               <img src="Animation1.gif" alt="game animation" style="max-width: 100%; border-radius: 16px; margin-top: 0.5rem; border: 1px solid #f0eae2;" onerror="this.style.display='none'">
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+    <!-- Scientific Work Section -->
+  <section id="scientific-work">
+    <div class="container">
+      <h2 class="section-title">Scientific work</h2>
+      <div class="projects-grid">
+        <!-- 1. PhD Thesis -->
+        <div class="project-card">
+          <div class="card-header" onclick="toggleCard(this)">
+            <div class="project-title">PhD Thesis</div>
+            <span class="toggle-icon">▼</span>
+          </div>
+          <div class="card-content-inner expanded">
+            <div class="project-meta">Computational Biology · University of Groningen (2024)</div>
+            <ul class="project-desc" style="list-style-type: disc; padding-left: 1.2rem; margin-bottom: 1.4rem;">
+              <li><strong>Evolvability and organismal architecture:</strong> The blind watchmaker and the reminiscent architect</li>
+              <li>Research at the intersection of evolutionary theory, genetics, and artificial intelligence</li>
+              <li>Gene regulatory networks · evolutionary robotics · developmental genetics · morphology</li>
+              <li>Individual-based modeling of density dependence and reverse evolution</li>
+            </ul>
+            <div class="pdf-embed" style="margin-top: 0.8rem;">
+              <iframe src="Thesis.pdf" title="PhD Thesis Preview" loading="lazy" style="width:100%; height:350px; border:none; display:block;"></iframe>
+            </div>
+            <p style="font-size: 0.75rem; color: #8f7f6e; margin-top: 0.5rem; text-align: right;">PDF preview — <a href="https://research.rug.nl/en/publications/evolvability-and-organismal-architecture-the-blind-watchmaker-and" target="_blank" style="color: #b45f3b;">view full thesis on University of Groningen portal →</a></p>
+          </div>
+        </div>
+
+        <!-- 2. GECCO 2023 Paper: Grammar-Structured Mutations -->
+        <div class="project-card">
+          <div class="card-header" onclick="toggleCard(this)">
+            <div class="project-title">Biological insights on grammar‑structured mutations improve fitness and diversity</div>
+            <span class="toggle-icon">▼</span>
+          </div>
+          <div class="card-content-inner expanded">
+            <div class="project-meta">GECCO 2023 · First author</div>
+            <ul class="project-desc" style="list-style-type: disc; padding-left: 1.2rem; margin-bottom: 1.4rem;">
+              <li>Proposed <strong>Facilitated Mutation (FM)</strong> inspired by evolutionary biology's Facilitated Variation theory</li>
+              <li><strong>Results:</strong> +0.5% test accuracy, +53% average population fitness, +523 more high-quality solutions</li>
+              <li>Co-authored with Carvalho, Lourenço, and Machado (University of Coimbra)</li>
+            </ul>
+            <div class="pdf-embed" style="margin-top: 0.8rem;">
+              <iframe src="gecco2023_paper.pdf" title="GECCO 2023 Paper Preview" loading="lazy" style="width:100%; height:350px; border:none; display:block;"></iframe>
+            </div>
+            <p style="font-size: 0.75rem; color: #8f7f6e; margin-top: 0.5rem; text-align: right;">PDF preview — <a href="https://doi.org/10.1145/3583131.3590472" target="_blank" style="color: #b45f3b;">view on ACM Digital Library →</a></p>
+          </div>
+        </div>
+
+        <!-- 3. Trends in Ecology & Evolution Paper (2022) -->
+        <div class="project-card">
+          <div class="card-header" onclick="toggleCard(this)">
+            <div class="project-title">Capturing the facets of evolvability in a mechanistic framework</div>
+            <span class="toggle-icon">▼</span>
+          </div>
+          <div class="card-content-inner expanded">
+            <div class="project-meta">Trends in Ecology & Evolution · 2022 · Co-author</div>
+            <ul class="project-desc" style="list-style-type: disc; padding-left: 1.2rem; margin-bottom: 1.4rem;">
+              <li>Published in <em>Trends in Ecology & Evolution</em> (Impact factor: 20.6), one of the leading journals in evolutionary biology</li>
+              <li>Proposed a unifying framework to categorize evolvability determinants into three key categories: <strong>(1)</strong> determinants providing variation, <strong>(2)</strong> determinants shaping fitness effects, and <strong>(3)</strong> determinants shaping the selection process</li>
+              <li>Introduced critical distinctions between <strong>general vs. specific evolvability</strong> and <strong>broad vs. narrow scope</strong> of evolvability determinants</li>
+              <li>Co-authored with Jana M. Riederer, Timo J.B. van Eldijk, and Franz J. Weissing</li>
+              <li>Framework designed to reduce misunderstandings across disciplines and guide future evolutionary research</li>
+            </ul>
+            <div class="pdf-embed" style="margin-top: 0.8rem;">
+              <iframe src="Capturing the facets of evolvability in a mechanistic framework (1).pdf" title="Evolvability Paper Preview" loading="lazy" style="width:100%; height:350px; border:none; display:block;"></iframe>
+            </div>
+            <p style="font-size: 0.75rem; color: #8f7f6e; margin-top: 0.5rem; text-align: right;">PDF preview — <a href="https://doi.org/10.1016/j.tree.2022.01.004" target="_blank" style="color: #b45f3b;">view on publisher's website →</a></p>
+          </div>
+        </div>
+
+        <!-- 4. Reverse Evolution & Phenotypic Plasticity -->
+        <div class="project-card">
+          <div class="card-header" onclick="toggleCard(this)">
+            <div class="project-title">Reverse Evolution & Phenotypic Plasticity</div>
+            <span class="toggle-icon">▼</span>
+          </div>
+          <div class="card-content-inner expanded">
+            <div class="project-meta">Evolutionary Biology · Peer-reviewed article</div>
+            <ul class="project-desc" style="list-style-type: disc; padding-left: 1.2rem; margin-bottom: 1.4rem;">
+              <li>Dollo's law of irreversibility and plastic traits in parasitic wasps</li>
+              <li>Lipogenesis switches on in fat-poor environments and off in fat-rich environments</li>
+              <li>Lineages that lost lipogenic ability >200 million years ago still retain fat synthesis as a plastic trait</li>
+              <li>Individual-based simulations show plasticity can persist for thousands of generations</li>
+            </ul>
+            <div class="pdf-embed" style="margin-top: 0.8rem;">
+              <iframe src="DollosLaw.pdf" title="Journal Article Preview" loading="lazy" style="width:100%; height:350px; border:none; display:block;"></iframe>
+            </div>
+            <p style="font-size: 0.75rem; color: #8f7f6e; margin-top: 0.5rem; text-align: right;">PDF preview — download available</p>
+          </div>
+        </div>
+
+        <!-- 5. Social Environments & Mate Attraction -->
+        <div class="project-card">
+          <div class="card-header" onclick="toggleCard(this)">
+            <div class="project-title">Social Environments & Mate Attraction</div>
+            <span class="toggle-icon">▼</span>
+          </div>
+          <div class="card-content-inner expanded">
+            <div class="project-meta">Behavioral Ecology · Field study</div>
+            <ul class="project-desc" style="list-style-type: disc; padding-left: 1.2rem; margin-bottom: 1.4rem;">
+              <li>Automated RFID-surveillance system in wild field crickets (<em>Gryllus campestris</em>)</li>
+              <li>Attractiveness increases from low to intermediate density (Allee effect), then declines at higher densities</li>
+              <li>Individual-specific Allee effects that may be evolvable</li>
+              <li>Males attractive under low densities remain attractive under higher densities</li>
+            </ul>
+            <div class="pdf-embed" style="margin-top: 0.8rem;">
+              <iframe src="Crickets.pdf" title="Second Journal Article Preview" loading="lazy" style="width:100%; height:350px; border:none; display:block;"></iframe>
+            </div>
+            <p style="font-size: 0.75rem; color: #8f7f6e; margin-top: 0.5rem; text-align: right;">PDF preview — download available</p>
+          </div>
+        </div>
+
+        <!-- 6. Google Scholar Profile -->
+        <div class="project-card">
+          <div class="card-header" onclick="toggleCard(this)">
+            <div class="project-title">Google Scholar</div>
+            <span class="toggle-icon">▼</span>
+          </div>
+          <div class="card-content-inner expanded">
+            <div class="project-meta">Publications & citation metrics</div>
+            <ul class="project-desc" style="list-style-type: disc; padding-left: 1.2rem; margin-bottom: 1.4rem;">
+              <li>Complete list of peer-reviewed publications including the 2022 TREE paper</li>
+              <li>PhD thesis on evolvability and organismal architecture</li>
+              <li>Articles on evolutionary plasticity, Dollo's law, and behavioral ecology</li>
+              <li>Citation metrics and research impact tracking</li>
+            </ul>
+            <a href="https://scholar.google.com/citations?user=s.tiso" target="_blank" style="display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 1rem; color: #b45f3b; text-decoration: none; font-weight: 500; border-bottom: 1px solid transparent; transition: 0.2s;" onmouseover="this.style.borderBottomColor='#b45f3b'" onmouseout="this.style.borderBottomColor='transparent'">
+              📚 View Google Scholar Profile →
+            </a>
           </div>
         </div>
       </div>
@@ -547,5 +703,24 @@
     };
   }
 </script>
+<script>
+  // Toggle collapsible cards
+  function toggleCard(header) {
+    const inner = header.nextElementSibling;
+    const icon = header.querySelector('.toggle-icon');
+    
+    if (inner.classList.contains('expanded')) {
+      inner.classList.remove('expanded');
+      inner.classList.add('collapsed');
+      icon.textContent = '▶';
+    } else {
+      inner.classList.remove('collapsed');
+      inner.classList.add('expanded');
+      icon.textContent = '▼';
+    }
+  }
+</script>
+<!-- ================================ -->
+
 </body>
 </html>
