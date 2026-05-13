@@ -108,14 +108,14 @@
 
     /* banner container & rotated image */
     .banner-container {
-      text-align: center;
-      margin-bottom: 1rem;
-      background: #f3efe9;
-      border-radius: 0 0 32px 32px;
-      padding: 1rem 0;
+    text-align: center;
+    margin-bottom: 1rem;
+    background: #f3efe9;
+    border-radius: 0 0 32px 32px;
+    padding: 0;   /* change from 1rem 0 to 0 – removes top/bottom padding so image touches edges */
     }
     .banner-image {
-      max-width: 180px;
+      width: 100%;                /* fills the container's width */
       height: auto;
       transform: rotate(90deg);
       display: inline-block;
@@ -428,11 +428,8 @@
         <!-- Sognetti: uses sognetti.png if available -->
         <div class="project-card">
           <div class="card-content">
-            <img src="sognetti.png" alt="Sognetti book cover" class="book-cover-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-            <div class="book-cover-placeholder" style="display: none;">
-              <span>📚</span>
-              <span>book cover placeholder</span>
-              <span style="font-size:0.7rem;">(upload sognetti.png)</span>
+            <div class="image-placeholder">
+              <img src="sognetti.png" alt="Sognetti book cover" onerror="this.src='https://placehold.co/600x300/f3efe9/8f7a67?text=book+cover'">
             </div>
             <div class="project-title">Sognetti</div>
             <div class="project-meta">2025–present · Author, Editor, Art director</div>
