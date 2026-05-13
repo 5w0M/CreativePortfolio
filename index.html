@@ -756,6 +756,22 @@
   });
 </script>
 <!-- ================================ -->
-
+<script>
+  // Automatically convert all PDF iframes to Google Docs Viewer
+  document.addEventListener('DOMContentLoaded', function() {
+    const pdfIframes = document.querySelectorAll('.pdf-embed iframe');
+    const currentUrl = window.location.href;
+    const baseUrl = currentUrl.substring(0, currentUrl.lastIndexOf('/') + 1);
+    
+    pdfIframes.forEach(iframe => {
+      const pdfSrc = iframe.src;
+      // Only convert if it's a local PDF file (not already a Google Docs URL)
+      if (pdfSrc && !pdfSrc.includes('docs.google.com') && pdfSrc.endsWith('.pdf')) {
+        const fullPdfUrl = pdfSrc.startsWith('http') ? pdfSrc : baseUrl + pdfSrc;
+        iframe.src = `https://docs.google.com/viewer?embedded=true&url=${encodeURIComponent(fullPdfUrl)}`;
+      }
+    });
+  });
+</script>
 </body>
 </html>
