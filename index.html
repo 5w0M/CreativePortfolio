@@ -316,11 +316,18 @@
       overflow: hidden;
       border: 1px solid #ece3da;
     }
+    /* Hide Chrome PDF toolbar as much as possible */
     .pdf-embed iframe {
       width: 100%;
-      height: 350px;              /* fixed height – won't stretch to bottom */
+      height: 350px;
       border: none;
       display: block;
+      background: #faf8f4;
+    }
+    
+    /* This helps hide the Chrome PDF toolbar on some browsers */
+    .pdf-embed iframe[src*=".pdf"] {
+      position: relative;
     }
     /* two column layout */
     .two-col {
@@ -470,9 +477,59 @@
       color: #b87c54;
       transition: transform 0.2s ease;
     }
+        /* Lightbox styles for expandable images */
+    .lightbox {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+    .lightbox.active {
+      display: flex;
+    }
+    .lightbox img {
+      max-width: 90%;
+      max-height: 90%;
+      object-fit: contain;
+      border-radius: 16px;
+    }
+    .lightbox-close {
+      position: absolute;
+      top: 20px;
+      right: 40px;
+      color: white;
+      font-size: 40px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .lightbox-close:hover {
+      color: #b87c54;
+    }
+    
+    /* Make images clickable */
+    .clickable-image {
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .clickable-image:hover {
+      opacity: 0.9;
+    }
   </style>
 </head>
 <body>
+    <!-- Lightbox for expandable images -->
+  <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+    <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+    <img id="lightbox-img" src="" alt="Expanded view">
+  </div>
 <header>
   <div class="container">
     <nav>
@@ -526,7 +583,7 @@
         <div class="project-card">
           <div class="card-header-creative" onclick="toggleCreativeCard(this)">
             <div class="image-placeholder">
-              <img src="sognetti.png" alt="Sognetti book cover" onerror="this.src='https://placehold.co/600x300/f3efe9/8f7a67?text=Sognetti+Cover'">
+              <img src="sognetti.png" alt="Sognetti book cover" class="clickable-image" onerror="this.src='https://placehold.co/600x300/f3efe9/8f7a67?text=Sognetti+Cover'">
             </div>
             <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 1.8rem 1rem 1.8rem;">
               <div class="project-title">Sognetti</div>
@@ -553,7 +610,7 @@
         <div class="project-card">
           <div class="card-header-creative" onclick="toggleCreativeCard(this)">
             <div class="image-placeholder">
-              <img src="GRANDE_CARTE_FINALE_1.png" alt="Passage technique map preview" onerror="this.src='https://placehold.co/600x300/f3efe9/8f7a67?text=map+preview'">
+              <img src="GRANDE_CARTE_FINALE_1.png" alt="Passage technique map preview" class="clickable-image" onerror="this.src='https://placehold.co/600x300/f3efe9/8f7a67?text=map+preview'">
             </div>
             <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 1.8rem 1rem 1.8rem;">
               <div class="project-title">Passage technique</div>
@@ -828,12 +885,44 @@
     const baseUrl = currentUrl.substring(0, currentUrl.lastIndexOf('/') + 1);
     
     pdfIframes.forEach(iframe => {
-      const pdfSrc = iframe.src;
-      // Only convert if it's a local PDF file (not already a Google Docs URL)
-      if (pdfSrc && !pdfSrc.includes('docs.google.com') && pdfSrc.endsWith('.pdf')) {
-        const fullPdfUrl = pdfSrc.startsWith('http') ? pdfSrc : baseUrl + pdfSrc;
-        iframe.src = `https://docs.google.com/viewer?embedded=true&url=${encodeURIComponent(fullPdfUrl)}`;
+      let pdfSrc = iframe.src;
+      
+      // Skip if already a Google Docs URL
+      if (pdfSrc.includes('docs.google.com')) return;
+      
+      // Get the PDF filename from src
+      let pdfFilename = pdfSrc;
+      if (!pdfSrc.startsWith('http')) {
+        pdfFilename = pdfSrc; // relative path
+      } else if (pdfSrc.startsWith(window.location.origin)) {
+        pdfFilename = pdfSrc.replace(window.location.origin + '/', '');
       }
+      
+      // Extract just the filename
+      const filename = pdfFilename.split('/').pop();
+      
+      // Map of your actual PDF files
+      const pdfFiles = {
+        '260513_SOGNO.pdf': '260513_SOGNO.pdf',
+        'Thesis.pdf': 'Thesis.pdf',
+        'gecco2023_paper.pdf': 'gecco2023_paper.pdf',
+        'Capturing the facets of evolvability in a mechanistic framework (1).pdf': 'Capturing the facets of evolvability in a mechanistic framework (1).pdf',
+        'DollosLaw.pdf': 'DollosLaw.pdf',
+        'Crickets.pdf': 'Crickets.pdf'
+      };
+      
+      // Find matching PDF
+      let actualFile = filename;
+      for (const [key, value] of Object.entries(pdfFiles)) {
+        if (filename.includes(key) || key.includes(filename)) {
+          actualFile = value;
+          break;
+        }
+      }
+      
+      // Construct full URL
+      const fullPdfUrl = baseUrl + actualFile;
+      iframe.src = `https://docs.google.com/viewer?embedded=true&url=${encodeURIComponent(fullPdfUrl)}`;
     });
   });
 </script>
@@ -870,7 +959,54 @@
       icon.textContent = '▶';  // Change to '▶' if you want them closed
     });
   });
+</script>
+<script>
+  // Expandable images - open in lightbox
+  function openLightbox(imgSrc) {
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    lightboxImg.src = imgSrc;
+    lightbox.classList.add('active');
+  }
   
+  function closeLightbox() {
+    const lightbox = document.getElementById('lightbox');
+    lightbox.classList.remove('active');
+  }
+  
+  // Make all card images clickable
+  document.addEventListener('DOMContentLoaded', function() {
+    // Creative work images
+    const creativeImages = document.querySelectorAll('#work .image-placeholder img, #work .card-content img');
+    creativeImages.forEach(img => {
+      if (img.src && !img.src.includes('placehold')) {
+        img.classList.add('clickable-image');
+        img.onclick = function(e) {
+          e.stopPropagation();
+          openLightbox(this.src);
+        };
+      }
+    });
+    
+    // Scientific work images
+    const scientificImages = document.querySelectorAll('#scientific-work .image-placeholder img');
+    scientificImages.forEach(img => {
+      if (img.src && !img.src.includes('placehold')) {
+        img.classList.add('clickable-image');
+        img.onclick = function(e) {
+          e.stopPropagation();
+          openLightbox(this.src);
+        };
+      }
+    });
+    
+    // Close lightbox with Escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeLightbox();
+      }
+    });
+  });
 </script>
 </body>
 </html>
