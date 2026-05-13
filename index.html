@@ -151,7 +151,7 @@
     /* cards grid */
     .projects-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
       gap: 2rem;
       margin-top: 1rem;
     }
@@ -162,6 +162,8 @@
       transition: transform 0.2s ease, box-shadow 0.2s;
       overflow: hidden;
       border: 1px solid #ede8e1;
+      display: flex;
+      flex-direction: column;
     }
     .project-card:hover {
       transform: translateY(-4px);
@@ -169,6 +171,7 @@
     }
     .card-content {
       padding: 1.8rem;
+      flex: 1;
     }
     .project-title {
       font-size: 1.6rem;
@@ -203,6 +206,20 @@
       height: 100%;
       object-fit: cover;
       transition: 0.2s;
+    }
+    /* embedded pdf viewer */
+    .pdf-embed {
+      margin-top: 1rem;
+      background: #faf8f4;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid #ece3da;
+    }
+    .pdf-embed iframe {
+      width: 100%;
+      height: 300px;
+      border: none;
+      display: block;
     }
     .btn-link {
       display: inline-flex;
@@ -269,6 +286,7 @@
       .two-col { grid-template-columns: 1fr; }
       .nav-links { gap: 1rem; }
       section { padding: 3rem 0; }
+      .pdf-embed iframe { height: 240px; }
     }
   </style>
 </head>
@@ -294,7 +312,7 @@
       <div class="hero-content">
         <div class="hero-tag">narrative design · interactive storytelling · playful learning</div>
         <h2>Stefano Tiso</h2>
-        <p>I’m a narrative designer and interactive storyteller creating joyful, playful learning experiences for children.<br>I also volunteer-teach game programming (ages 6–12) and work comfortably across writing, design, and implementation.</p>
+        <p>I'm a narrative designer and interactive storyteller creating joyful, playful learning experiences for children.<br>I also volunteer-teach game programming (ages 6–12) and work comfortably across writing, design, and implementation.</p>
         <div class="pill-list">
           <span class="pill">🇫🇷 French (native)</span>
           <span class="pill">🇬🇧 English (native)</span>
@@ -310,7 +328,7 @@
     <div class="container">
       <h2 class="section-title">Selected work</h2>
       <div class="projects-grid">
-        <!-- Sognetti project -->
+        <!-- Sognetti project with embedded PDF -->
         <div class="project-card">
           <div class="card-content">
             <div class="project-title">Sognetti</div>
@@ -318,7 +336,10 @@
             <div class="project-desc">
               Collective literary anthology. Curated texts from multiple writers; wrote the majority of stories; handled editing and typography. A book project bringing diverse voices into a shared narrative universe.
             </div>
-            <a href="260513_SOGNO.pdf" class="btn-link" target="_blank">📄 Read excerpt →</a>
+            <!-- Embedded PDF viewer -->
+            <div class="pdf-embed">
+              <iframe src="260513_SOGNO.pdf" title="Sognetti excerpt" loading="lazy"></iframe>
+            </div>
           </div>
         </div>
 
@@ -334,7 +355,7 @@
               Branching narrative set in a parallel Briançon after a strange climatic collapse. Interactive map with moving characters and dialogue-driven choices. Hand‑crafted dialogue trees, narrative coherence, authentic cultural elements.
             </div>
             <div style="margin-top: 0.8rem;">
-              <img src="Screenshot_2.png" alt="dialogue screenshot" style="max-width: 100%; border-radius: 16px; margin-top: 0.5rem;" onerror="this.style.display='none'">
+              <img src="Screenshot_2.png" alt="dialogue screenshot" style="max-width: 100%; border-radius: 16px; margin-top: 0.5rem; border: 1px solid #f0eae2;" onerror="this.style.display='none'">
             </div>
           </div>
         </div>
@@ -366,9 +387,9 @@
       <div class="two-col">
         <div>
           <table class="skill-table">
-            <tr><th>Narrative</th><td>Script editing, dialogue trees, interactive narrative design, worldbuilding, editorial leadership</td></tr>
-            <tr><th>Technical</th><td>Unity (C#), Python, LangGraph, text-based scripting, multimodal (sound + image)</td></tr>
-            <tr><th>Collaboration</th><td>Iteration, feedback loops, documentation, cross‑discipline communication</td></tr>
+            <tr><th>Narrative</th><td>Script editing, dialogue trees, interactive narrative design, worldbuilding, editorial leadership</td>
+            <tr><th>Technical</th><td>Unity (C#), Python, LangGraph, text-based scripting, multimodal (sound + image)</td>
+            <tr><th>Collaboration</th><td>Iteration, feedback loops, documentation, cross‑discipline communication</td>
           </table>
         </div>
         <div>
