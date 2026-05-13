@@ -441,6 +441,28 @@
       height: 100%;
       object-fit: cover;
     }
+        /* Creative work collapsible cards */
+    #work .project-card {
+      cursor: pointer;
+    }
+    #work .card-header-creative {
+      cursor: pointer;
+    }
+    #work .card-content-creative {
+      transition: all 0.2s ease;
+    }
+    #work .card-content-creative.collapsed {
+      display: none;
+    }
+    #work .card-content-creative.expanded {
+      display: block;
+    }
+    #work .toggle-icon-creative {
+      float: right;
+      font-size: 1.2rem;
+      color: #b87c54;
+      transition: transform 0.2s ease;
+    }
   </style>
 </head>
 <body>
@@ -487,51 +509,67 @@
     </div>
   </section>
 
-  <!-- Creative Work -->
+   <!-- Creative Work Section -->
   <section id="work">
     <div class="container">
       <h2 class="section-title">Creative work</h2>
       <div class="projects-grid">
-        <!-- Sognetti: uses sognetti.png if available -->
+        
+        <!-- Sognetti (Collapsible) -->
         <div class="project-card">
-          <div class="image-placeholder">
-            <img src="sognetti.png" alt="Sognetti book cover" onerror="this.src='https://placehold.co/600x300/f3efe9/8f7a67?text=Sognetti+Cover'">
+          <div class="card-header-creative" onclick="toggleCreativeCard(this)">
+            <div class="image-placeholder">
+              <img src="sognetti.png" alt="Sognetti book cover" onerror="this.src='https://placehold.co/600x300/f3efe9/8f7a67?text=Sognetti+Cover'">
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 1.8rem 1rem 1.8rem;">
+              <div class="project-title">Sognetti</div>
+              <span class="toggle-icon-creative">▼</span>
+            </div>
           </div>
-          <div class="card-content">
-            <div class="project-title">Sognetti</div>
-            <div class="project-meta">2025–present · Author, Editor, Art director</div>
-            <ul class="project-desc" style="list-style-type: disc; padding-left: 1.2rem; margin-bottom: 1.4rem;">
-              <li>Collective literary anthology</li>
-              <li>Curated texts from multiple writers; wrote majority of stories</li>
-              <li>Handled editing and typography</li>
-              <li>Book project bringing diverse voices into a shared narrative universe</li>
-            </ul>
-            <div class="pdf-embed">
-              <iframe src="260513_SOGNO.pdf" title="Sognetti excerpt" loading="lazy"></iframe>
+          <div class="card-content-creative expanded">
+            <div class="card-content" style="padding: 0 1.8rem 1.8rem 1.8rem;">
+              <div class="project-meta">2025–present · Author, Editor, Art director</div>
+              <ul class="project-desc" style="list-style-type: disc; padding-left: 1.2rem; margin-bottom: 1.4rem;">
+                <li>Collective literary anthology</li>
+                <li>Curated texts from multiple writers; wrote majority of stories</li>
+                <li>Handled editing and typography</li>
+                <li>Book project bringing diverse voices into a shared narrative universe</li>
+              </ul>
+              <div class="pdf-embed">
+                <iframe src="260513_SOGNO.pdf" title="Sognetti excerpt" loading="lazy" style="width:100%; height:350px; border:none; display:block;"></iframe>
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- Passage technique -->
+        <!-- Passage technique (Collapsible) -->
         <div class="project-card">
-          <div class="image-placeholder">
-            <img src="GRANDE_CARTE_FINALE_1.png" alt="Passage technique map preview" onerror="this.src='https://placehold.co/600x300/f3efe9/8f7a67?text=map+preview'">
+          <div class="card-header-creative" onclick="toggleCreativeCard(this)">
+            <div class="image-placeholder">
+              <img src="GRANDE_CARTE_FINALE_1.png" alt="Passage technique map preview" onerror="this.src='https://placehold.co/600x300/f3efe9/8f7a67?text=map+preview'">
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 1.8rem 1rem 1.8rem;">
+              <div class="project-title">Passage technique</div>
+              <span class="toggle-icon-creative">▼</span>
+            </div>
           </div>
-          <div class="card-content">
-            <div class="project-title">Passage technique</div>
-            <div class="project-meta">2026–present · Narrative video game</div>
-            <ul class="project-desc" style="list-style-type: disc; padding-left: 1.2rem; margin-bottom: 1.4rem;">
-              <li>Branching narrative set in a parallel Briançon after climatic collapse</li>
-              <li>Interactive map with moving characters and dialogue-driven choices</li>
-              <li>Hand‑crafted dialogue trees and narrative coherence</li>
-              <li>Authentic cultural elements</li>
-            </ul>
-            <div style="margin-top: 0.8rem;">
-              <img src="Animation.gif" alt="game animation" style="max-width: 100%; border-radius: 16px; margin-top: 0.5rem; border: 1px solid #f0eae2;" onerror="this.style.display='none'">
-              <img src="Animation1.gif" alt="game animation" style="max-width: 100%; border-radius: 16px; margin-top: 0.5rem; border: 1px solid #f0eae2;" onerror="this.style.display='none'">
+          <div class="card-content-creative expanded">
+            <div class="card-content" style="padding: 0 1.8rem 1.8rem 1.8rem;">
+              <div class="project-meta">2026–present · Narrative video game</div>
+              <ul class="project-desc" style="list-style-type: disc; padding-left: 1.2rem; margin-bottom: 1.4rem;">
+                <li>Branching narrative set in a parallel Briançon after climatic collapse</li>
+                <li>Interactive map with moving characters and dialogue-driven choices</li>
+                <li>Hand‑crafted dialogue trees and narrative coherence</li>
+                <li>Authentic cultural elements</li>
+              </ul>
+              <div style="margin-top: 0.8rem;">
+                <img src="Animation.gif" alt="game animation" style="max-width: 100%; border-radius: 16px; margin-top: 0.5rem; border: 1px solid #f0eae2;" onerror="this.style.display='none'">
+                <img src="Animation1.gif" alt="game animation" style="max-width: 100%; border-radius: 16px; margin-top: 0.5rem; border: 1px solid #f0eae2;" onerror="this.style.display='none'">
+              </div>
             </div>
           </div>
         </div>
+        
       </div>
     </div>
   </section>
@@ -791,6 +829,41 @@
       }
     });
   });
+</script>
+<script>
+  // Toggle creative work cards (shows image + title when collapsed)
+  function toggleCreativeCard(header) {
+    const card = header.closest('.project-card');
+    const content = card.querySelector('.card-content-creative');
+    const icon = header.querySelector('.toggle-icon-creative');
+    
+    if (content.classList.contains('expanded')) {
+      content.classList.remove('expanded');
+      content.classList.add('collapsed');
+      if (icon) icon.textContent = '▶';
+    } else {
+      content.classList.remove('collapsed');
+      content.classList.add('expanded');
+      if (icon) icon.textContent = '▼';
+    }
+  }
+  
+  // Set creative cards to expanded by default (or change to 'collapsed' if you want them closed)
+  document.addEventListener('DOMContentLoaded', function() {
+    // For creative cards - change to 'collapsed' if you want them closed on load
+    const creativeContents = document.querySelectorAll('#work .card-content-creative');
+    creativeContents.forEach(content => {
+      content.classList.add('collapsed');  // Change to 'collapsed' if you want them closed
+      content.classList.remove('expanded');
+    });
+    
+    // Update icons to match
+    const creativeIcons = document.querySelectorAll('#work .toggle-icon-creative');
+    creativeIcons.forEach(icon => {
+      icon.textContent = '▼';  // Change to '▶' if you want them closed
+    });
+  });
+  
 </script>
 </body>
 </html>
