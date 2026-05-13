@@ -106,22 +106,15 @@
     }
     /* banner container & rotated image */
     .banner-container {
-      position: relative;
-      max-width: 1200px;    /* match .container */
-      padding: 0;              /* removes internal padding */
-      margin: 0;               /* removes external margins */
-      background: #f3efe9;
-      border-radius: 0 0 32px 32px;
-      overflow: hidden;     /* for fade effect */
+      margin: 0;
+      padding: 0;
     }
     .banner-image {
       display: block;
-      width: auto;
-      max-width: 100%;      /* never wider than container */
+      width: 100%;
       height: auto;
-      max-height: 70vh;     /* optional: limit height */
-      margin: 0 auto;
-      transform: rotate(90deg);
+      max-height: 150px;
+      object-fit: cover;
     }
     /* fade at left and right borders (inside the container) */
     .banner-container::before {
