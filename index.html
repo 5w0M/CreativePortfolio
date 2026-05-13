@@ -13,30 +13,6 @@
       padding: 0;
       box-sizing: border-box;
     }
-    /* Collapsible card styles */
-    .card-header {
-      cursor: pointer;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1rem 1.8rem;
-      background: white;
-      border-radius: 28px 28px 0 0;
-    }
-    .toggle-icon {
-      font-size: 1.2rem;
-      color: #b87c54;
-      transition: transform 0.2s ease;
-    }
-    .card-content-inner {
-      padding: 0 1.8rem 1.8rem 1.8rem;
-    }
-    .card-content-inner.collapsed {
-      display: none;
-    }
-    .card-content-inner.expanded {
-      display: block;
-    }
     body {
       font-family: 'Inter', sans-serif;
       background: #fefcf8;
@@ -402,6 +378,50 @@
       .hero-content { text-align: center; }
       .pill-list { justify-content: center; }
     }
+            /* Collapsible card styles */
+    .card-header {
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.8rem;
+      background: white;
+      border-radius: 28px 28px 0 0;
+    }
+    .toggle-icon {
+      font-size: 1.2rem;
+      color: #b87c54;
+      transition: transform 0.2s ease;
+    }
+    .card-content-inner {
+      padding: 0 1.8rem 1.8rem 1.8rem;
+    }
+    .card-content-inner.collapsed {
+      display: none;
+    }
+    .card-content-inner.expanded {
+      display: block;
+    }
+    
+    /* Ensure cards in grid maintain equal height regardless of content */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 2rem;
+      margin-top: 1rem;
+      align-items: start;  /* prevents cards from stretching to same height */
+    }
+    .project-card {
+      background: white;
+      border-radius: 28px;
+      box-shadow: 0 12px 28px -8px rgba(0,0,0,0.05);
+      transition: transform 0.2s ease, box-shadow 0.2s;
+      overflow: hidden;
+      border: 1px solid #ede8e1;
+      display: flex;
+      flex-direction: column;
+      height: 100%;        /* ensures consistent card height within its row */
+    }
   </style>
 </head>
 <body>
@@ -508,7 +528,7 @@
             <div class="project-title">PhD Thesis</div>
             <span class="toggle-icon">▼</span>
           </div>
-          <div class="card-content-inner expanded">
+          <div class="card-content-inner collapsed">
             <div class="project-meta">Computational Biology · University of Groningen (2024)</div>
             <ul class="project-desc" style="list-style-type: disc; padding-left: 1.2rem; margin-bottom: 1.4rem;">
               <li><strong>Evolvability and organismal architecture:</strong> The blind watchmaker and the reminiscent architect</li>
@@ -529,7 +549,7 @@
             <div class="project-title">Biological insights on grammar‑structured mutations improve fitness and diversity</div>
             <span class="toggle-icon">▼</span>
           </div>
-          <div class="card-content-inner expanded">
+          <div class="card-content-inner collapsed">
             <div class="project-meta">GECCO 2023 · First author</div>
             <ul class="project-desc" style="list-style-type: disc; padding-left: 1.2rem; margin-bottom: 1.4rem;">
               <li>Proposed <strong>Facilitated Mutation (FM)</strong> inspired by evolutionary biology's Facilitated Variation theory</li>
@@ -549,7 +569,7 @@
             <div class="project-title">Capturing the facets of evolvability in a mechanistic framework</div>
             <span class="toggle-icon">▼</span>
           </div>
-          <div class="card-content-inner expanded">
+          <div class="card-content-inner collapsed">
             <div class="project-meta">Trends in Ecology & Evolution · 2022 · Co-author</div>
             <ul class="project-desc" style="list-style-type: disc; padding-left: 1.2rem; margin-bottom: 1.4rem;">
               <li>Published in <em>Trends in Ecology & Evolution</em> (Impact factor: 20.6), one of the leading journals in evolutionary biology</li>
@@ -571,7 +591,7 @@
             <div class="project-title">Reverse Evolution & Phenotypic Plasticity</div>
             <span class="toggle-icon">▼</span>
           </div>
-          <div class="card-content-inner expanded">
+          <div class="card-content-inner collapsed">
             <div class="project-meta">Evolutionary Biology · Peer-reviewed article</div>
             <ul class="project-desc" style="list-style-type: disc; padding-left: 1.2rem; margin-bottom: 1.4rem;">
               <li>Dollo's law of irreversibility and plastic traits in parasitic wasps</li>
@@ -592,7 +612,7 @@
             <div class="project-title">Social Environments & Mate Attraction</div>
             <span class="toggle-icon">▼</span>
           </div>
-          <div class="card-content-inner expanded">
+          <div class="card-content-inner collapsed">
             <div class="project-meta">Behavioral Ecology · Field study</div>
             <ul class="project-desc" style="list-style-type: disc; padding-left: 1.2rem; margin-bottom: 1.4rem;">
               <li>Automated RFID-surveillance system in wild field crickets (<em>Gryllus campestris</em>)</li>
@@ -613,7 +633,7 @@
             <div class="project-title">Google Scholar</div>
             <span class="toggle-icon">▼</span>
           </div>
-          <div class="card-content-inner expanded">
+          <div class="card-content-inner collapsed">
             <div class="project-meta">Publications & citation metrics</div>
             <ul class="project-desc" style="list-style-type: disc; padding-left: 1.2rem; margin-bottom: 1.4rem;">
               <li>Complete list of peer-reviewed publications including the 2022 TREE paper</li>
@@ -704,7 +724,7 @@
   }
 </script>
 <script>
-  // Toggle collapsible cards
+  // Toggle collapsible cards - closed by default
   function toggleCard(header) {
     const inner = header.nextElementSibling;
     const icon = header.querySelector('.toggle-icon');
@@ -719,6 +739,21 @@
       icon.textContent = '▼';
     }
   }
+  
+  // Set all scientific cards to collapsed on page load
+  document.addEventListener('DOMContentLoaded', function() {
+    const allScientificCards = document.querySelectorAll('#scientific-work .card-content-inner');
+    allScientificCards.forEach(card => {
+      card.classList.remove('expanded');
+      card.classList.add('collapsed');
+      // Also update the toggle icon to ▶
+      const header = card.previousElementSibling;
+      if (header && header.classList.contains('card-header')) {
+        const icon = header.querySelector('.toggle-icon');
+        if (icon) icon.textContent = '▶';
+      }
+    });
+  });
 </script>
 <!-- ================================ -->
 
