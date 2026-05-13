@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Stefano Tiso · Narrative Design Portfolio</title>
@@ -882,44 +883,85 @@
 </script>
 <!-- ================================ -->
 <script>
-  // Fix PDF embeds - handle spaces and local files
+    // PDF.js viewer - works reliably on GitHub Pages
   document.addEventListener('DOMContentLoaded', function() {
-    const pdfIframes = document.querySelectorAll('.pdf-embed iframe');
+    // Set the worker source (required for PDF.js)
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
     
-    pdfIframes.forEach(iframe => {
+    // Find all PDF embeds
+    const pdfEmbeds = document.querySelectorAll('.pdf-embed');
+    
+    pdfEmbeds.forEach((embed, index) => {
+      const iframe = embed.querySelector('iframe');
+      if (!iframe) return;
+      
       let pdfSrc = iframe.src;
       
-      // Skip if already a Google Docs URL
-      if (pdfSrc.includes('docs.google.com')) return;
+      // Skip if not a local PDF
+      if (!pdfSrc.endsWith('.pdf') && !pdfSrc.includes('.pdf')) return;
       
-      // Get the filename from src
+      // Get just the filename
       let filename = pdfSrc.split('/').pop();
+      if (filename.includes('?')) filename = filename.split('?')[0];
       
-      // Fix spaces in filename - encode them properly
-      filename = filename.replace(/ /g, '%20');
+      // Clear the iframe and create canvas container
+      const container = document.createElement('div');
+      container.style.width = '100%';
+      container.style.maxHeight = '400px';
+      container.style.overflow = 'auto';
+      container.style.background = '#faf8f4';
+      container.style.borderRadius = '16px';
+      container.style.padding = '10px';
       
-      // Get the current base URL
-      let baseUrl = window.location.href;
-      baseUrl = baseUrl.substring(0, baseUrl.lastIndexOf('/') + 1);
+      // Replace iframe with container
+      iframe.style.display = 'none';
+      embed.appendChild(container);
       
-      // Construct full URL
-      let fullPdfUrl = baseUrl + filename;
-      
-      // If on local file system, show a message instead
-      if (fullPdfUrl.startsWith('file://')) {
-        // Replace iframe with a message
-        const wrapper = iframe.parentElement;
-        wrapper.innerHTML = `
-          <div style="background: #faf8f4; border-radius: 20px; padding: 2rem; text-align: center; border: 1px solid #ece3da;">
-            <p style="color: #b87c54; margin-bottom: 0.5rem;">📄 PDF Preview</p>
-            <p style="font-size: 0.85rem; color: #8f7f6e;">For best experience, <a href="${fullPdfUrl}" target="_blank" style="color: #b45f3b;">open PDF directly</a> or upload to GitHub Pages</p>
+      // Load and render PDF
+      pdfjsLib.getDocument(filename).promise.then(function(pdf) {
+        // Show page count info
+        const info = document.createElement('div');
+        info.style.textAlign = 'center';
+        info.style.fontSize = '0.75rem';
+        info.style.color = '#8f7f6e';
+        info.style.marginBottom = '8px';
+        info.innerHTML = `📄 ${pdf.numPages} page${pdf.numPages > 1 ? 's' : ''} · <a href="${filename}" target="_blank" style="color:#b45f3b">Download PDF</a>`;
+        container.appendChild(info);
+        
+        // Render first 3 pages
+        const pagesToShow = Math.min(3, pdf.numPages);
+        
+        for (let i = 1; i <= pagesToShow; i++) {
+          pdf.getPage(i).then(function(page) {
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            const scale = 1.2;
+            const viewport = page.getViewport({ scale: scale });
+            
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
+            canvas.style.width = '100%';
+            canvas.style.height = 'auto';
+            canvas.style.marginBottom = '8px';
+            canvas.style.borderRadius = '8px';
+            canvas.style.boxShadow = '0 1px 3px rgba(0,0,0,0.1)';
+            
+            container.appendChild(canvas);
+            
+            page.render({ canvasContext: context, viewport: viewport });
+          });
+        }
+      }).catch(function(error) {
+        console.error('PDF load error:', error);
+        container.innerHTML = `
+          <div style="padding: 2rem; text-align: center; background: #faf8f4; border-radius: 16px;">
+            <p style="color: #b87c54; margin-bottom: 0.5rem;">⚠️ PDF preview unavailable</p>
+            <p style="font-size: 0.85rem; color: #8f7f6e;">
+              <a href="${filename}" target="_blank" style="color: #b45f3b;">Click here to open PDF directly</a>
+            </p>
           </div>
         `;
-        return;
-      }
-      
-      // Use Google Docs Viewer
-      iframe.src = `https://docs.google.com/viewer?embedded=true&url=${encodeURIComponent(fullPdfUrl)}`;
+      });
     });
   });
 </script>
