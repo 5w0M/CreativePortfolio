@@ -422,6 +422,25 @@
       flex-direction: column;
       /* height: 100%;        ensures consistent card height within its row */
     }
+        /* Only for creative work section - limit to 1/4 screen height */
+    #work .image-placeholder {
+      max-height: 25vh;
+      min-height: 120px;
+    }
+    
+    #work .image-placeholder img {
+      max-height: 25vh;
+      object-fit: contain;
+    }
+    
+    /* Scientific work keeps original fixed height */
+    #scientific-work .image-placeholder {
+      height: 180px;
+    }
+    #scientific-work .image-placeholder img {
+      height: 100%;
+      object-fit: cover;
+    }
   </style>
 </head>
 <body>
