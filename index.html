@@ -105,16 +105,23 @@
       border-bottom: none;
     }
     /* banner container & rotated image */
+    /* Banner container - rounded like cards */
     .banner-container {
-      margin: 0;
+      margin: 0 0 1rem 0;
       padding: 0;
+      line-height: 0;
+      background: #f3efe9;
+      border-radius: 28px;        /* matches card border radius */
+      overflow: hidden;           /* ensures image respects rounded corners */
     }
+    
     .banner-image {
       display: block;
       width: 100%;
       height: auto;
       max-height: 150px;
       object-fit: cover;
+      border-radius: 28px;        /* rounded corners on image too */
     }
     /* fade at left and right borders (inside the container) */
     .banner-container::before {
