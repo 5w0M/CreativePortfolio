@@ -521,6 +521,26 @@
     .clickable-image:hover {
       opacity: 0.9;
     }
+        /* Sliding animation for images */
+    .slider-container {
+      position: relative;
+      overflow: hidden;
+    }
+    .slide-image {
+      transition: transform 0.5s ease-in-out;
+    }
+    .slide-out-left {
+      transform: translateX(-100%);
+    }
+    .slide-in-right {
+      transform: translateX(0);
+    }
+    .slide-out-right {
+      transform: translateX(100%);
+    }
+    .slide-in-left {
+      transform: translateX(0);
+    }
   </style>
 </head>
 <body>
@@ -1045,5 +1065,236 @@
     });
   });
 </script>
+<script>
+  // Rotating images with slide right-to-left effect
+  document.addEventListener('DOMContentLoaded', function() {
+    // ===== BANNER IMAGES =====
+    let bannerImages = [];
+    let currentBannerIndex = 0;
+    const bannerContainer = document.querySelector('.banner-container');
+    const bannerImg = document.querySelector('.banner-image');
+    
+    // ===== PORTRAIT IMAGES =====
+    let portraitImages = [];
+    let currentPortraitIndex = 0;
+    const portraitContainer = document.querySelector('.hero-portrait');
+    const portraitImg = document.querySelector('.portrait-img');
+    
+    // Create wrapper for sliding effect
+    function setupSlider(container, imgElement, isBanner) {
+      if (!container || !imgElement) return null;
+      
+      // Create wrapper div
+      const wrapper = document.createElement('div');
+      wrapper.style.position = 'relative';
+      wrapper.style.overflow = 'hidden';
+      wrapper.style.width = '100%';
+      wrapper.style.height = imgElement.style.height || 'auto';
+      
+      // Clone the image
+      const img1 = imgElement.cloneNode(true);
+      const img2 = imgElement.cloneNode(true);
+      
+      img1.style.position = 'relative';
+      img1.style.width = '100%';
+      img1.style.display = 'block';
+      img1.style.transition = 'transform 0.5s ease-in-out';
+      
+      img2.style.position = 'absolute';
+      img2.style.top = '0';
+      img2.style.left = '100%';
+      img2.style.width = '100%';
+      img2.style.display = 'block';
+      img2.style.transition = 'transform 0.5s ease-in-out';
+      
+      // Clear container and add wrapper
+      container.innerHTML = '';
+      wrapper.appendChild(img1);
+      wrapper.appendChild(img2);
+      container.appendChild(wrapper);
+      
+      return { img1, img2, wrapper };
+    }
+    
+    // Load images with numbered pattern (banner1.jpg, banner2.jpg, etc.)
+    function loadImages(prefix, maxAttempts, callback) {
+      const images = [];
+      let loadedCount = 0;
+      let foundAny = false;
+      
+      for (let i = 1; i <= maxAttempts; i++) {
+        const img = new Image();
+        const extensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+        
+        extensions.forEach(ext => {
+          const testPath = `${prefix}${i}.${ext}`;
+          img.onload = function() {
+            if (!images.includes(testPath)) {
+              images.push(testPath);
+              foundAny = true;
+            }
+            loadedCount++;
+            if (loadedCount === maxAttempts * extensions.length && callback) {
+              callback(images);
+            }
+          };
+          img.onerror = function() {
+            loadedCount++;
+            if (loadedCount === maxAttempts * extensions.length && callback && !foundAny && i === maxAttempts) {
+              callback(images);
+            }
+          };
+          img.src = testPath;
+        });
+      }
+    }
+    
+    // Function for banner sliding (right to left)
+    function setupBannerSlider() {
+      if (!bannerContainer || !bannerImg) return;
+      
+      const images = [];
+      let currentIndex = 0;
+      
+      loadImages('banner', 10, function(foundImages) {
+        if (foundImages.length === 0) {
+          // Fallback to default
+          images.push('Abbronzatura.png');
+        } else {
+          foundImages.forEach(img => images.push(img));
+        }
+        
+        if (images.length <= 1) return;
+        
+        // Create slider elements
+        const img1 = document.createElement('img');
+        const img2 = document.createElement('img');
+        
+        img1.src = images[0];
+        img2.src = images[1 % images.length];
+        img1.className = 'banner-image';
+        img2.className = 'banner-image';
+        img1.style.width = '100%';
+        img1.style.display = 'block';
+        img1.style.transition = 'transform 0.5s ease-in-out';
+        img2.style.width = '100%';
+        img2.style.display = 'block';
+        img2.style.position = 'absolute';
+        img2.style.top = '0';
+        img2.style.left = '100%';
+        img2.style.transition = 'transform 0.5s ease-in-out';
+        
+        bannerContainer.innerHTML = '';
+        bannerContainer.style.position = 'relative';
+        bannerContainer.style.overflow = 'hidden';
+        bannerContainer.appendChild(img1);
+        bannerContainer.appendChild(img2);
+        
+        let nextIndex = 1;
+        
+        setInterval(() => {
+          // Slide current image left
+          img1.style.transform = 'translateX(-100%)';
+          img2.style.transform = 'translateX(0)';
+          
+          setTimeout(() => {
+            // Update images
+            currentIndex = nextIndex;
+            nextIndex = (nextIndex + 1) % images.length;
+            
+            img1.src = images[nextIndex];
+            img1.style.transform = '';
+            img2.style.transform = '';
+            
+            // Swap positions
+            const tempSrc = img1.src;
+            img1.src = img2.src;
+            img2.src = tempSrc;
+          }, 500);
+        }, 5000);
+      });
+    }
+    
+    // Function for portrait sliding (right to left)
+    function setupPortraitSlider() {
+      if (!portraitContainer || !portraitImg) return;
+      
+      const images = [];
+      
+      loadImages('portrait', 10, function(foundImages) {
+        if (foundImages.length === 0) {
+          images.push('portrait.jpg');
+        } else {
+          foundImages.forEach(img => images.push(img));
+        }
+        
+        if (images.length <= 1) return;
+        
+        // Create slider elements
+        const img1 = document.createElement('img');
+        const img2 = document.createElement('img');
+        
+        img1.src = images[0];
+        img2.src = images[1 % images.length];
+        img1.className = 'portrait-img';
+        img2.className = 'portrait-img';
+        img1.style.width = '100%';
+        img1.style.maxWidth = '220px';
+        img1.style.borderRadius = '50%';
+        img1.style.aspectRatio = '1 / 1';
+        img1.style.objectFit = 'cover';
+        img1.style.display = 'block';
+        img1.style.margin = '0 auto';
+        img1.style.transition = 'transform 0.5s ease-in-out';
+        
+        img2.style.width = '100%';
+        img2.style.maxWidth = '220px';
+        img2.style.borderRadius = '50%';
+        img2.style.aspectRatio = '1 / 1';
+        img2.style.objectFit = 'cover';
+        img2.style.display = 'block';
+        img2.style.position = 'absolute';
+        img2.style.top = '0';
+        img2.style.left = '100%';
+        img2.style.margin = '0 auto';
+        img2.style.transition = 'transform 0.5s ease-in-out';
+        
+        portraitContainer.innerHTML = '';
+        portraitContainer.style.position = 'relative';
+        portraitContainer.style.display = 'flex';
+        portraitContainer.style.justifyContent = 'center';
+        portraitContainer.appendChild(img1);
+        portraitContainer.appendChild(img2);
+        
+        let nextIndex = 1;
+        
+        setInterval(() => {
+          // Slide current image left
+          img1.style.transform = 'translateX(-100%)';
+          img2.style.transform = 'translateX(0)';
+          
+          setTimeout(() => {
+            // Update images
+            nextIndex = (nextIndex + 1) % images.length;
+            
+            img1.src = images[nextIndex];
+            img1.style.transform = '';
+            img2.style.transform = '';
+            
+            // Swap positions
+            const tempSrc = img1.src;
+            img1.src = img2.src;
+            img2.src = tempSrc;
+          }, 500);
+        }, 7000);
+      });
+    }
+    
+    // Initialize sliders
+    setupBannerSlider();
+    setupPortraitSlider();
+  });
+</script>
+
 </body>
 </html>
