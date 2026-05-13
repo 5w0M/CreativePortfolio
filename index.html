@@ -106,17 +106,34 @@
       border-bottom: none;
     }
     /* banner container & rotated image */
+    .banner-container {
+      position: relative;
+      max-width: 1200px;    /* match .container */
+      margin: 0 auto 1rem auto;  /* centered, same bottom margin */
+      background: #f3efe9;
+      border-radius: 0 0 32px 32px;
+      overflow: hidden;     /* for fade effect */
+    }
     .banner-image {
       display: block;
       width: auto;
-      height: 100%;       /* fill container height */
-      max-width: none;
+      max-width: 100%;      /* never wider than container */
+      height: auto;
+      max-height: 70vh;     /* optional: limit height */
       margin: 0 auto;
       transform: rotate(90deg);
     }
-    .banner-container {
-      height: auto;
-      min-height: 200px;  /* adjust as needed */
+    /* fade at left and right borders (inside the container) */
+    .banner-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      background: linear-gradient(90deg, #fefcf8 0%, transparent 8%, transparent 92%, #fefcf8 100%);
+      border-radius: inherit;
     }
     .banner-placeholder {
       width: 100%;
