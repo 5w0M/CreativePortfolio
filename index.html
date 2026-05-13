@@ -422,15 +422,22 @@
       flex-direction: column;
       /* height: 100%;        ensures consistent card height within its row */
     }
-        /* Only for creative work section - limit to 1/4 screen height */
+    /* Creative work images - fill width, maintain aspect ratio */
     #work .image-placeholder {
+      width: 100%;
       max-height: 25vh;
-      min-height: 120px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f3efe9;
     }
     
     #work .image-placeholder img {
-      max-height: 25vh;
-      object-fit: contain;
+      width: 100%;
+      height: auto;
+      object-fit: cover;     /* fills the width, crops top/bottom if needed */
+      display: block;
     }
     
     /* Scientific work keeps original fixed height */
