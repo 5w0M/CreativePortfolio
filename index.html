@@ -1069,161 +1069,201 @@
   });
 </script>
 <script>
-  // Auto-detect numbered images and slide
-  document.addEventListener('DOMContentLoaded', function() {
-    
-    // Helper: load all images matching pattern like "banner1", "banner2", ...
-    function loadNumberedImages(baseName, maxAttempts, extensions, callback) {
-      const images = [];
-      let totalChecks = maxAttempts * extensions.length;
-      let completed = 0;
-      
-      for (let i = 1; i <= maxAttempts; i++) {
-        extensions.forEach(ext => {
-          const path = `${baseName}${i}.${ext}`;
-          const img = new Image();
-          img.onload = () => {
-            if (!images.includes(path)) images.push(path);
-            completed++;
-            if (completed === totalChecks) callback(images);
-          };
-          img.onerror = () => {
-            completed++;
-            if (completed === totalChecks) callback(images);
-          };
-          img.src = path;
-        });
-      }
-    }
-    
-    const bannerContainer = document.querySelector('.banner-container');
-    const portraitContainer = document.querySelector('.hero-portrait');
-    const extensions = ['png', 'jpg', 'jpeg', 'gif', 'webp'];
-    
-    // Banner slider (left-to-right)
-    function setupBannerSlider(images) {
-      if (!bannerContainer || images.length < 2) return;
-      
-      bannerContainer.innerHTML = '';
-      bannerContainer.style.position = 'relative';
-      bannerContainer.style.overflow = 'hidden';
-      bannerContainer.style.width = '100%';
-      bannerContainer.style.maxHeight = '33vh';
-      
-      const img1 = document.createElement('img');
-      const img2 = document.createElement('img');
-      
-      img1.src = images[0];
-      img2.src = images[1];
-      img1.className = 'banner-image';
-      img2.className = 'banner-image';
-      Object.assign(img1.style, {
-        width: '100%', height: 'auto', maxHeight: '33vh', objectFit: 'contain',
-        display: 'block', position: 'relative', transition: 'transform 0.6s ease-in-out'
-      });
-      Object.assign(img2.style, {
-        width: '100%', height: 'auto', maxHeight: '33vh', objectFit: 'contain',
-        display: 'block', position: 'absolute', top: '0', left: '-100%',
-        transition: 'transform 0.6s ease-in-out'
-      });
-      
-      bannerContainer.appendChild(img1);
-      bannerContainer.appendChild(img2);
-      
-      let nextIdx = 1;
-      const total = images.length;
-      
-      setInterval(() => {
-        // Slide left-to-right: current moves right (+100%), new comes from left
-        img1.style.transform = 'translateX(100%)';
-        img2.style.transform = 'translateX(0)';
-        
-        setTimeout(() => {
-          nextIdx = (nextIdx + 1) % total;
-          img1.src = images[nextIdx];
-          img1.style.transform = '';
-          img2.style.transform = '';
-          img2.style.left = '-100%';
-          // Swap roles so img1 is always the visible one
-          const temp = img1.src;
-          img1.src = img2.src;
-          img2.src = temp;
-        }, 600);
-      }, 5000);
-    }
-    
-    // Portrait slider (right-to-left)
-    function setupPortraitSlider(images) {
-      if (!portraitContainer || images.length < 2) return;
-      
-      portraitContainer.innerHTML = '';
-      portraitContainer.style.position = 'relative';
-      portraitContainer.style.overflow = 'hidden';
-      portraitContainer.style.display = 'flex';
-      portraitContainer.style.justifyContent = 'center';
-      portraitContainer.style.minWidth = '150px';
-      
-      const img1 = document.createElement('img');
-      const img2 = document.createElement('img');
-      
-      img1.src = images[0];
-      img2.src = images[1];
-      img1.className = 'portrait-img';
-      img2.className = 'portrait-img';
-      const baseStyle = {
-        width: '100%', maxWidth: '220px', borderRadius: '50%',
-        aspectRatio: '1 / 1', objectFit: 'cover', display: 'block',
-        margin: '0 auto', transition: 'transform 0.6s ease-in-out'
-      };
-      Object.assign(img1.style, { ...baseStyle, position: 'relative' });
-      Object.assign(img2.style, { ...baseStyle, position: 'absolute', top: '0', left: '50%', transform: 'translateX(100%)' });
-      
-      portraitContainer.appendChild(img1);
-      portraitContainer.appendChild(img2);
-      
-      let nextIdx = 1;
-      const total = images.length;
-      
-      setInterval(() => {
-        // Slide right-to-left: current moves left (-100%), new comes from right
-        img1.style.transform = 'translateX(-100%)';
-        img2.style.transform = 'translateX(0)';
-        
-        setTimeout(() => {
-          nextIdx = (nextIdx + 1) % total;
-          img1.src = images[nextIdx];
-          img1.style.transform = '';
-          img2.style.transform = 'translateX(100%)';
-          img2.style.left = '50%';
-          // Swap roles
-          const temp = img1.src;
-          img1.src = img2.src;
-          img2.src = temp;
-        }, 600);
-      }, 7000);
-    }
-    
-    // Auto‑detect banner images (banner1.*, banner2.*, ... up to banner20)
-    loadNumberedImages('banner', 20, extensions, (banners) => {
-      if (banners.length === 0) {
-        // Fallback to your original banner if none found
-        const fallback = document.querySelector('.banner-image');
-        if (fallback && fallback.src) banners = [fallback.src.split('/').pop()];
-      }
-      if (banners.length > 0) setupBannerSlider(banners);
-    });
-    
-    // Auto‑detect portrait images (portrait1.*, portrait2.*, ...)
-    loadNumberedImages('portrait', 20, extensions, (portraits) => {
-      if (portraits.length === 0) {
-        const fallback = document.querySelector('.portrait-img');
-        if (fallback && fallback.src) portraits = [fallback.src.split('/').pop()];
-      }
-      if (portraits.length > 0) setupPortraitSlider(portraits);
-    });
-    
-  });
-</script>
+// Auto‑detect numbered images and slide one‑way only
+document.addEventListener('DOMContentLoaded', function() {
 
+  // ------------------------------------------------------------------
+  // Helper: find all images matching pattern "name1.ext", "name2.ext", …
+  // up to maxAttempts (e.g., 20). Returns array of found paths.
+  // ------------------------------------------------------------------
+  function loadNumberedImages(baseName, maxAttempts, extensions, callback) {
+    const images = [];
+    let totalChecks = maxAttempts * extensions.length;
+    let completed = 0;
+
+    for (let i = 1; i <= maxAttempts; i++) {
+      extensions.forEach(ext => {
+        const path = `${baseName}${i}.${ext}`;
+        const img = new Image();
+        img.onload = () => {
+          if (!images.includes(path)) images.push(path);
+          completed++;
+          if (completed === totalChecks) callback(images);
+        };
+        img.onerror = () => {
+          completed++;
+          if (completed === totalChecks) callback(images);
+        };
+        img.src = path;
+      });
+    }
+  }
+
+  const bannerContainer = document.querySelector('.banner-container');
+  const portraitContainer = document.querySelector('.hero-portrait');
+  const extensions = ['png', 'jpg', 'jpeg', 'gif', 'webp'];
+
+  // ------------------------------------------------------------------
+  // BANNER SLIDER – left‑to‑right (new image slides in from left,
+  // old image slides out to the right, then is reset off‑screen)
+  // ------------------------------------------------------------------
+  function setupBannerSlider(images) {
+    if (!bannerContainer || images.length < 2) return;
+
+    // Clear and style container
+    bannerContainer.innerHTML = '';
+    bannerContainer.style.position = 'relative';
+    bannerContainer.style.overflow = 'hidden';
+    bannerContainer.style.backgroundColor = '#fefcf8';
+
+    // Create two images: img1 (visible), img2 (hidden off‑screen left)
+    const img1 = document.createElement('img');
+    const img2 = document.createElement('img');
+
+    img1.src = images[0];
+    img2.src = images[1];
+
+    img1.className = 'banner-image';
+    img2.className = 'banner-image';
+
+    // Common styles
+    const commonStyle = {
+      width: '100%',
+      height: 'auto',
+      maxHeight: '33vh',
+      objectFit: 'contain',
+      display: 'block',
+      transition: 'transform 0.6s ease-in-out',
+      backgroundColor: '#fefcf8'
+    };
+    Object.assign(img1.style, commonStyle, { position: 'relative' });
+    Object.assign(img2.style, commonStyle, {
+      position: 'absolute',
+      top: '0',
+      left: '-100%'          // start off‑screen left
+    });
+
+    bannerContainer.appendChild(img1);
+    bannerContainer.appendChild(img2);
+
+    let nextIndex = 1;
+    const total = images.length;
+
+    setInterval(() => {
+      // Move current image to the right (out)
+      img1.style.transform = 'translateX(100%)';
+      // Move new image from left to centre
+      img2.style.transform = 'translateX(0)';
+
+      setTimeout(() => {
+        // After animation, swap roles
+        nextIndex = (nextIndex + 1) % total;
+        // Prepare the image that is now hidden (img1) for next cycle
+        img1.src = images[nextIndex];
+        // Reset transforms and positions
+        img1.style.transform = '';
+        img2.style.transform = '';
+        img2.style.left = '-100%';
+        // Swap so that img1 becomes the visible one again
+        const temp = img1.src;
+        img1.src = img2.src;
+        img2.src = temp;
+      }, 600);
+    }, 5000);
+  }
+
+  // ------------------------------------------------------------------
+  // PORTRAIT SLIDER – right‑to‑left (new image slides in from right,
+  // old image slides out to the left, then reset off‑screen)
+  // ------------------------------------------------------------------
+  function setupPortraitSlider(images) {
+    if (!portraitContainer || images.length < 2) return;
+
+    portraitContainer.innerHTML = '';
+    portraitContainer.style.position = 'relative';
+    portraitContainer.style.overflow = 'hidden';
+    portraitContainer.style.display = 'flex';
+    portraitContainer.style.justifyContent = 'center';
+    portraitContainer.style.minWidth = '150px';
+    portraitContainer.style.backgroundColor = 'transparent';
+
+    const img1 = document.createElement('img');
+    const img2 = document.createElement('img');
+
+    img1.src = images[0];
+    img2.src = images[1];
+
+    img1.className = 'portrait-img';
+    img2.className = 'portrait-img';
+
+    const baseStyle = {
+      width: '100%',
+      maxWidth: '220px',
+      borderRadius: '50%',
+      aspectRatio: '1 / 1',
+      objectFit: 'cover',
+      display: 'block',
+      margin: '0 auto',
+      transition: 'transform 0.6s ease-in-out',
+      backgroundColor: 'transparent'
+    };
+
+    Object.assign(img1.style, { ...baseStyle, position: 'relative' });
+    Object.assign(img2.style, {
+      ...baseStyle,
+      position: 'absolute',
+      top: '0',
+      left: '50%',
+      transform: 'translateX(100%)'   // start off‑screen right
+    });
+
+    portraitContainer.appendChild(img1);
+    portraitContainer.appendChild(img2);
+
+    let nextIndex = 1;
+    const total = images.length;
+
+    setInterval(() => {
+      // Move current image left (out)
+      img1.style.transform = 'translateX(-100%)';
+      // Move new image from right to centre
+      img2.style.transform = 'translateX(0)';
+
+      setTimeout(() => {
+        nextIndex = (nextIndex + 1) % total;
+        img1.src = images[nextIndex];
+        img1.style.transform = '';
+        img2.style.transform = 'translateX(100%)';
+        img2.style.left = '50%';
+        // Swap roles
+        const temp = img1.src;
+        img1.src = img2.src;
+        img2.src = temp;
+      }, 600);
+    }, 7000);
+  }
+
+  // ------------------------------------------------------------------
+  // AUTO‑DETECTION
+  // ------------------------------------------------------------------
+  loadNumberedImages('banner', 20, extensions, (banners) => {
+    if (banners.length === 0) {
+      // Fallback: keep the original static banner if present
+      const existing = document.querySelector('.banner-image');
+      if (existing && existing.src) banners = [existing.src.split('/').pop()];
+    }
+    if (banners.length > 0) setupBannerSlider(banners);
+  });
+
+  loadNumberedImages('portrait', 20, extensions, (portraits) => {
+    if (portraits.length === 0) {
+      const existing = document.querySelector('.portrait-img');
+      if (existing && existing.src) portraits = [existing.src.split('/').pop()];
+    }
+    if (portraits.length > 0) setupPortraitSlider(portraits);
+  });
+
+});
+</script>
 </body>
 </html>
