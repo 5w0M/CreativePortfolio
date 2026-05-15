@@ -108,11 +108,11 @@
     /* Banner container - rounded like cards */
     /* Banner height limited to 1/3 of page */
     /* Banner height limited to 1/3 of viewport */
+    /* Banner container – transparent background, matches site */
     .banner-container {
       margin: 0 0 1rem 0;
       padding: 0;
-      line-height: 0;
-      background: #f3efe9;
+      background: #fefcf8;   /* or 'transparent' – both match the page */
       border-radius: 28px;
       overflow: hidden;
       max-height: 33vh;
@@ -122,8 +122,12 @@
       height: auto;
       max-height: 33vh;
       object-fit: contain;
-      background: #f3efe9;
       display: block;
+      background: #fefcf8;   /* fill any empty space with site color */
+    }
+    /* Portrait container – no extra background */
+    .hero-portrait {
+      background: transparent;
     }
     /* fade at left and right borders (inside the container) */
     .banner-container::before {
@@ -161,11 +165,6 @@
     .hero-content {
       flex: 2;
       min-width: 250px;
-    }
-    .hero-portrait {
-      flex: 1;
-      min-width: 150px;
-      text-align: center;
     }
     .portrait-img {
       width: 100%;
@@ -1069,13 +1068,10 @@
   });
 </script>
 <script>
-// Auto‑detect numbered images and slide one‑way only
+  // Auto‑detect numbered images and slide one‑way only (no back‑and‑forth)
 document.addEventListener('DOMContentLoaded', function() {
 
-  // ------------------------------------------------------------------
   // Helper: find all images matching pattern "name1.ext", "name2.ext", …
-  // up to maxAttempts (e.g., 20). Returns array of found paths.
-  // ------------------------------------------------------------------
   function loadNumberedImages(baseName, maxAttempts, extensions, callback) {
     const images = [];
     let totalChecks = maxAttempts * extensions.length;
@@ -1104,29 +1100,25 @@ document.addEventListener('DOMContentLoaded', function() {
   const extensions = ['png', 'jpg', 'jpeg', 'gif', 'webp'];
 
   // ------------------------------------------------------------------
-  // BANNER SLIDER – left‑to‑right (new image slides in from left,
-  // old image slides out to the right, then is reset off‑screen)
+  // BANNER SLIDER – left‑to‑right (new from left, old exits right)
   // ------------------------------------------------------------------
   function setupBannerSlider(images) {
     if (!bannerContainer || images.length < 2) return;
 
-    // Clear and style container
     bannerContainer.innerHTML = '';
     bannerContainer.style.position = 'relative';
     bannerContainer.style.overflow = 'hidden';
-    bannerContainer.style.backgroundColor = '#fefcf8';
+    bannerContainer.style.backgroundColor = '#fefcf8'; // match site
 
-    // Create two images: img1 (visible), img2 (hidden off‑screen left)
+    // Create two images: visible (img1) and next (img2) hidden off-screen left
     const img1 = document.createElement('img');
     const img2 = document.createElement('img');
-
     img1.src = images[0];
     img2.src = images[1];
 
     img1.className = 'banner-image';
     img2.className = 'banner-image';
 
-    // Common styles
     const commonStyle = {
       width: '100%',
       height: 'auto',
@@ -1140,7 +1132,7 @@ document.addEventListener('DOMContentLoaded', function() {
     Object.assign(img2.style, commonStyle, {
       position: 'absolute',
       top: '0',
-      left: '-100%'          // start off‑screen left
+      left: '-100%'          // start off-screen left
     });
 
     bannerContainer.appendChild(img1);
@@ -1150,31 +1142,33 @@ document.addEventListener('DOMContentLoaded', function() {
     const total = images.length;
 
     setInterval(() => {
-      // Move current image to the right (out)
+      // Slide current image to the right (out)
       img1.style.transform = 'translateX(100%)';
-      // Move new image from left to centre
+      // Slide next image from left to center
       img2.style.transform = 'translateX(0)';
 
       setTimeout(() => {
-        // After animation, swap roles
+        // After animation, swap roles: img1 becomes the hidden one, img2 the visible
         nextIndex = (nextIndex + 1) % total;
-        // Prepare the image that is now hidden (img1) for next cycle
+        // Prepare the (now hidden) img1 for the future
         img1.src = images[nextIndex];
-        // Reset transforms and positions
         img1.style.transform = '';
         img2.style.transform = '';
         img2.style.left = '-100%';
-        // Swap so that img1 becomes the visible one again
-        const temp = img1.src;
+        // Swap so that img1 is again the visible image (it now holds the current)
+        const tempSrc = img1.src;
         img1.src = img2.src;
-        img2.src = temp;
+        img2.src = tempSrc;
+        // Ensure transforms are cleared
+        img1.style.transform = '';
+        img2.style.transform = '';
+        img2.style.left = '-100%';
       }, 600);
     }, 5000);
   }
 
   // ------------------------------------------------------------------
-  // PORTRAIT SLIDER – right‑to‑left (new image slides in from right,
-  // old image slides out to the left, then reset off‑screen)
+  // PORTRAIT SLIDER – right‑to‑left (new from right, old exits left)
   // ------------------------------------------------------------------
   function setupPortraitSlider(images) {
     if (!portraitContainer || images.length < 2) return;
@@ -1189,7 +1183,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const img1 = document.createElement('img');
     const img2 = document.createElement('img');
-
     img1.src = images[0];
     img2.src = images[1];
 
@@ -1207,14 +1200,13 @@ document.addEventListener('DOMContentLoaded', function() {
       transition: 'transform 0.6s ease-in-out',
       backgroundColor: 'transparent'
     };
-
     Object.assign(img1.style, { ...baseStyle, position: 'relative' });
     Object.assign(img2.style, {
       ...baseStyle,
       position: 'absolute',
       top: '0',
       left: '50%',
-      transform: 'translateX(100%)'   // start off‑screen right
+      transform: 'translateX(100%)'   // start off-screen right
     });
 
     portraitContainer.appendChild(img1);
@@ -1224,9 +1216,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const total = images.length;
 
     setInterval(() => {
-      // Move current image left (out)
+      // Slide current image left (out)
       img1.style.transform = 'translateX(-100%)';
-      // Move new image from right to centre
+      // Slide next image from right to center
       img2.style.transform = 'translateX(0)';
 
       setTimeout(() => {
@@ -1239,22 +1231,24 @@ document.addEventListener('DOMContentLoaded', function() {
         const temp = img1.src;
         img1.src = img2.src;
         img2.src = temp;
+        // Ensure clean state
+        img1.style.transform = '';
+        img2.style.transform = 'translateX(100%)';
+        img2.style.left = '50%';
       }, 600);
     }, 7000);
   }
 
-  // ------------------------------------------------------------------
-  // AUTO‑DETECTION
-  // ------------------------------------------------------------------
+  // Auto‑detect banners (banner1.*, banner2.*, ...)
   loadNumberedImages('banner', 20, extensions, (banners) => {
     if (banners.length === 0) {
-      // Fallback: keep the original static banner if present
       const existing = document.querySelector('.banner-image');
       if (existing && existing.src) banners = [existing.src.split('/').pop()];
     }
     if (banners.length > 0) setupBannerSlider(banners);
   });
 
+  // Auto‑detect portraits (portrait1.*, portrait2.*, ...)
   loadNumberedImages('portrait', 20, extensions, (portraits) => {
     if (portraits.length === 0) {
       const existing = document.querySelector('.portrait-img');
