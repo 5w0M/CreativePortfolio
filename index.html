@@ -1412,11 +1412,11 @@ function setupBannerSlider(images) {
       active.style.left = '-100%';      // becomes the new hidden (off‑left)
       hidden.style.left = '0';          // becomes the new visible (center)
 
+      // Swap roles
       [active, hidden] = [hidden, active];
       hidden.src = images[nextIdx];
       setHeight();
     }, 500);
-    // Swap roles
   }, 5000);
 }
 
@@ -1477,7 +1477,7 @@ function setupPortraitSlider(images) {
   setInterval(() => {
     // ---- ANIMATION: only transforms ----
     active.style.transform = 'translateX(-100%)';   // old exits left
-    hidden.style.transform = 'translateX(0)';       // new enters from right
+    hidden.style.transform = 'translateX(-100)';       // new enters from right
 
     setTimeout(() => {
       // ---- RESET (static positions, no transforms) ----
