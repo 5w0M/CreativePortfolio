@@ -1172,15 +1172,12 @@
   });
 </script>
 <script>
-  // Auto‑detect numbered images and slide one‑way only (no back‑and‑forth)
-document.addEventListener('DOMContentLoaded', function() {
-
-  // Helper: find all images matching pattern "name1.ext", "name2.ext", …
+// ==================== SLIDER WITH THREE IMAGES (no flicker) ====================
+(function() {
   function loadNumberedImages(baseName, maxAttempts, extensions, callback) {
     const images = [];
-    let totalChecks = maxAttempts * extensions.length;
     let completed = 0;
-
+    const total = maxAttempts * extensions.length;
     for (let i = 1; i <= maxAttempts; i++) {
       extensions.forEach(ext => {
         const path = `${baseName}${i}.${ext}`;
@@ -1188,207 +1185,90 @@ document.addEventListener('DOMContentLoaded', function() {
         img.onload = () => {
           if (!images.includes(path)) images.push(path);
           completed++;
-          if (completed === totalChecks) callback(images);
+          if (completed === total) callback(images);
         };
         img.onerror = () => {
           completed++;
-          if (completed === totalChecks) callback(images);
+          if (completed === total) callback(images);
         };
         img.src = path;
       });
     }
   }
-  // ------------------------------------------------------------------
-  // GALLERY for banner and portrait images (clickable, swipe left/right)
-  // ------------------------------------------------------------------
-  (function() {
-    // Store the image lists for each type
-    let currentGalleryImages = [];
-    let currentGalleryIndex = 0;
-    let galleryType = ''; // 'banner' or 'portrait'
-
-    const gallery = document.getElementById('galleryLightbox');
-    const galleryImg = document.getElementById('galleryImg');
-    const counter = document.getElementById('galleryCounter');
-    const closeBtn = document.querySelector('.gallery-close');
-    const prevBtn = document.querySelector('.gallery-prev');
-    const nextBtn = document.querySelector('.gallery-next');
-
-    // Open gallery with a specific set of images and starting index
-    function openGallery(images, startIndex, type) {
-      if (!images || images.length === 0) return;
-      currentGalleryImages = images;
-      currentGalleryIndex = startIndex;
-      galleryType = type;
-      updateGalleryImage();
-      gallery.classList.add('active');
-    }
-
-    function updateGalleryImage() {
-      if (currentGalleryImages[currentGalleryIndex]) {
-        galleryImg.src = currentGalleryImages[currentGalleryIndex];
-        counter.textContent = `${currentGalleryIndex + 1} / ${currentGalleryImages.length}`;
-      }
-    }
-
-    function nextImage() {
-      if (currentGalleryImages.length === 0) return;
-      currentGalleryIndex = (currentGalleryIndex + 1) % currentGalleryImages.length;
-      updateGalleryImage();
-    }
-
-    function prevImage() {
-      if (currentGalleryImages.length === 0) return;
-      currentGalleryIndex = (currentGalleryIndex - 1 + currentGalleryImages.length) % currentGalleryImages.length;
-      updateGalleryImage();
-    }
-
-    function closeGallery() {
-      gallery.classList.remove('active');
-    }
-
-    // Event listeners for buttons
-    closeBtn.addEventListener('click', closeGallery);
-    prevBtn.addEventListener('click', prevImage);
-    nextBtn.addEventListener('click', nextImage);
-    gallery.addEventListener('click', (e) => {
-      if (e.target === gallery) closeGallery();
-    });
-
-    // Keyboard navigation
-    document.addEventListener('keydown', (e) => {
-      if (!gallery.classList.contains('active')) return;
-      if (e.key === 'ArrowLeft') prevImage();
-      if (e.key === 'ArrowRight') nextImage();
-      if (e.key === 'Escape') closeGallery();
-    });
-
-    // Touch/swipe support
-    let touchStartX = 0;
-    let touchEndX = 0;
-    galleryImg.addEventListener('touchstart', (e) => {
-      touchStartX = e.changedTouches[0].screenX;
-    });
-    galleryImg.addEventListener('touchend', (e) => {
-      touchEndX = e.changedTouches[0].screenX;
-      if (touchEndX < touchStartX - 50) nextImage();
-      if (touchEndX > touchStartX + 50) prevImage();
-    });
-
-    // Function to attach click handlers to banner images (the visible ones)
-    // Since slider replaces images, we use a mutation observer or event delegation.
-    // Simplest: add click listener on container, check if clicked element is an image.
-    const bannerContainer = document.querySelector('.banner-container');
-    const portraitContainer = document.querySelector('.hero-portrait');
-
-    // Helper to get the full list of banner images (from the slider's internal array)
-    // We'll reuse the same arrays that the slider uses.
-    // To avoid duplication, we'll expose the image lists globally or capture them.
-    // We'll store them when they are loaded.
-    let globalBannerList = [];
-    let globalPortraitList = [];
-
-    // Override the setup functions to also store the image lists globally and add click handlers
-    // But to keep code clean, we'll simply observe clicks on containers and use the pre-loaded lists.
-    // We need to know the image arrays after they are loaded by the slider.
-    // We'll add a small hook: after loadNumberedImages, we store the lists.
-    // Modify the existing slider init to also store the lists globally.
-    // Since we cannot modify the previous answer's code here, I'll provide a complementary script
-    // that reads the image sources from the DOM (the visible image src) and constructs the list from the known pattern.
-    // Simpler: when a banner image is clicked, we scan for all banner numbered files again and open gallery.
-    // But that would be inefficient. Better: the existing slider already has the full array (bannerImages). We'll capture it.
-
-    // We'll wrap the gallery attachment in a setTimeout to ensure slider arrays are populated.
-    setTimeout(() => {
-      // Retrieve the image lists that were built inside the slider functions.
-      // Since they are not globally exposed, we'll re‑fetch the image lists using the same loadNumberedImages.
-      // This is acceptable because the images are cached by the browser.
-      const extensions = ['png', 'jpg', 'jpeg', 'gif', 'webp'];
-      loadNumberedImages('banner', 20, extensions, (banners) => {
-        globalBannerList = banners.length ? banners : (() => {
-          const fallback = document.querySelector('.banner-image');
-          return fallback && fallback.src ? [fallback.src.split('/').pop()] : [];
-        })();
-        // Make banner images clickable – event delegation
-        bannerContainer?.addEventListener('click', (e) => {
-          let target = e.target;
-          if (target.tagName === 'IMG' && target.classList.contains('banner-image')) {
-            // Find which banner image index we are at by comparing src
-            const currentSrc = target.src.split('/').pop();
-            let startIdx = globalBannerList.findIndex(img => img === currentSrc);
-            if (startIdx === -1) startIdx = 0;
-            openGallery(globalBannerList, startIdx, 'banner');
-            e.stopPropagation();
-          }
-        });
-      });
-
-      loadNumberedImages('portrait', 20, extensions, (portraits) => {
-        globalPortraitList = portraits.length ? portraits : (() => {
-          const fallback = document.querySelector('.portrait-img');
-          return fallback && fallback.src ? [fallback.src.split('/').pop()] : [];
-        })();
-        portraitContainer?.addEventListener('click', (e) => {
-          let target = e.target;
-          if (target.tagName === 'IMG' && target.classList.contains('portrait-img')) {
-            const currentSrc = target.src.split('/').pop();
-            let startIdx = globalPortraitList.findIndex(img => img === currentSrc);
-            if (startIdx === -1) startIdx = 0;
-            openGallery(globalPortraitList, startIdx, 'portrait');
-            e.stopPropagation();
-          }
-        });
-      });
-    }, 500); // delay to ensure slider has already run
-  })();
 
   const bannerContainer = document.querySelector('.banner-container');
   const portraitContainer = document.querySelector('.hero-portrait');
   const extensions = ['png', 'jpg', 'jpeg', 'gif', 'webp'];
 
-  // ------------------------------------------------------------------
-  // BANNER SLIDER – left‑to‑right (new from left, old exits right)
-  // ------------------------------------------------------------------
+  // ----- BANNER (left‑to‑right) -----
   function setupBannerSlider(images) {
     if (!bannerContainer || images.length < 2) return;
     bannerContainer.innerHTML = '';
     bannerContainer.style.position = 'relative';
     bannerContainer.style.overflow = 'hidden';
+    bannerContainer.style.width = '100%';
+    bannerContainer.style.backgroundColor = '#fefcf8';
 
-    // Create two images
-    let imgA = document.createElement('img');
-    let imgB = document.createElement('img');
-    imgA.src = images[0];
-    imgB.src = images[1];
-    imgA.className = imgB.className = 'banner-image';
-    const style = {
-      width: '100%', height: 'auto', maxHeight: '33vh', objectFit: 'contain',
-      display: 'block', transition: 'transform 0.6s ease-in-out'
-    };
-    Object.assign(imgA.style, { ...style, position: 'relative' });
-    Object.assign(imgB.style, { ...style, position: 'absolute', top: '0', left: '-100%' });
-    bannerContainer.append(imgA, imgB);
+    // Create three images
+    const imgs = [];
+    for (let i = 0; i < 3; i++) {
+      const img = document.createElement('img');
+      img.className = 'banner-image';
+      Object.assign(img.style, {
+        width: '100%', height: 'auto', maxHeight: '33vh', objectFit: 'contain',
+        display: 'block', position: 'absolute', top: '0',
+        transition: 'left 0.6s ease-in-out'
+      });
+      bannerContainer.appendChild(img);
+      imgs.push(img);
+    }
 
+    // Set initial positions and sources
+    imgs[0].src = images[0];
+    imgs[1].src = images[1];
+    imgs[2].src = images[2 % images.length];
+    imgs[0].style.left = '0';       // visible
+    imgs[1].style.left = '-100%';   // hidden left (will slide in)
+    imgs[2].style.left = '100%';    // hidden right (buffer)
+
+    let visibleIdx = 0;
     let nextIdx = 1;
-    const total = images.length;
+    let bufferIdx = 2;
+    let nextImageIndex = 2;
 
     setInterval(() => {
-      // Move visible imgA to the right (exit), move hidden imgB from left to center (enter)
-      imgA.style.transform = 'translateX(100%)';
-      imgB.style.transform = 'translateX(100)';
+      // Slide: visible moves right, next moves to center
+      imgs[visibleIdx].style.left = '100%';
+      imgs[nextIdx].style.left = '0';
 
       setTimeout(() => {
-        nextIdx = (nextIdx + 1) % total;
-        imgA.src = images[nextIdx];
-        imgA.style.transform = '';
-        imgB.style.transform = '';
-        imgB.style.left = '-100%';           // reset hidden image to left
-        [imgA, imgB] = [imgB, imgA];        // swap roles
-      }, 500);
+        // 1. Move old visible (now at 100%) to buffer position (100%) without transition
+        imgs[visibleIdx].style.transition = 'none';
+        imgs[visibleIdx].style.left = '100%';
+        void imgs[visibleIdx].offsetHeight;
+        imgs[visibleIdx].style.transition = 'left 0.6s ease-in-out';
+        // Update its src to the next image (future)
+        imgs[visibleIdx].src = images[nextImageIndex];
+        nextImageIndex = (nextImageIndex + 1) % images.length;
+
+        // 2. Rotate roles: visible becomes old next, next becomes old buffer, buffer becomes old visible
+        const newVisible = nextIdx;
+        const newNext = bufferIdx;
+        const newBuffer = visibleIdx;
+        visibleIdx = newVisible;
+        nextIdx = newNext;
+        bufferIdx = newBuffer;
+
+        // 3. Move the new hidden left (nextIdx) to -100% without transition
+        imgs[nextIdx].style.transition = 'none';
+        imgs[nextIdx].style.left = '-100%';
+        void imgs[nextIdx].offsetHeight;
+        imgs[nextIdx].style.transition = 'left 0.6s ease-in-out';
+      }, 600);
     }, 5000);
   }
 
-  // PORTRAIT: right‑to‑left (new from right, exits left)
+  // ----- PORTRAIT (right‑to‑left) -----
   function setupPortraitSlider(images) {
     if (!portraitContainer || images.length < 2) return;
     portraitContainer.innerHTML = '';
@@ -1398,57 +1278,100 @@ document.addEventListener('DOMContentLoaded', function() {
     portraitContainer.style.justifyContent = 'center';
     portraitContainer.style.minWidth = '150px';
 
-    let imgA = document.createElement('img');
-    let imgB = document.createElement('img');
-    imgA.src = images[0];
-    imgB.src = images[1];
-    imgA.className = imgB.className = 'portrait-img';
-    const baseStyle = {
-      width: '100%', maxWidth: '220px', borderRadius: '50%', aspectRatio: '1/1',
-      objectFit: 'cover', display: 'block', margin: '0 auto', transition: 'transform 0.6s ease-in-out'
-    };
-    Object.assign(imgA.style, { ...baseStyle, position: 'relative' });
-    Object.assign(imgB.style, { ...baseStyle, position: 'absolute', top: '0', left: '100%'});
-    portraitContainer.append(imgA, imgB);
+    const imgs = [];
+    for (let i = 0; i < 3; i++) {
+      const img = document.createElement('img');
+      img.className = 'portrait-img';
+      Object.assign(img.style, {
+        width: '100%', maxWidth: '220px', borderRadius: '50%', aspectRatio: '1/1',
+        objectFit: 'cover', display: 'block', margin: '0 auto',
+        position: 'absolute', top: '0',
+        transition: 'left 0.6s ease-in-out'
+      });
+      portraitContainer.appendChild(img);
+      imgs.push(img);
+    }
 
+    // Center the container relatively
+    imgs.forEach(img => { img.style.left = '50%'; img.style.transform = 'translateX(-50%)'; });
+
+    imgs[0].src = images[0];
+    imgs[1].src = images[1];
+    imgs[2].src = images[2 % images.length];
+    // For right‑to‑left, hidden right is at +100% (translateX(100%))
+    imgs[0].style.transform = 'translateX(-50%)';   // visible (centered)
+    imgs[1].style.transform = 'translateX(100%)';   // hidden right
+    imgs[2].style.transform = 'translateX(-150%)';  // hidden left (buffer)
+
+    let visibleIdx = 0;
     let nextIdx = 1;
-    const total = images.length;
+    let bufferIdx = 2;
+    let nextImageIndex = 2;
 
     setInterval(() => {
-      // Move visible imgA to the left (exit), move hidden imgB from right to center (enter)
-      imgA.style.transform = 'translateX(-100%)';
-      imgB.style.transform = 'translateX(0)';
+      // Slide: visible moves left, next moves from right to center
+      imgs[visibleIdx].style.transform = 'translateX(-150%)';
+      imgs[nextIdx].style.transform = 'translateX(-50%)';
 
       setTimeout(() => {
-        nextIdx = (nextIdx + 1) % total;
-        imgA.src = images[nextIdx];
-        imgA.style.transform = '';
-        imgB.style.transform = '';
-        imgB.style.left = '100%';           // reset hidden image to right
-        [imgA, imgB] = [imgB, imgA];        // swap roles
+        // Reset old visible (now at -150%) to buffer position (right side) without transition
+        imgs[visibleIdx].style.transition = 'none';
+        imgs[visibleIdx].style.transform = 'translateX(100%)';
+        void imgs[visibleIdx].offsetHeight;
+        imgs[visibleIdx].style.transition = 'transform 0.6s ease-in-out';
+        imgs[visibleIdx].src = images[nextImageIndex];
+        nextImageIndex = (nextImageIndex + 1) % images.length;
+
+        // Rotate roles
+        const newVisible = nextIdx;
+        const newNext = bufferIdx;
+        const newBuffer = visibleIdx;
+        visibleIdx = newVisible;
+        nextIdx = newNext;
+        bufferIdx = newBuffer;
+
+        // Move the new hidden right (nextIdx) to +100%
+        imgs[nextIdx].style.transition = 'none';
+        imgs[nextIdx].style.transform = 'translateX(100%)';
+        void imgs[nextIdx].offsetHeight;
+        imgs[nextIdx].style.transition = 'transform 0.6s ease-in-out';
       }, 600);
     }, 7000);
   }
 
-  // Auto‑detect banners (banner1.*, banner2.*, ...)
-  loadNumberedImages('banner', 20, extensions, (banners) => {
-    if (banners.length === 0) {
-      const existing = document.querySelector('.banner-image');
-      if (existing && existing.src) banners = [existing.src.split('/').pop()];
+  // Auto‑detect and start
+  loadNumberedImages('banner', 20, extensions, banners => {
+    if (banners.length === 0) banners = ['Abbronzatura.png'];
+    // Show first image immediately
+    if (bannerContainer) {
+      bannerContainer.innerHTML = '';
+      const first = document.createElement('img');
+      first.src = banners[0];
+      first.className = 'banner-image';
+      first.style.width = '100%';
+      first.style.maxHeight = '33vh';
+      first.style.objectFit = 'contain';
+      bannerContainer.appendChild(first);
+      if (banners.length > 1) setupBannerSlider(banners);
     }
-    if (banners.length > 0) setupBannerSlider(banners);
   });
 
-  // Auto‑detect portraits (portrait1.*, portrait2.*, ...)
-  loadNumberedImages('portrait', 20, extensions, (portraits) => {
-    if (portraits.length === 0) {
-      const existing = document.querySelector('.portrait-img');
-      if (existing && existing.src) portraits = [existing.src.split('/').pop()];
+  loadNumberedImages('portrait', 20, extensions, portraits => {
+    if (portraits.length === 0) portraits = ['portrait1.jpg'];
+    if (portraitContainer) {
+      portraitContainer.innerHTML = '';
+      const first = document.createElement('img');
+      first.src = portraits[0];
+      first.className = 'portrait-img';
+      Object.assign(first.style, {
+        width: '100%', maxWidth: '220px', borderRadius: '50%', aspectRatio: '1/1',
+        objectFit: 'cover', display: 'block', margin: '0 auto'
+      });
+      portraitContainer.appendChild(first);
+      if (portraits.length > 1) setupPortraitSlider(portraits);
     }
-    if (portraits.length > 0) setupPortraitSlider(portraits);
   });
-
-});
+})();
 </script>
 </body>
 </html>
