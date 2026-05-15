@@ -1346,90 +1346,158 @@ document.addEventListener('DOMContentLoaded', function() {
   const bannerContainer = document.querySelector('.banner-container');
   const portraitContainer = document.querySelector('.hero-portrait');
   const extensions = ['png', 'jpg', 'jpeg', 'gif', 'webp'];
+// ------------------------------------------------------------------
+// BANNER SLIDER – left‑to‑right (new from left, old exits right)
+// ------------------------------------------------------------------
+function setupBannerSlider(images) {
+  if (!bannerContainer || images.length < 2) return;
+  bannerContainer.innerHTML = '';
+  bannerContainer.style.position = 'relative';
+  bannerContainer.style.overflow = 'hidden';
 
-  // ------------------------------------------------------------------
-  // BANNER SLIDER – left‑to‑right (new from left, old exits right)
-  // ------------------------------------------------------------------
-  function setupBannerSlider(images) {
-    if (!bannerContainer || images.length < 2) return;
-    bannerContainer.innerHTML = '';
-    bannerContainer.style.position = 'relative';
-    bannerContainer.style.overflow = 'hidden';
+  let imgA = document.createElement('img');
+  let imgB = document.createElement('img');
+  imgA.src = images[0];
+  imgB.src = images[1];
+  imgA.className = imgB.className = 'banner-image';
 
-    // Create two images
-    let imgA = document.createElement('img');
-    let imgB = document.createElement('img');
-    imgA.src = images[0];
-    imgB.src = images[1];
-    imgA.className = imgB.className = 'banner-image';
-    const style = {
-      width: '100%', height: 'auto', maxHeight: '33vh', objectFit: 'contain',
-      display: 'block', transition: 'transform 0.6s ease-in-out'
-    };
-    Object.assign(imgA.style, { ...style, position: 'relative' });
-    Object.assign(imgB.style, { ...style, position: 'absolute', top: '0', left: '-100%' });
-    bannerContainer.append(imgA, imgB);
+  const baseStyle = {
+    position: 'absolute',
+    top: '0',
+    width: '100%',
+    height: 'auto',
+    maxHeight: '33vh',
+    objectFit: 'contain',
+    display: 'block',
+    transition: 'transform 0.6s ease-in-out'
+  };
+  Object.assign(imgA.style, baseStyle);
+  Object.assign(imgB.style, baseStyle);
 
-    let nextIdx = 1;
-    const total = images.length;
+  // ---- static positions (no movement) ----
+  imgA.style.left = '0';          // visible
+  imgB.style.left = '-100%';      // hidden off‑left
 
-    setInterval(() => {
-      // Move visible imgA to the right (exit), move hidden imgB from left to center (enter)
-      imgA.style.transform = 'translateX(100%)';
-      imgB.style.transform = 'translateX(100)';
+  bannerContainer.append(imgA, imgB);
 
-      setTimeout(() => {
-        nextIdx = (nextIdx + 1) % total;
-        imgA.src = images[nextIdx];
-        imgA.style.transform = '';
-        imgB.style.transform = '';
-        imgB.style.left = '-100%';           // reset hidden image to left
-        [imgA, imgB] = [imgB, imgA];        // swap roles
-      }, 500);
-    }, 5000);
-  }
+  // Prevent container collapse
+  const setHeight = () => {
+    const h = imgA.offsetHeight || imgB.offsetHeight;
+    if (h) bannerContainer.style.height = h + 'px';
+  };
+  imgA.onload = setHeight;
+  imgB.onload = setHeight;
+  setHeight();
 
-  // PORTRAIT: right‑to‑left (new from right, exits left)
-  function setupPortraitSlider(images) {
-    if (!portraitContainer || images.length < 2) return;
-    portraitContainer.innerHTML = '';
-    portraitContainer.style.position = 'relative';
-    portraitContainer.style.overflow = 'hidden';
-    portraitContainer.style.display = 'flex';
-    portraitContainer.style.justifyContent = 'center';
-    portraitContainer.style.minWidth = '150px';
+  let active = imgA;     // currently visible
+  let hidden = imgB;
+  let nextIdx = 1;
+  const total = images.length;
 
-    let imgA = document.createElement('img');
-    let imgB = document.createElement('img');
-    imgA.src = images[0];
-    imgB.src = images[1];
-    imgA.className = imgB.className = 'portrait-img';
-    const baseStyle = {
-      width: '100%', maxWidth: '220px', borderRadius: '50%', aspectRatio: '1/1',
-      objectFit: 'cover', display: 'block', margin: '0 auto', transition: 'transform 0.6s ease-in-out'
-    };
-    Object.assign(imgA.style, { ...baseStyle, position: 'relative' });
-    Object.assign(imgB.style, { ...baseStyle, position: 'absolute', top: '0', left: '100%'});
-    portraitContainer.append(imgA, imgB);
+  setInterval(() => {
+    // ---- ANIMATION: only transforms ----
+    active.style.transform = 'translateX(100%)';   // old exits right
+    hidden.style.transform = 'translateX(0)';      // new enters from left
 
-    let nextIdx = 1;
-    const total = images.length;
+    setTimeout(() => {
+      // ---- RESET (static positions, no transforms) ----
+      nextIdx = (nextIdx + 1) % total;
+      hidden.src = images[nextIdx];    // preload next image
 
-    setInterval(() => {
-      // Move visible imgA to the left (exit), move hidden imgB from right to center (enter)
-      imgA.style.transform = 'translateX(-100%)';
-      imgB.style.transform = 'translateX(0)';
+      // Clear transforms
+      active.style.transform = '';
+      hidden.style.transform = '';
 
-      setTimeout(() => {
-        nextIdx = (nextIdx + 1) % total;
-        imgA.src = images[nextIdx];
-        imgA.style.transform = '';
-        imgB.style.transform = '';
-        imgB.style.left = '100%';           // reset hidden image to right
-        [imgA, imgB] = [imgB, imgA];        // swap roles
-      }, 600);
-    }, 7000);
-  }
+      // Reset static left positions
+      active.style.left = '-100%';      // becomes the new hidden (off‑left)
+      hidden.style.left = '0';          // becomes the new visible (center)
+
+      // Swap roles
+      [active, hidden] = [hidden, active];
+
+      setHeight();
+    }, 500);
+  }, 5000);
+}
+
+// ------------------------------------------------------------------
+// PORTRAIT SLIDER – right‑to‑left (new from right, exits left)
+// ------------------------------------------------------------------
+function setupPortraitSlider(images) {
+  if (!portraitContainer || images.length < 2) return;
+  portraitContainer.innerHTML = '';
+  portraitContainer.style.position = 'relative';
+  portraitContainer.style.overflow = 'hidden';
+  portraitContainer.style.display = 'flex';
+  portraitContainer.style.justifyContent = 'center';
+  portraitContainer.style.minWidth = '150px';
+
+  let imgA = document.createElement('img');
+  let imgB = document.createElement('img');
+  imgA.src = images[0];
+  imgB.src = images[1];
+  imgA.className = imgB.className = 'portrait-img';
+
+  const baseStyle = {
+    position: 'absolute',
+    top: '0',
+    width: '100%',
+    maxWidth: '220px',
+    borderRadius: '50%',
+    aspectRatio: '1/1',
+    objectFit: 'cover',
+    display: 'block',
+    transition: 'transform 0.6s ease-in-out'
+  };
+  Object.assign(imgA.style, baseStyle);
+  Object.assign(imgB.style, baseStyle);
+
+  // Center an absolute element using left:0 / right:0 + margin:auto
+  const centerStyle = { left: '0', right: '0', margin: '0 auto' };
+  Object.assign(imgA.style, centerStyle);
+  // Hidden image: push it off‑right (left:100%, right:auto)
+  imgB.style.left = '100%';
+  imgB.style.right = 'auto';
+
+  portraitContainer.append(imgA, imgB);
+
+  const setHeight = () => {
+    const h = imgA.offsetHeight || imgB.offsetHeight;
+    if (h) portraitContainer.style.height = h + 'px';
+  };
+  imgA.onload = setHeight;
+  imgB.onload = setHeight;
+  setHeight();
+
+  let active = imgA;
+  let hidden = imgB;
+  let nextIdx = 1;
+  const total = images.length;
+
+  setInterval(() => {
+    // ---- ANIMATION: only transforms ----
+    active.style.transform = 'translateX(-100%)';   // old exits left
+    hidden.style.transform = 'translateX(0)';       // new enters from right
+
+    setTimeout(() => {
+      // ---- RESET (static positions, no transforms) ----
+      nextIdx = (nextIdx + 1) % total;
+      hidden.src = images[nextIdx];
+
+      active.style.transform = '';
+      hidden.style.transform = '';
+
+      // Reset static left/right
+      active.style.left = '100%';      // becomes the new hidden (off‑right)
+      active.style.right = 'auto';
+      Object.assign(hidden.style, centerStyle); // becomes the new visible (centered)
+
+      [active, hidden] = [hidden, active];
+
+      setHeight();
+    }, 500);
+  }, 7000);
+}
 
   // Auto‑detect banners (banner1.*, banner2.*, ...)
   loadNumberedImages('banner', 20, extensions, (banners) => {
