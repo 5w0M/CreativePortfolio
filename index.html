@@ -1378,14 +1378,13 @@ document.addEventListener('DOMContentLoaded', function() {
       imgB.style.transform = 'translateX(0)';
 
       setTimeout(() => {
-        // After animation: update imgA to be the next image (the one that will be hidden next cycle)
         nextIdx = (nextIdx + 1) % total;
+        // Now imgB is visible, imgA is off-screen right.
+        // Swap roles: make imgA the hidden one for next cycle.
         imgA.src = images[nextIdx];
-        // Reset transforms and positions
-        imgA.style.transform = '';
-        imgB.style.transform = '';
-        imgB.style.left = '100%';
-        // Swap the two image elements so that imgA is always the visible one
+        imgA.style.transform = 'translateX(-100%)'; // place off-screen left
+        imgB.style.transform = '';                   // keep visible
+        // Swap the variables so imgA always points to the hidden image
         [imgA, imgB] = [imgB, imgA];
       }, 1000);
     }, 5000);
@@ -1424,11 +1423,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
       setTimeout(() => {
         nextIdx = (nextIdx + 1) % total;
+        // Now imgB is visible, imgA is off-screen right.
+        // Swap roles: make imgA the hidden one for next cycle.
         imgA.src = images[nextIdx];
-        imgA.style.transform = '';
-        imgB.style.transform = 'translateX(-100%)';
-        imgB.style.left = '100%';
-        // Swap elements
+        imgA.style.transform = 'translateX(100%)'; // place off-screen right
+        imgB.style.transform = '';                   // keep visible
+        // Swap the variables so imgA always points to the hidden image
         [imgA, imgB] = [imgB, imgA];
       }, 1100);
     }, 7000);
