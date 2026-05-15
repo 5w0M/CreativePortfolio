@@ -1341,7 +1341,7 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     }, 500); // delay to ensure slider has already run
   })();
-  
+
   const bannerContainer = document.querySelector('.banner-container');
   const portraitContainer = document.querySelector('.hero-portrait');
   const extensions = ['png', 'jpg', 'jpeg', 'gif', 'webp'];
@@ -1355,7 +1355,7 @@ document.addEventListener('DOMContentLoaded', function() {
     bannerContainer.innerHTML = '';
     bannerContainer.style.position = 'relative';
     bannerContainer.style.overflow = 'hidden';
-    bannerContainer.style.backgroundColor = '#fefcf8'; // match site
+    bannerContainer.style.backgroundColor = 'transparent'; // match site
 
     // Create two images: visible (img1) and next (img2) hidden off-screen left
     const img1 = document.createElement('img');
@@ -1373,7 +1373,7 @@ document.addEventListener('DOMContentLoaded', function() {
       objectFit: 'contain',
       display: 'block',
       transition: 'transform 0.6s ease-in-out',
-      backgroundColor: '#fefcf8'
+      backgroundColor: 'transparent'
     };
     Object.assign(img1.style, commonStyle, { position: 'relative' });
     Object.assign(img2.style, commonStyle, {
@@ -1452,7 +1452,7 @@ document.addEventListener('DOMContentLoaded', function() {
       ...baseStyle,
       position: 'absolute',
       top: '0',
-      left: '50%',
+      left: '-100%',
       transform: 'translateX(100%)'   // start off-screen right
     });
 
@@ -1473,7 +1473,7 @@ document.addEventListener('DOMContentLoaded', function() {
         img1.src = images[nextIndex];
         img1.style.transform = '';
         img2.style.transform = 'translateX(100%)';
-        img2.style.left = '50%';
+        img2.style.left = '-100%';
         // Swap roles
         const temp = img1.src;
         img1.src = img2.src;
@@ -1481,7 +1481,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Ensure clean state
         img1.style.transform = '';
         img2.style.transform = 'translateX(100%)';
-        img2.style.left = '50%';
+        img2.style.left = '-100%';
       }, 600);
     }, 7000);
   }
