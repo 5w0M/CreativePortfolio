@@ -189,6 +189,100 @@
       margin: 0 auto;
       box-shadow: 0 8px 20px rgba(0,0,0,0.05);
     }
+        /* Gallery lightbox (for banner & portrait) */
+    .gallery-lightbox {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      cursor: pointer;
+    }
+    .gallery-lightbox.active {
+      display: flex;
+    }
+    .gallery-container {
+      position: relative;
+      width: 90%;
+      max-width: 1000px;
+      height: 80%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .gallery-img {
+      max-width: 90%;
+      max-height: 90%;
+      object-fit: contain;
+      border-radius: 16px;
+      transition: transform 0.2s ease;
+    }
+    .gallery-close {
+      position: absolute;
+      top: 20px;
+      right: 40px;
+      color: white;
+      font-size: 40px;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 2001;
+      transition: 0.2s;
+    }
+    .gallery-close:hover {
+      color: #b87c54;
+    }
+    .gallery-prev, .gallery-next {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255,255,255,0.2);
+      color: white;
+      font-size: 2rem;
+      padding: 1rem;
+      cursor: pointer;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.2s;
+      user-select: none;
+    }
+    .gallery-prev { left: 20px; }
+    .gallery-next { right: 20px; }
+    .gallery-prev:hover, .gallery-next:hover {
+      background: rgba(255,255,255,0.4);
+      color: #b87c54;
+    }
+    .gallery-counter {
+      position: absolute;
+      bottom: 20px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      color: white;
+      font-size: 0.9rem;
+      background: rgba(0,0,0,0.5);
+      padding: 5px 10px;
+      width: fit-content;
+      margin: 0 auto;
+      border-radius: 20px;
+    }
+    @media (max-width: 720px) {
+      .gallery-prev, .gallery-next {
+        width: 40px;
+        height: 40px;
+        font-size: 1.5rem;
+      }
+      .gallery-close { top: 15px; right: 20px; font-size: 30px; }
+    }
     .hero-tag {
       display: inline-block;
       background: #eae2d7;
@@ -550,6 +644,16 @@
   <div id="lightbox" class="lightbox" onclick="closeLightbox()">
     <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
     <img id="lightbox-img" src="" alt="Expanded view">
+  </div>
+    <!-- Gallery lightbox for banner/portrait sets -->
+  <div id="galleryLightbox" class="gallery-lightbox">
+    <span class="gallery-close">&times;</span>
+    <div class="gallery-container">
+      <div class="gallery-prev">&#10094;</div>
+      <img class="gallery-img" id="galleryImg" alt="Gallery view">
+      <div class="gallery-next">&#10095;</div>
+    </div>
+    <div class="gallery-counter" id="galleryCounter"></div>
   </div>
 <header>
   <div class="container">
@@ -1094,7 +1198,150 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     }
   }
+  // ------------------------------------------------------------------
+  // GALLERY for banner and portrait images (clickable, swipe left/right)
+  // ------------------------------------------------------------------
+  (function() {
+    // Store the image lists for each type
+    let currentGalleryImages = [];
+    let currentGalleryIndex = 0;
+    let galleryType = ''; // 'banner' or 'portrait'
 
+    const gallery = document.getElementById('galleryLightbox');
+    const galleryImg = document.getElementById('galleryImg');
+    const counter = document.getElementById('galleryCounter');
+    const closeBtn = document.querySelector('.gallery-close');
+    const prevBtn = document.querySelector('.gallery-prev');
+    const nextBtn = document.querySelector('.gallery-next');
+
+    // Open gallery with a specific set of images and starting index
+    function openGallery(images, startIndex, type) {
+      if (!images || images.length === 0) return;
+      currentGalleryImages = images;
+      currentGalleryIndex = startIndex;
+      galleryType = type;
+      updateGalleryImage();
+      gallery.classList.add('active');
+    }
+
+    function updateGalleryImage() {
+      if (currentGalleryImages[currentGalleryIndex]) {
+        galleryImg.src = currentGalleryImages[currentGalleryIndex];
+        counter.textContent = `${currentGalleryIndex + 1} / ${currentGalleryImages.length}`;
+      }
+    }
+
+    function nextImage() {
+      if (currentGalleryImages.length === 0) return;
+      currentGalleryIndex = (currentGalleryIndex + 1) % currentGalleryImages.length;
+      updateGalleryImage();
+    }
+
+    function prevImage() {
+      if (currentGalleryImages.length === 0) return;
+      currentGalleryIndex = (currentGalleryIndex - 1 + currentGalleryImages.length) % currentGalleryImages.length;
+      updateGalleryImage();
+    }
+
+    function closeGallery() {
+      gallery.classList.remove('active');
+    }
+
+    // Event listeners for buttons
+    closeBtn.addEventListener('click', closeGallery);
+    prevBtn.addEventListener('click', prevImage);
+    nextBtn.addEventListener('click', nextImage);
+    gallery.addEventListener('click', (e) => {
+      if (e.target === gallery) closeGallery();
+    });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (!gallery.classList.contains('active')) return;
+      if (e.key === 'ArrowLeft') prevImage();
+      if (e.key === 'ArrowRight') nextImage();
+      if (e.key === 'Escape') closeGallery();
+    });
+
+    // Touch/swipe support
+    let touchStartX = 0;
+    let touchEndX = 0;
+    galleryImg.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    });
+    galleryImg.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      if (touchEndX < touchStartX - 50) nextImage();
+      if (touchEndX > touchStartX + 50) prevImage();
+    });
+
+    // Function to attach click handlers to banner images (the visible ones)
+    // Since slider replaces images, we use a mutation observer or event delegation.
+    // Simplest: add click listener on container, check if clicked element is an image.
+    const bannerContainer = document.querySelector('.banner-container');
+    const portraitContainer = document.querySelector('.hero-portrait');
+
+    // Helper to get the full list of banner images (from the slider's internal array)
+    // We'll reuse the same arrays that the slider uses.
+    // To avoid duplication, we'll expose the image lists globally or capture them.
+    // We'll store them when they are loaded.
+    let globalBannerList = [];
+    let globalPortraitList = [];
+
+    // Override the setup functions to also store the image lists globally and add click handlers
+    // But to keep code clean, we'll simply observe clicks on containers and use the pre-loaded lists.
+    // We need to know the image arrays after they are loaded by the slider.
+    // We'll add a small hook: after loadNumberedImages, we store the lists.
+    // Modify the existing slider init to also store the lists globally.
+    // Since we cannot modify the previous answer's code here, I'll provide a complementary script
+    // that reads the image sources from the DOM (the visible image src) and constructs the list from the known pattern.
+    // Simpler: when a banner image is clicked, we scan for all banner numbered files again and open gallery.
+    // But that would be inefficient. Better: the existing slider already has the full array (bannerImages). We'll capture it.
+
+    // We'll wrap the gallery attachment in a setTimeout to ensure slider arrays are populated.
+    setTimeout(() => {
+      // Retrieve the image lists that were built inside the slider functions.
+      // Since they are not globally exposed, we'll re‑fetch the image lists using the same loadNumberedImages.
+      // This is acceptable because the images are cached by the browser.
+      const extensions = ['png', 'jpg', 'jpeg', 'gif', 'webp'];
+      loadNumberedImages('banner', 20, extensions, (banners) => {
+        globalBannerList = banners.length ? banners : (() => {
+          const fallback = document.querySelector('.banner-image');
+          return fallback && fallback.src ? [fallback.src.split('/').pop()] : [];
+        })();
+        // Make banner images clickable – event delegation
+        bannerContainer?.addEventListener('click', (e) => {
+          let target = e.target;
+          if (target.tagName === 'IMG' && target.classList.contains('banner-image')) {
+            // Find which banner image index we are at by comparing src
+            const currentSrc = target.src.split('/').pop();
+            let startIdx = globalBannerList.findIndex(img => img === currentSrc);
+            if (startIdx === -1) startIdx = 0;
+            openGallery(globalBannerList, startIdx, 'banner');
+            e.stopPropagation();
+          }
+        });
+      });
+
+      loadNumberedImages('portrait', 20, extensions, (portraits) => {
+        globalPortraitList = portraits.length ? portraits : (() => {
+          const fallback = document.querySelector('.portrait-img');
+          return fallback && fallback.src ? [fallback.src.split('/').pop()] : [];
+        })();
+        portraitContainer?.addEventListener('click', (e) => {
+          let target = e.target;
+          if (target.tagName === 'IMG' && target.classList.contains('portrait-img')) {
+            const currentSrc = target.src.split('/').pop();
+            let startIdx = globalPortraitList.findIndex(img => img === currentSrc);
+            if (startIdx === -1) startIdx = 0;
+            openGallery(globalPortraitList, startIdx, 'portrait');
+            e.stopPropagation();
+          }
+        });
+      });
+    }, 500); // delay to ensure slider has already run
+  })();
+  
   const bannerContainer = document.querySelector('.banner-container');
   const portraitContainer = document.querySelector('.hero-portrait');
   const extensions = ['png', 'jpg', 'jpeg', 'gif', 'webp'];
