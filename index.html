@@ -1172,44 +1172,78 @@
   });
 </script>
 <script>
-// ==================== SLIDER WITH THREE IMAGES (no flicker) ====================
+ // Fast slider with minimal pre‑loading
 (function() {
-  function loadNumberedImages(baseName, maxAttempts, extensions, callback) {
+  const bannerContainer = document.querySelector('.banner-container');
+  const portraitContainer = document.querySelector('.hero-portrait');
+
+  // Helper: try to load images with a given base name (e.g., "banner") and extension
+  // Returns a promise that resolves with an array of existing image URLs.
+  async function findExistingImages(baseName, maxCount = 10, ext = 'png') {
     const images = [];
-    let completed = 0;
-    const total = maxAttempts * extensions.length;
-    for (let i = 1; i <= maxAttempts; i++) {
-      extensions.forEach(ext => {
-        const path = `${baseName}${i}.${ext}`;
+    for (let i = 1; i <= maxCount; i++) {
+      const url = `${baseName}${i}.${ext}`;
+      try {
+        await new Promise((resolve, reject) => {
+          const img = new Image();
+          img.onload = () => resolve(true);
+          img.onerror = () => reject();
+          img.src = url;
+        });
+        images.push(url);
+      } catch {
+        // break on first missing? No, but we continue to allow gaps? Better to stop after first missing if sequential.
+        // But to be safe, we continue up to maxCount.
+      }
+    }
+    return images;
+  }
+
+  // Fast version: assume all images are .png, try up to 10, stop at first missing
+  async function getImageList(baseName) {
+    const images = [];
+    for (let i = 1; i <= 20; i++) {
+      const url = `${baseName}${i}.png`;
+      const exists = await new Promise(resolve => {
         const img = new Image();
-        img.onload = () => {
-          if (!images.includes(path)) images.push(path);
-          completed++;
-          if (completed === total) callback(images);
-        };
-        img.onerror = () => {
-          completed++;
-          if (completed === total) callback(images);
-        };
-        img.src = path;
+        img.onload = () => resolve(true);
+        img.onerror = () => resolve(false);
+        img.src = url;
       });
+      if (exists) images.push(url);
+      else break; // stop at first missing (assuming sequential naming)
+    }
+    return images;
+  }
+
+  // Show first image instantly, then start slider if more exist
+  async function initSlider(container, baseName, className, styleCallback, slideCallback) {
+    if (!container) return;
+    const images = await getImageList(baseName);
+    if (images.length === 0) return;
+
+    // Show first image immediately
+    const firstImg = document.createElement('img');
+    firstImg.src = images[0];
+    firstImg.className = className;
+    if (styleCallback) styleCallback(firstImg);
+    container.innerHTML = '';
+    container.appendChild(firstImg);
+
+    // If more than one image, start slider after a short delay (to not block initial paint)
+    if (images.length > 1) {
+      setTimeout(() => slideCallback(container, images), 100);
     }
   }
 
-  const bannerContainer = document.querySelector('.banner-container');
-  const portraitContainer = document.querySelector('.hero-portrait');
-  const extensions = ['png', 'jpg', 'jpeg', 'gif', 'webp'];
+  // ----- BANNER SLIDER (left‑to‑right, 3 images) -----
+  function startBannerSlider(container, images) {
+    container.innerHTML = '';
+    container.style.position = 'relative';
+    container.style.overflow = 'hidden';
+    container.style.width = '100%';
+    container.style.backgroundColor = '#fefcf8';
 
-  // ----- BANNER (left‑to‑right) -----
-  function setupBannerSlider(images) {
-    if (!bannerContainer || images.length < 2) return;
-    bannerContainer.innerHTML = '';
-    bannerContainer.style.position = 'relative';
-    bannerContainer.style.overflow = 'hidden';
-    bannerContainer.style.width = '100%';
-    bannerContainer.style.backgroundColor = '#fefcf8';
-
-    // Create three images
     const imgs = [];
     for (let i = 0; i < 3; i++) {
       const img = document.createElement('img');
@@ -1219,106 +1253,31 @@
         display: 'block', position: 'absolute', top: '0',
         transition: 'left 0.6s ease-in-out'
       });
-      bannerContainer.appendChild(img);
+      container.appendChild(img);
       imgs.push(img);
     }
 
-    // Set initial positions and sources
+    // Assign initial images
     imgs[0].src = images[0];
-    imgs[1].src = images[1];
+    imgs[1].src = images[1 % images.length];
     imgs[2].src = images[2 % images.length];
-    imgs[0].style.left = '0';       // visible
-    imgs[1].style.left = '-100%';   // hidden left (will slide in)
-    imgs[2].style.left = '100%';    // hidden right (buffer)
+    imgs[0].style.left = '0';
+    imgs[1].style.left = '-100%';
+    imgs[2].style.left = '100%';
 
-    let visibleIdx = 0;
-    let nextIdx = 1;
-    let bufferIdx = 2;
+    let visibleIdx = 0, nextIdx = 1, bufferIdx = 2;
     let nextImageIndex = 2;
 
     setInterval(() => {
-      // Slide: visible moves right, next moves to center
       imgs[visibleIdx].style.left = '100%';
       imgs[nextIdx].style.left = '0';
 
       setTimeout(() => {
-        // 1. Move old visible (now at 100%) to buffer position (100%) without transition
+        // Reset old visible (now at 100%) to buffer position without transition
         imgs[visibleIdx].style.transition = 'none';
         imgs[visibleIdx].style.left = '100%';
         void imgs[visibleIdx].offsetHeight;
         imgs[visibleIdx].style.transition = 'left 0.6s ease-in-out';
-        // Update its src to the next image (future)
-        imgs[visibleIdx].src = images[nextImageIndex];
-        nextImageIndex = (nextImageIndex + 1) % images.length;
-
-        // 2. Rotate roles: visible becomes old next, next becomes old buffer, buffer becomes old visible
-        const newVisible = nextIdx;
-        const newNext = bufferIdx;
-        const newBuffer = visibleIdx;
-        visibleIdx = newVisible;
-        nextIdx = newNext;
-        bufferIdx = newBuffer;
-
-        // 3. Move the new hidden left (nextIdx) to -100% without transition
-        imgs[nextIdx].style.transition = 'none';
-        imgs[nextIdx].style.left = '-100%';
-        void imgs[nextIdx].offsetHeight;
-        imgs[nextIdx].style.transition = 'left 0.6s ease-in-out';
-      }, 600);
-    }, 5000);
-  }
-
-  // ----- PORTRAIT (right‑to‑left) -----
-  function setupPortraitSlider(images) {
-    if (!portraitContainer || images.length < 2) return;
-    portraitContainer.innerHTML = '';
-    portraitContainer.style.position = 'relative';
-    portraitContainer.style.overflow = 'hidden';
-    portraitContainer.style.display = 'flex';
-    portraitContainer.style.justifyContent = 'center';
-    portraitContainer.style.minWidth = '150px';
-
-    const imgs = [];
-    for (let i = 0; i < 3; i++) {
-      const img = document.createElement('img');
-      img.className = 'portrait-img';
-      Object.assign(img.style, {
-        width: '100%', maxWidth: '220px', borderRadius: '50%', aspectRatio: '1/1',
-        objectFit: 'cover', display: 'block', margin: '0 auto',
-        position: 'absolute', top: '0',
-        transition: 'left 0.6s ease-in-out'
-      });
-      portraitContainer.appendChild(img);
-      imgs.push(img);
-    }
-
-    // Center the container relatively
-    imgs.forEach(img => { img.style.left = '50%'; img.style.transform = 'translateX(-50%)'; });
-
-    imgs[0].src = images[0];
-    imgs[1].src = images[1];
-    imgs[2].src = images[2 % images.length];
-    // For right‑to‑left, hidden right is at +100% (translateX(100%))
-    imgs[0].style.transform = 'translateX(-50%)';   // visible (centered)
-    imgs[1].style.transform = 'translateX(100%)';   // hidden right
-    imgs[2].style.transform = 'translateX(-150%)';  // hidden left (buffer)
-
-    let visibleIdx = 0;
-    let nextIdx = 1;
-    let bufferIdx = 2;
-    let nextImageIndex = 2;
-
-    setInterval(() => {
-      // Slide: visible moves left, next moves from right to center
-      imgs[visibleIdx].style.transform = 'translateX(-150%)';
-      imgs[nextIdx].style.transform = 'translateX(-50%)';
-
-      setTimeout(() => {
-        // Reset old visible (now at -150%) to buffer position (right side) without transition
-        imgs[visibleIdx].style.transition = 'none';
-        imgs[visibleIdx].style.transform = 'translateX(100%)';
-        void imgs[visibleIdx].offsetHeight;
-        imgs[visibleIdx].style.transition = 'transform 0.6s ease-in-out';
         imgs[visibleIdx].src = images[nextImageIndex];
         nextImageIndex = (nextImageIndex + 1) % images.length;
 
@@ -1330,7 +1289,68 @@
         nextIdx = newNext;
         bufferIdx = newBuffer;
 
-        // Move the new hidden right (nextIdx) to +100%
+        // Move new hidden left to -100%
+        imgs[nextIdx].style.transition = 'none';
+        imgs[nextIdx].style.left = '-100%';
+        void imgs[nextIdx].offsetHeight;
+        imgs[nextIdx].style.transition = 'left 0.6s ease-in-out';
+      }, 600);
+    }, 5000);
+  }
+
+  // ----- PORTRAIT SLIDER (right‑to‑left, 3 images) -----
+  function startPortraitSlider(container, images) {
+    container.innerHTML = '';
+    container.style.position = 'relative';
+    container.style.overflow = 'hidden';
+    container.style.display = 'flex';
+    container.style.justifyContent = 'center';
+    container.style.minWidth = '150px';
+
+    const imgs = [];
+    for (let i = 0; i < 3; i++) {
+      const img = document.createElement('img');
+      img.className = 'portrait-img';
+      Object.assign(img.style, {
+        width: '100%', maxWidth: '220px', borderRadius: '50%', aspectRatio: '1/1',
+        objectFit: 'cover', display: 'block', margin: '0 auto',
+        position: 'absolute', top: '0', transition: 'transform 0.6s ease-in-out'
+      });
+      container.appendChild(img);
+      imgs.push(img);
+      // Center horizontally
+      img.style.left = '50%';
+    }
+
+    imgs[0].src = images[0];
+    imgs[1].src = images[1 % images.length];
+    imgs[2].src = images[2 % images.length];
+    imgs[0].style.transform = 'translateX(-50%)';
+    imgs[1].style.transform = 'translateX(100%)';
+    imgs[2].style.transform = 'translateX(-150%)';
+
+    let visibleIdx = 0, nextIdx = 1, bufferIdx = 2;
+    let nextImageIndex = 2;
+
+    setInterval(() => {
+      imgs[visibleIdx].style.transform = 'translateX(-150%)';
+      imgs[nextIdx].style.transform = 'translateX(-50%)';
+
+      setTimeout(() => {
+        imgs[visibleIdx].style.transition = 'none';
+        imgs[visibleIdx].style.transform = 'translateX(100%)';
+        void imgs[visibleIdx].offsetHeight;
+        imgs[visibleIdx].style.transition = 'transform 0.6s ease-in-out';
+        imgs[visibleIdx].src = images[nextImageIndex];
+        nextImageIndex = (nextImageIndex + 1) % images.length;
+
+        const newVisible = nextIdx;
+        const newNext = bufferIdx;
+        const newBuffer = visibleIdx;
+        visibleIdx = newVisible;
+        nextIdx = newNext;
+        bufferIdx = newBuffer;
+
         imgs[nextIdx].style.transition = 'none';
         imgs[nextIdx].style.transform = 'translateX(100%)';
         void imgs[nextIdx].offsetHeight;
@@ -1339,39 +1359,21 @@
     }, 7000);
   }
 
-  // Auto‑detect and start
-  loadNumberedImages('banner', 20, extensions, banners => {
-    if (banners.length === 0) banners = ['Abbronzatura.png'];
-    // Show first image immediately
-    if (bannerContainer) {
-      bannerContainer.innerHTML = '';
-      const first = document.createElement('img');
-      first.src = banners[0];
-      first.className = 'banner-image';
-      first.style.width = '100%';
-      first.style.maxHeight = '33vh';
-      first.style.objectFit = 'contain';
-      bannerContainer.appendChild(first);
-      if (banners.length > 1) setupBannerSlider(banners);
-    }
-  });
-
-  loadNumberedImages('portrait', 20, extensions, portraits => {
-    if (portraits.length === 0) portraits = ['portrait1.jpg'];
-    if (portraitContainer) {
-      portraitContainer.innerHTML = '';
-      const first = document.createElement('img');
-      first.src = portraits[0];
-      first.className = 'portrait-img';
-      Object.assign(first.style, {
+  // Initialize with first image shown immediately, slider starts after
+  initSlider(bannerContainer, 'banner', 'banner-image', 
+    (img) => { img.style.maxHeight = '33vh'; img.style.objectFit = 'contain'; },
+    startBannerSlider
+  );
+  initSlider(portraitContainer, 'portrait', 'portrait-img',
+    (img) => {
+      Object.assign(img.style, {
         width: '100%', maxWidth: '220px', borderRadius: '50%', aspectRatio: '1/1',
         objectFit: 'cover', display: 'block', margin: '0 auto'
       });
-      portraitContainer.appendChild(first);
-      if (portraits.length > 1) setupPortraitSlider(portraits);
-    }
-  });
-})();
+    },
+    startPortraitSlider
+  );
+})(); 
 </script>
 </body>
 </html>
