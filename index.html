@@ -1380,15 +1380,6 @@ function setupBannerSlider(images) {
 
   bannerContainer.append(imgA, imgB);
 
-  // Prevent container collapse
-  const setHeight = () => {
-    const h = imgA.offsetHeight || imgB.offsetHeight;
-    if (h) bannerContainer.style.height = h + 'px';
-  };
-  imgA.onload = setHeight;
-  imgB.onload = setHeight;
-  setHeight();
-
   let active = imgA;     // currently visible
   let hidden = imgB;
   let nextIdx = 1;
@@ -1415,7 +1406,7 @@ function setupBannerSlider(images) {
       // Swap roles
       [active, hidden] = [hidden, active];
 
-      setHeight();
+      // setHeight();
     }, 500);
   }, 5000);
 }
@@ -1461,14 +1452,6 @@ function setupPortraitSlider(images) {
 
   portraitContainer.append(imgA, imgB);
 
-  const setHeight = () => {
-    const h = imgA.offsetHeight || imgB.offsetHeight;
-    if (h) portraitContainer.style.height = h + 'px';
-  };
-  imgA.onload = setHeight;
-  imgB.onload = setHeight;
-  setHeight();
-
   let active = imgA;
   let hidden = imgB;
   let nextIdx = 1;
@@ -1494,7 +1477,6 @@ function setupPortraitSlider(images) {
 
       [active, hidden] = [hidden, active];
 
-      setHeight();
     }, 500);
   }, 5000);
 }
