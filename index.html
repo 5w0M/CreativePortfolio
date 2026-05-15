@@ -1401,8 +1401,8 @@ function setupBannerSlider(images) {
 
     setTimeout(() => {
       // ---- RESET (static positions, no transforms) ----
+      active.src = images[nextIdx];    // preload next image
       nextIdx = (nextIdx + 1) % total;
-      hidden.src = images[nextIdx];    // preload next image
 
       // Clear transforms
       active.style.transform = '';
@@ -1412,11 +1412,11 @@ function setupBannerSlider(images) {
       active.style.left = '-100%';      // becomes the new hidden (off‑left)
       hidden.style.left = '0';          // becomes the new visible (center)
 
-      
+      [active, hidden] = [hidden, active];
+      hidden.src = images[nextIdx];
       setHeight();
     }, 500);
     // Swap roles
-    [active, hidden] = [hidden, active];
   }, 5000);
 }
 
