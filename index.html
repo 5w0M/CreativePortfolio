@@ -1354,7 +1354,7 @@ document.addEventListener('DOMContentLoaded', function() {
     bannerContainer.innerHTML = '';
     bannerContainer.style.position = 'relative';
     bannerContainer.style.overflow = 'hidden';
-    bannerContainer.style.backgroundColor = '#fefcf8';
+    bannerContainer.style.backgroundColor = 'transparent';
 
     // Create two images
     let imgA = document.createElement('img');
@@ -1385,7 +1385,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Reset transforms and positions
         imgA.style.transform = '';
         imgB.style.transform = '';
-        imgB.style.left = '-100%';
+        imgB.style.left = '100%';
         // Swap the two image elements so that imgA is always the visible one
         [imgA, imgB] = [imgB, imgA];
       }, 600);
@@ -1427,7 +1427,7 @@ document.addEventListener('DOMContentLoaded', function() {
         nextIdx = (nextIdx + 1) % total;
         imgA.src = images[nextIdx];
         imgA.style.transform = '';
-        imgB.style.transform = 'translateX(100%)';
+        imgB.style.transform = 'translateX(-100%)';
         imgB.style.left = '100%';
         // Swap elements
         [imgA, imgB] = [imgB, imgA];
