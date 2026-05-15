@@ -1366,7 +1366,7 @@ document.addEventListener('DOMContentLoaded', function() {
       display: 'block', transition: 'transform 0.6s ease-in-out'
     };
     Object.assign(imgA.style, { ...style, position: 'relative' });
-    Object.assign(imgB.style, { ...style, position: 'absolute', top: '0', left: '-100%' });
+    Object.assign(imgB.style, { ...style, position: 'absolute', top: '0', left: '100%' });
     bannerContainer.append(imgA, imgB);
 
     let nextIdx = 1;
@@ -1387,7 +1387,7 @@ document.addEventListener('DOMContentLoaded', function() {
         imgB.style.left = '100%';
         // Swap the two image elements so that imgA is always the visible one
         [imgA, imgB] = [imgB, imgA];
-      }, 600);
+      }, 1000);
     }, 5000);
   }
 
@@ -1411,7 +1411,7 @@ document.addEventListener('DOMContentLoaded', function() {
       objectFit: 'cover', display: 'block', margin: '0 auto', transition: 'transform 0.6s ease-in-out'
     };
     Object.assign(imgA.style, { ...baseStyle, position: 'relative' });
-    Object.assign(imgB.style, { ...baseStyle, position: 'absolute', top: '0', left: '100%', transform: 'translateX(100%)' });
+    Object.assign(imgB.style, { ...baseStyle, position: 'absolute', top: '0', left: '-100%'});
     portraitContainer.append(imgA, imgB);
 
     let nextIdx = 1;
@@ -1426,11 +1426,11 @@ document.addEventListener('DOMContentLoaded', function() {
         nextIdx = (nextIdx + 1) % total;
         imgA.src = images[nextIdx];
         imgA.style.transform = '';
-        imgB.style.transform = 'translateX(-100%)';
+        imgB.style.transform = 'translateX(100%)';
         imgB.style.left = '100%';
         // Swap elements
         [imgA, imgB] = [imgB, imgA];
-      }, 600);
+      }, 1100);
     }, 7000);
   }
 
