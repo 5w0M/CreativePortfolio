@@ -1380,6 +1380,13 @@ function setupBannerSlider(images) {
 
   bannerContainer.append(imgA, imgB);
 
+  const setHeight = () => {
+    const h = imgA.offsetHeight || imgB.offsetHeight;
+    if (h) portraitContainer.style.height = h + 'px';
+  };
+  imgA.onload = setHeight;
+  imgB.onload = setHeight;
+  setHeight();
   let active = imgA;     // currently visible
   let hidden = imgB;
   let nextIdx = 1;
@@ -1451,6 +1458,14 @@ function setupPortraitSlider(images) {
   imgB.style.right = 'auto';
 
   portraitContainer.append(imgA, imgB);
+
+  const setHeight = () => {
+    const h = imgA.offsetHeight || imgB.offsetHeight;
+    if (h) portraitContainer.style.height = h + 'px';
+  };
+  imgA.onload = setHeight;
+  imgB.onload = setHeight;
+  setHeight();
 
   let active = imgA;
   let hidden = imgB;
