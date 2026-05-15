@@ -112,7 +112,7 @@
     .banner-container {
       margin: 0 0 1rem 0;
       padding: 0;
-      background: #fefcf8;   /* or 'transparent' – both match the page */
+      background:transparent;   /* or 'transparent' – both match the page */
       border-radius: 28px;
       overflow: hidden;
       max-height: 33vh;
@@ -123,7 +123,7 @@
       max-height: 33vh;
       object-fit: contain;
       display: block;
-      background: #fefcf8;   /* fill any empty space with site color */
+      background:transparent;   /* fill any empty space with site color */
     }
     /* Portrait container – no extra background */
     .hero-portrait {
@@ -1354,7 +1354,6 @@ document.addEventListener('DOMContentLoaded', function() {
     bannerContainer.innerHTML = '';
     bannerContainer.style.position = 'relative';
     bannerContainer.style.overflow = 'hidden';
-    bannerContainer.style.backgroundColor = 'transparent';
 
     // Create two images
     let imgA = document.createElement('img');
