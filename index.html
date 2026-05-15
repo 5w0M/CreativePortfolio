@@ -1382,8 +1382,8 @@ document.addEventListener('DOMContentLoaded', function() {
         imgA.src = images[nextIdx];
         imgA.style.transform = '';
         imgB.style.transform = '';
-        [imgA, imgB] = [imgB, imgA];        // swap roles
         imgB.style.left = '-100%';           // reset hidden image to left
+        [imgA, imgB] = [imgB, imgA];        // swap roles
       }, 500);
     }, 5000);
   }
@@ -1424,8 +1424,8 @@ document.addEventListener('DOMContentLoaded', function() {
         imgA.src = images[nextIdx];
         imgA.style.transform = '';
         imgB.style.transform = '';
-        [imgA, imgB] = [imgB, imgA];        // swap roles
         imgB.style.left = '100%';           // reset hidden image to right
+        [imgA, imgB] = [imgB, imgA];        // swap roles
       }, 600);
     }, 7000);
   }
