@@ -130,7 +130,7 @@
       background: transparent;
     }
     /* fade at left and right borders (inside the container) */
-    .banner-container::before {
+    /* .banner-container::before {
       content: '';
       position: absolute;
       top: 0;
@@ -140,7 +140,7 @@
       pointer-events: none;
       background: linear-gradient(90deg, #fefcf8 0%, transparent 8%, transparent 92%, #fefcf8 100%);
       border-radius: inherit;
-    }
+    } */
     .banner-placeholder {
       width: 100%;
       height: 140px;
@@ -1351,137 +1351,86 @@ document.addEventListener('DOMContentLoaded', function() {
   // ------------------------------------------------------------------
   function setupBannerSlider(images) {
     if (!bannerContainer || images.length < 2) return;
-
     bannerContainer.innerHTML = '';
     bannerContainer.style.position = 'relative';
     bannerContainer.style.overflow = 'hidden';
-    bannerContainer.style.backgroundColor = 'transparent'; // match site
+    bannerContainer.style.backgroundColor = '#fefcf8';
 
-    // Create two images: visible (img1) and next (img2) hidden off-screen left
-    const img1 = document.createElement('img');
-    const img2 = document.createElement('img');
-    img1.src = images[0];
-    img2.src = images[1];
-
-    img1.className = 'banner-image';
-    img2.className = 'banner-image';
-
-    const commonStyle = {
-      width: '100%',
-      height: 'auto',
-      maxHeight: '33vh',
-      objectFit: 'contain',
-      display: 'block',
-      transition: 'transform 0.6s ease-in-out',
-      backgroundColor: 'transparent'
+    // Create two images
+    let imgA = document.createElement('img');
+    let imgB = document.createElement('img');
+    imgA.src = images[0];
+    imgB.src = images[1];
+    imgA.className = imgB.className = 'banner-image';
+    const style = {
+      width: '100%', height: 'auto', maxHeight: '33vh', objectFit: 'contain',
+      display: 'block', transition: 'transform 0.6s ease-in-out'
     };
-    Object.assign(img1.style, commonStyle, { position: 'relative' });
-    Object.assign(img2.style, commonStyle, {
-      position: 'absolute',
-      top: '0',
-      left: '-100%'          // start off-screen left
-    });
+    Object.assign(imgA.style, { ...style, position: 'relative' });
+    Object.assign(imgB.style, { ...style, position: 'absolute', top: '0', left: '-100%' });
+    bannerContainer.append(imgA, imgB);
 
-    bannerContainer.appendChild(img1);
-    bannerContainer.appendChild(img2);
-
-    let nextIndex = 1;
+    let nextIdx = 1;
     const total = images.length;
 
     setInterval(() => {
-      // Slide current image to the right (out)
-      img1.style.transform = 'translateX(100%)';
-      // Slide next image from left to center
-      img2.style.transform = 'translateX(0)';
+      // Move visible imgA to the right (exit), move hidden imgB from left to center (enter)
+      imgA.style.transform = 'translateX(100%)';
+      imgB.style.transform = 'translateX(0)';
 
       setTimeout(() => {
-        // After animation, swap roles: img1 becomes the hidden one, img2 the visible
-        nextIndex = (nextIndex + 1) % total;
-        // Prepare the (now hidden) img1 for the future
-        img1.src = images[nextIndex];
-        img1.style.transform = '';
-        img2.style.transform = '';
-        img2.style.left = '-100%';
-        // Swap so that img1 is again the visible image (it now holds the current)
-        const tempSrc = img1.src;
-        img1.src = img2.src;
-        img2.src = tempSrc;
-        // Ensure transforms are cleared
-        img1.style.transform = '';
-        img2.style.transform = '';
-        img2.style.left = '-100%';
+        // After animation: update imgA to be the next image (the one that will be hidden next cycle)
+        nextIdx = (nextIdx + 1) % total;
+        imgA.src = images[nextIdx];
+        // Reset transforms and positions
+        imgA.style.transform = '';
+        imgB.style.transform = '';
+        imgB.style.left = '-100%';
+        // Swap the two image elements so that imgA is always the visible one
+        [imgA, imgB] = [imgB, imgA];
       }, 600);
     }, 5000);
   }
 
-  // ------------------------------------------------------------------
-  // PORTRAIT SLIDER – right‑to‑left (new from right, old exits left)
-  // ------------------------------------------------------------------
+  // PORTRAIT: right‑to‑left (new from right, exits left)
   function setupPortraitSlider(images) {
     if (!portraitContainer || images.length < 2) return;
-
     portraitContainer.innerHTML = '';
     portraitContainer.style.position = 'relative';
     portraitContainer.style.overflow = 'hidden';
     portraitContainer.style.display = 'flex';
     portraitContainer.style.justifyContent = 'center';
     portraitContainer.style.minWidth = '150px';
-    portraitContainer.style.backgroundColor = 'transparent';
 
-    const img1 = document.createElement('img');
-    const img2 = document.createElement('img');
-    img1.src = images[0];
-    img2.src = images[1];
-
-    img1.className = 'portrait-img';
-    img2.className = 'portrait-img';
-
+    let imgA = document.createElement('img');
+    let imgB = document.createElement('img');
+    imgA.src = images[0];
+    imgB.src = images[1];
+    imgA.className = imgB.className = 'portrait-img';
     const baseStyle = {
-      width: '100%',
-      maxWidth: '220px',
-      borderRadius: '50%',
-      aspectRatio: '1 / 1',
-      objectFit: 'cover',
-      display: 'block',
-      margin: '0 auto',
-      transition: 'transform 0.6s ease-in-out',
-      backgroundColor: 'transparent'
+      width: '100%', maxWidth: '220px', borderRadius: '50%', aspectRatio: '1/1',
+      objectFit: 'cover', display: 'block', margin: '0 auto', transition: 'transform 0.6s ease-in-out'
     };
-    Object.assign(img1.style, { ...baseStyle, position: 'relative' });
-    Object.assign(img2.style, {
-      ...baseStyle,
-      position: 'absolute',
-      top: '0',
-      left: '-100%',
-      transform: 'translateX(100%)'   // start off-screen right
-    });
+    Object.assign(imgA.style, { ...baseStyle, position: 'relative' });
+    Object.assign(imgB.style, { ...baseStyle, position: 'absolute', top: '0', left: '100%', transform: 'translateX(100%)' });
+    portraitContainer.append(imgA, imgB);
 
-    portraitContainer.appendChild(img1);
-    portraitContainer.appendChild(img2);
-
-    let nextIndex = 1;
+    let nextIdx = 1;
     const total = images.length;
 
     setInterval(() => {
-      // Slide current image left (out)
-      img1.style.transform = 'translateX(-100%)';
-      // Slide next image from right to center
-      img2.style.transform = 'translateX(0)';
+      // Move visible imgA to the left (exit), move hidden imgB from right to center (enter)
+      imgA.style.transform = 'translateX(-100%)';
+      imgB.style.transform = 'translateX(0)';
 
       setTimeout(() => {
-        nextIndex = (nextIndex + 1) % total;
-        img1.src = images[nextIndex];
-        img1.style.transform = '';
-        img2.style.transform = 'translateX(100%)';
-        img2.style.left = '-100%';
-        // Swap roles
-        const temp = img1.src;
-        img1.src = img2.src;
-        img2.src = temp;
-        // Ensure clean state
-        img1.style.transform = '';
-        img2.style.transform = 'translateX(100%)';
-        img2.style.left = '-100%';
+        nextIdx = (nextIdx + 1) % total;
+        imgA.src = images[nextIdx];
+        imgA.style.transform = '';
+        imgB.style.transform = 'translateX(100%)';
+        imgB.style.left = '100%';
+        // Swap elements
+        [imgA, imgB] = [imgB, imgA];
       }, 600);
     }, 7000);
   }
