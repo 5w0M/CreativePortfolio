@@ -1464,18 +1464,19 @@ function setupPortraitSlider(images) {
 
     setTimeout(() => {
       // ---- RESET (static positions, no transforms) ----
-      nextIdx = (nextIdx + 1) % total;
       hidden.src = images[nextIdx];
-
+      nextIdx = (nextIdx + 1) % total;
+      
       active.style.transform = '';
       hidden.style.transform = '';
-
+      
       // Reset static left/right
       active.style.left = '100%';      // becomes the new hidden (off‑right)
       active.style.right = 'auto';
       Object.assign(hidden.style, centerStyle); // becomes the new visible (centered)
-
+      
       [active, hidden] = [hidden, active];
+      hidden.src = images[nextIdx];
 
     }, 500);
   }, 5000);
