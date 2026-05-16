@@ -192,9 +192,9 @@
             overflow: hidden;
             max-height: 33vh;
             cursor: pointer;
-            transition: box-shadow 0.3s;
+            /*transition: box-shadow 0.3s;*/
         }
-        .banner-container:hover { box-shadow: 0 0 0 3px rgba(180,95,59,0.15); }
+        /*.banner-container:hover { box-shadow: 0 0 0 3px rgba(180,95,59,0.15); }*/
         .banner-image {
             width: 100%;
             height: auto;
@@ -203,6 +203,7 @@
             display: block;
             background: transparent;
         }
+
         .banner-placeholder {
             width: 100%;
             height: 140px;
@@ -226,12 +227,17 @@
             margin-top: 2rem;
         }
         .hero-content { flex: 2; min-width: 250px; }
+
         .hero-portrait {
             position: relative;
-            height: 220px;
-            width: 220px;
+            width: 260px;
+            height: 260px;
+            border-radius: 50%;
+            overflow: visible;
             margin: 0 auto;
+            background: transparent;
             display: flex;
+            align-items: center;
             justify-content: center;
         }
         .hero-portrait { background: transparent; cursor: pointer; transition: transform 0.3s; }
@@ -1158,6 +1164,7 @@
                 const c = document.querySelector('.banner-container'); if (!c||images.length<2) return;
                 galleryState.bannerImages = images; c.innerHTML = ''; c.style.position='relative'; c.style.overflow='hidden';
                 const a = document.createElement('img'), b = document.createElement('img');
+                
                 a.src=images[0]; b.src=images[1]; a.className=b.className='banner-image';
                 const s = {position:'absolute',top:'0',width:'100%',height:'auto',maxHeight:'33vh',objectFit:'contain',display:'block',transition:'transform 0.5s ease-in-out'};
                 Object.assign(a.style,s); Object.assign(b.style,s); a.style.left='0'; b.style.left='-100%'; c.append(a,b);
@@ -1181,31 +1188,103 @@
                 });
             }
             function setupPortraitSlider(images) {
-                const c = document.querySelector('.hero-portrait'); if (!c||images.length<2) return;
-                galleryState.portraitImages = images; c.innerHTML=''; c.style.position='relative'; c.style.overflow='hidden'; c.style.display='flex'; c.style.justifyContent='center';
-                const a=document.createElement('img'), b=document.createElement('img'); a.src=images[0]; b.src=images[1]; a.className=b.className='portrait-img';
-                const s={position:'absolute',top:'0',width:'100%',maxWidth:'220px',borderRadius:'50%',aspectRatio:'1/1',objectFit:'cover',display:'block',transition:'transform 0.5s ease-in-out'};
-                Object.assign(a.style,s); Object.assign(b.style,s); a.style.left='0'; a.style.right='0'; a.style.margin='0 auto'; b.style.left='100%'; b.style.right='auto'; c.append(a,b);
-                const setH=()=>{ const h=a.offsetHeight||b.offsetHeight; if(h) c.style.height=h+'px'; };
-                a.onload=setH; b.onload=setH; setH();
-                let active=a, hidden=b, nextIdx=1, total=images.length;
-                setInterval(()=>{
-                    active.style.transform='translateX(-100%)'; hidden.style.transform='translateX(-100%)';
-                    setTimeout(()=>{
-                        active.style.transition='none'; hidden.style.transition='none'; active.src=images[nextIdx]; nextIdx=(nextIdx+1)%total;
-                        active.style.transform=''; hidden.style.transform=''; active.style.left='100%'; active.style.right='auto';
-                        hidden.style.left='0'; hidden.style.right='0'; hidden.style.margin='0 auto'; [active,hidden]=[hidden,active]; hidden.src=images[nextIdx]; setH();
-                        setTimeout(()=>{ active.style.transition='transform 0.5s ease-in-out'; hidden.style.transition='transform 0.5s ease-in-out'; },10);
-                    },500);
-                },5000);
-                c.addEventListener('click', e => {
-                    const t=e.target; if(t.tagName==='IMG'&&t.classList.contains('portrait-img')){
-                        const cur=t.src.split('/').pop(); let idx=galleryState.portraitImages.findIndex(i=>i===cur); if(idx<0) idx=0;
-                        openGallery(galleryState.portraitImages, idx, 'portrait'); e.stopPropagation();
+                const c = document.querySelector('.hero-portrait');
+                if (!c || images.length < 2) return;
+                
+                galleryState.portraitImages = images;
+                
+                // Clear and set circular container
+                c.innerHTML = '';
+                c.style.position = 'relative';
+                c.style.width = '260px';
+                c.style.height = '260px';
+                c.style.borderRadius = '50%';
+                c.style.overflow = 'visible';
+                c.style.margin = '0 auto';
+                c.style.background = 'transparent';
+                
+                // Create two images
+                const a = document.createElement('img');
+                const b = document.createElement('img');
+                a.src = images[0];
+                b.src = images[1];
+                a.className = b.className = 'portrait-img';
+                
+                const baseStyle = {
+                    position: 'absolute',
+                    width: '220px',
+                    height: '220px',
+                    borderRadius: '50%',
+                    objectFit: 'cover',
+                    boxShadow: '0 12px 24px -8px rgba(0,0,0,0.3)',
+                    top: '50%',
+                    left: '50%',
+                    transition: 'transform 0.4s ease-in-out, opacity 0.4s ease-in-out'
+                };
+                Object.assign(a.style, baseStyle);
+                Object.assign(b.style, baseStyle);
+                
+                // Initially: a centered and opaque, b hidden off‑screen and invisible
+                a.style.transform = 'translate(-50%, -50%)';
+                a.style.opacity = '1';
+                b.style.transform = 'translate(150%, -50%)';  // far right, outside container
+                b.style.opacity = '0';
+                
+                c.appendChild(a);
+                c.appendChild(b);
+                
+                let active = a;
+                let hidden = b;
+                let nextIndex = 2;
+                const total = images.length;
+                
+                setInterval(() => {
+                    // Slide active out to left and fade out
+                    active.style.transform = 'translate(-150%, -50%)';
+                    active.style.opacity = '0';
+                    
+                    // Bring hidden in from right and fade in
+                    hidden.style.transform = 'translate(-50%, -50%)';
+                    hidden.style.opacity = '1';
+                    
+                    setTimeout(() => {
+                        // After transition, swap roles without transition
+                        active.style.transition = 'none';
+                        hidden.style.transition = 'none';
+                        
+                        // Reset active (now the hidden one) to right, invisible
+                        active.src = images[nextIndex];
+                        nextIndex = (nextIndex + 1) % total;
+                        active.style.transform = 'translate(150%, -50%)';
+                        active.style.opacity = '0';
+                        
+                        // Hidden (which became visible) stays centered and opaque
+                        hidden.style.transform = 'translate(-50%, -50%)';
+                        hidden.style.opacity = '1';
+                        
+                        // Swap references
+                        [active, hidden] = [hidden, active];
+                        
+                        // Re‑enable transitions
+                        setTimeout(() => {
+                            active.style.transition = 'transform 0.4s ease-in-out, opacity 0.4s ease-in-out';
+                            hidden.style.transition = 'transform 0.4s ease-in-out, opacity 0.4s ease-in-out';
+                        }, 10);
+                    }, 400); // match transition duration
+                }, 4000); // interval between slides
+                
+                // Lightbox click
+                c.addEventListener('click', (e) => {
+                    const t = e.target;
+                    if (t.tagName === 'IMG' && t.classList.contains('portrait-img')) {
+                        let idx = galleryState.portraitImages.findIndex(img => img === t.src);
+                        if (idx < 0) idx = 0;
+                        openGallery(galleryState.portraitImages, idx, 'portrait');
+                        e.stopPropagation();
                     }
                 });
             }
- 
+            
             window.openQuarter = function(sectionId) {
                 if (currentSection === sectionId) return;
                 const grid = document.getElementById('origami-grid');
