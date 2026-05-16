@@ -1,0 +1,832 @@
+
+Diagonal Fold Square Animation
+Clean Up Portfolio HTML Code
+Fix banner and portrait slider code
+Github Website
+Parolia
+Tailored CV for Narrative Designer Role
+Finding academic paper on cricket attractiveness
+Mallow
+Jacquemus style preference clarification
+Surprise Gift Balance Discussion
+Number 310426 Correction
+Diagonal Fold Square Animation
+starting from this code:
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Folding Square – Four Corners Fold Inward (3D)</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(145deg, #cdd9cf 0%, #a3b6a5 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+      padding: 2rem;
+    }
+
+    /* main container – inspired by .jaffee but adapted for 4 corners */
+    .folding-square {
+      position: relative;
+      width: 400px;
+      height: 400px;
+      transform-style: preserve-3d;
+      cursor: pointer;
+      border-radius: 12px;
+      box-shadow: 0 25px 35px rgba(0, 0, 0, 0.3);
+      transition: box-shadow 0.3s ease;
+    }
+
+    /* background square (the smaller square that appears after folding) */
+    .inner-square {
+      position: absolute;
+      top: 100px;
+      left: 100px;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(ellipse at 30% 30%, #fbefdb, #f0ddc4);
+      border-radius: 8px;
+      box-shadow: inset 0 0 0 3px #fff3e2, 0 8px 18px rgba(0, 0, 0, 0.15);
+      opacity: 0;
+      transition: opacity 0.5s ease 0.2s;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* each corner flap – uses triangle shape via clip-path */
+    .flap {
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      transform-style: preserve-3d;
+      transition: transform 1.2s cubic-bezier(0.23, 1, 0.32, 1);
+      will-change: transform;
+      backface-visibility: hidden;
+    }
+
+    /* common style for the face inside each flap (paper texture) */
+    .flap .face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #f5e7d9, #f7e5cf);
+      box-shadow: inset 0 1px 2px rgba(255,245,215,0.8), 0 2px 6px rgba(0,0,0,0.1);
+      border-radius: 8px;
+    }
+
+    /* position each flap in its corner & clip to triangle */
+    .flap-tl {
+      top: 0;
+      left: 0;
+      clip-path: polygon(0% 0%, 100% 0%, 0% 100%);
+      transform-origin: 100% 100%;  /* rotate around the inner corner (the point that stays) */
+    }
+
+    .flap-tr {
+      top: 0;
+      right: 0;
+      clip-path: polygon(0% 0%, 100% 0%, 100% 100%);
+      transform-origin: 0% 100%;
+    }
+
+    .flap-br {
+      bottom: 0;
+      right: 0;
+      clip-path: polygon(100% 0%, 100% 100%, 0% 100%);
+      transform-origin: 0% 0%;
+    }
+
+    .flap-bl {
+      bottom: 0;
+      left: 0;
+      clip-path: polygon(0% 100%, 100% 100%, 0% 0%);
+      transform-origin: 100% 0%;
+    }
+
+    /* FOLDED STATE: each flap rotates 180deg around its origin (the inner corner)
+       and also translates slightly to perfectly align the new smaller square.
+       The rotation creates the 3D flip, just like .bc and .c in your example.
+    */
+    .folding-square.folded .flap-tl {
+      transform: rotateX(180deg) rotateY(180deg) translate(0, 0);
+    }
+    .folding-square.folded .flap-tr {
+      transform: rotateX(180deg) rotateY(-180deg) translate(0, 0);
+    }
+    .folding-square.folded .flap-br {
+      transform: rotateX(-180deg) rotateY(180deg) translate(0, 0);
+    }
+    .folding-square.folded .flap-bl {
+      transform: rotateX(-180deg) rotateY(-180deg) translate(0, 0);
+    }
+
+    /* optional: add a subtle shadow overlay on the flaps for depth */
+    .flap .shadow {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 30% 30%, rgba(0,0,0,0.25), transparent 70%);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s;
+      border-radius: 8px;
+    }
+
+    .folding-square.folded .flap .shadow {
+      opacity: 0.4;
+    }
+
+    /* when folded, the inner square fades in */
+    .folding-square.folded .inner-square {
+      opacity: 1;
+    }
+
+    /* decorative crease lines (like the diagonal hints in your example) */
+    .crease-guide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 10;
+    }
+    .guide-diag {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, transparent 49.8%, rgba(160, 110, 70, 0.25) 49.8%, rgba(160, 110, 70, 0.25) 50.2%, transparent 50.2%);
+    }
+    .guide-diag2 {
+      background: linear-gradient(45deg, transparent 49.8%, rgba(160, 110, 70, 0.25) 49.8%, rgba(160, 110, 70, 0.25) 50.2%, transparent 50.2%);
+    }
+    .folding-square.folded .guide-diag,
+    .folding-square.folded .guide-diag2 {
+      opacity: 0;
+      transition: opacity 0.5s;
+    }
+
+    /* controls & status */
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+    }
+
+    button {
+      background: #2c3e2b;
+      border: none;
+      font-size: 1.1rem;
+      font-weight: 600;
+      padding: 0.7rem 2rem;
+      border-radius: 3rem;
+      color: #fff3e2;
+      font-family: inherit;
+      cursor: pointer;
+      transition: 0.15s linear;
+      box-shadow: 0 5px 0 #1b2a1a;
+    }
+    button:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px 0 #1b2a1a;
+    }
+    button:hover {
+      background: #3e5a3c;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 0 #1b2a1a;
+    }
+
+    .status {
+      background: #2c3e2bcc;
+      backdrop-filter: blur(6px);
+      padding: 0.4rem 1.4rem;
+      border-radius: 3rem;
+      font-family: monospace;
+      font-weight: bold;
+      color: #fffbee;
+      align-self: center;
+      font-size: 0.9rem;
+    }
+    .status span {
+      background: #fedba0;
+      color: #2b3e2a;
+      padding: 0.2rem 0.7rem;
+      border-radius: 2rem;
+      margin-left: 0.6rem;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.7rem;
+      margin-top: 1.4rem;
+      color: #242d1f;
+      opacity: 0.7;
+    }
+
+    @media (max-width: 550px) {
+      .folding-square {
+        width: 300px;
+        height: 300px;
+      }
+      .inner-square {
+        top: 75px;
+        left: 75px;
+        width: 150px;
+        height: 150px;
+      }
+      .flap {
+        width: 150px;
+        height: 150px;
+      }
+      button {
+        font-size: 0.9rem;
+        padding: 0.5rem 1.4rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<div style="text-align: center;">
+  <div class="folding-square" id="folder">
+    <!-- inner smaller square that becomes visible after folding -->
+    <div class="inner-square"></div>
+
+    <!-- four corner flaps, each with a paper face and optional shadow -->
+    <div class="flap flap-tl">
+      <div class="face"></div>
+      <div class="shadow"></div>
+    </div>
+    <div class="flap flap-tr">
+      <div class="face"></div>
+      <div class="shadow"></div>
+    </div>
+    <div class="flap flap-br">
+      <div class="face"></div>
+      <div class="shadow"></div>
+    </div>
+    <div class="flap flap-bl">
+      <div class="face"></div>
+      <div class="shadow"></div>
+    </div>
+
+    <!-- subtle diagonal crease guides (fade on fold) -->
+    <div class="crease-guide">
+      <div class="guide-diag"></div>
+      <div class="guide-diag2"></div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button id="foldBtn">📄 FOLD CORNERS</button>
+    <button id="resetBtn">⟳ RESET</button>
+    <div class="status">✧ PAPER STATE <span id="foldState">FLAT</span></div>
+  </div>
+  <footer>▼ each corner folds inward along the diagonal → four flaps form a smaller square in the center ▼</footer>
+</div>
+
+<script>
+  (function() {
+    const container = document.getElementById('folder');
+    const foldBtn = document.getElementById('foldBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const stateSpan = document.getElementById('foldState');
+
+    let isFolded = false;   // false = flat, true = corners folded inward
+
+    // Apply class to trigger CSS transitions (the actual 3D rotation)
+    function setFoldedState(folded) {
+      if (folded) {
+        container.classList.add('folded');
+        stateSpan.textContent = 'FOLDED ✧ SMALL SQUARE';
+      } else {
+        container.classList.remove('folded');
+        stateSpan.textContent = 'FLAT ▢ BIG SQUARE';
+      }
+      isFolded = folded;
+    }
+
+    // Smoothly fold or unfold
+    function foldInward() {
+      if (isFolded) return;
+      setFoldedState(true);
+    }
+
+    function unfold() {
+      if (!isFolded) return;
+      setFoldedState(false);
+    }
+
+    // Toggle on click (optional, but user-friendly)
+    function onSquareClick() {
+      if (isFolded) {
+        unfold();
+      } else {
+        foldInward();
+      }
+    }
+
+    // Event binding
+    if (container) container.addEventListener('click', onSquareClick);
+    if (foldBtn) foldBtn.addEventListener('click', (e) => { e.stopPropagation(); foldInward(); });
+    if (resetBtn) resetBtn.addEventListener('click', (e) => { e.stopPropagation(); unfold(); });
+
+    // initial state
+    setFoldedState(false);
+
+    // optional: add a tiny preload effect to ensure transforms look crisp
+    console.log('Folding square ready – corners fold along diagonals, inspired by jaffee 3D effect');
+  })();
+</script>
+</body>
+</html>
+try to adapt it to have the paper fold not along its bisextric but along its diagonals
+We need to: "try to adapt it to have the paper fold not along its bisextric but along its diagonals". From reading the current code, the flaps are each triangles created using clip-path matching one half of a square cut by a diagonal. Currently each flap rotates about its "inner corner" (origin: 100% 100% for TL, etc) to fold inwards along the diagonal. This indeed uses the diagonal as fold line. But the phrase "not along its bisextric but along its diagonals" – maybe the user thinks the fold currently is along the bisextric (the angle bisector)? Actually bisextric I'm not a typical term, probably "bisector"? But a square's diagonal is a bisector of the corner angle (45 deg line). Possibly they want the folds to be along lines that are not the corner-to-center lines? Wait: the current implementation: each flap is a right isosceles triangle with clip-path that exactly corresponds to the diagonal of the square (from corner to opposite corner of the half-square). The fold line is the hypotenuse of that triangle. However, the folding behavior: rotateX/rotateY combined with origin - this creates a 3D rotation that folds the triangle so that its surface goes underneath the inner region. The existing rotation: .folded .flap-tl { transform: rotateX(180deg) rotateY(180deg) translate(0,0); } Actually need careful: but they currently apply rotateX and rotateY 180deg to get flap to flip over? But because they are using clip-path and the triangle shape, using rotateX and rotateY might cause weird orientation. Let's test mental model: For flap-tl, the triangle originally occupies top-left quadrant of square, with vertices at (0,0), (200,0), (0,200). Transform-origin at 100% 100% means rotate about the point (200,200) relative to flap, which is bottom-right of that flap, i.e. the center of the big square? Actually, each flap is positioned absolutely relative to container (400x400). For TL flap, it's at top:0 left:0, width/height:200px. Origin set to 100% 100% corresponds to point (200px,200px) relative to flap, which maps to absolute coordinate (200,200) in container – that's exact center of the big square. Similarly, for TR flap origin is 0% 100% -> (0,200) relative to flap, absolute: (200,200) (center). For BR flap origin is 0% 0% -> (200,200) center; BL origin is 100% 0% -> (200,200). Good: all flaps rotate about the center of the square (200,200). They use rotations: rotateX(180deg) rotateY(180deg). The combination probably causes the flap to flip over such that triangle visually disappears under the inner square, but currently not perfect? Actually the CSS transforms: rotateX 180deg flips top to bottom, rotateY 180deg flips left to right. Since origin at center, the flap could end up in folded position but might overlay incorrectly due to depth. The goal: folding each triangle outward (or inward) along its diagonal fold line. Their current transforms: .folded .flap-tl { transform: rotateX(180deg) rotateY(180deg) translate(0,0); } and similar variations. That may not correspond to realistic folding along the diagonal, because a realistic fold would be around the diagonal axis (the hypotenuse). However, in typical 3D, folding a triangle along its longest side (the diagonal of the original square) requires a rotation transformation about an axis that is the diagonal line. Since CSS doesn’t support arbitrary axis easily unless using rotate3d, current approach uses double-axis rotation that approximates the folding effect but may not represent exact diagonal fold; it looks more like the triangle rotates about the central point and folds into a smaller square area.
+
+Given the phrase "not along its bisextric but along its diagonals" could mean they want the crease to be exactly along the diagonal lines that go from each corner to the center of square? Actually any corner fold in paper folding often uses the bisector of the corner angle (line at 45 deg from edges) which is also the diagonal of the square. But the current is also diagonal: each flap is cut by diagonal and folds along that diagonal edge. Possibly they'd like the fold axis to be the actual diagonal line (the hypotenuse) instead of rotating about the center point? To ensure that when folded, the triangular flap rotates 180 degrees around that diagonal axis so it lands exactly inside the central region, forming a layered smaller square.
+
+Given the existing code's visual quality may be imperfect and they want an improved "fold along diagonal" model that uses rotate3d or transforms based on fold axis (the diagonal line). Also because the current transform's rotateX+rotateY may produce weird intersections with 3D perspective.
+
+Therefore adapt: Use proper 3D rotation such that each flap folds 180 degrees around the diagonal line (the hypotenuse). That provides a realistic folding effect where the triangle flips over and lands on the inner square region.
+
+Simplify: For each triangular flap, we define its diagonal line (from corner to the center of original square). Then rotate around that axis using rotate3d, while also ensuring the front face ends up facing down (or back face shows). So we need to set proper transform-origin to a line, which is not directly possible; we need to use rotate3d with axis vector (dx, dy, dz). Since diagonal lies in XY-plane, we compute angle and rotate about that line. Also we must consider that the triangle should be initially flat, then apply a rotation of 180 degrees about the diagonal axis to make it fold inward.
+
+Alternatively, another approach: use CSS rotate3d with axis defined by the vector along diagonal. For flap-tl diagonal endpoints: from (0,0) to (200,200) flap local coordinates? But the diagonal is the hypotenuse that borders the central square? Wait: flap-tl shape: vertices: A(0,0), B(200,0), C(0,200). The diagonal fold line that separates it from the rest of big square is the line from corner (0,0) to (200,200)? Actually no: the flap is triangle formed by the top-left corner and the two edges. The diagonal line that would separate the triangle from inner region is the line from the inner corner (200,200) relative? Actually for folding corners inward, the fold line is typically the line that goes from the midpoint of the side or from the corner to the center? Usually origami "fold corners to center" uses fold line that bisects the corner and goes to the midpoint of opposite side? But the current described fold: four corners fold inward along the diagonal. Many designs: each corner triangle folds along the diagonal that runs from outer corner to the center of square? The diagonal of the original square from corner to opposite corner goes through center. But each flap is a right triangle, the fold line would be the "line from the corner to the center of the original square"? That's exactly the hypotenuse of the triangle: from (0,0) to (200,200) in TL flap local coords? But note: TL triangle vertices: outer corner (0,0), point (200,0) and (0,200) - hypotenuse is between (200,0) and (0,200) (actually that's not from outer corner to center) That's from mid-edges? Wait need to draw mapping: flap's coordinates: top-left: (0,0), top-right relative: (200,0), bottom-left: (0,200). The hypotenuse lies from (200,0) to (0,200). But that diagonal line is not the corner-to-center line: the center of original big square is at absolute (200,200) mapping to (200,200) in flap local? The corner of square is (0,0) and center is (200,200). That vector goes from (0,0) to (200,200) - which is a diagonal of the flap region. However, that line is not an edge of the triangle: the triangle's vertices (0,0), (200,0), (0,200). The line from corner to center (0,0)-(200,200) goes across interior of triangle? The hypotenuse between (200,0) and (0,200) is different. To fold corner inward correctly to meet center, normally you fold triangle so that the outer corner touches center - the fold line is a line that goes perpendicular to the bisector? Wait origami: In many folds, for a square, to fold corner to center, the crease is the line that is the perpendicular bisector of line connecting corner and center, not necessarily the diagonal. However, the given effect currently uses clip-path such that the flap is the exact half-square triangle cut by the diagonal connecting midpoints? Actually I realize: the current clip-path for TL is polygon(0% 0%, 100% 0%, 0% 100%) – that triangle's hypotenuse from (100% 0) to (0% 100%) is actually passing across the corner but not connecting original corner to center. That line runs from the middle of the right side to middle of bottom side? Actually 100% 0 is top-right corner of the flap, but overall big square top-right is absolute (200,0) from container? Hence flap's top-right corner corresponds to the midpoint of top edge of the big square? The container is 400x400, flaps are 200x200 positioned absolutely, making each flap exactly a quadrant of the square. The TL flap covers region x=0..200, y=0..200. Its vertices: (0,0) outer corner, (200,0) middle of top edge, (0,200) middle of left edge. The hypotenuse is from (200,0) to (0,200) which goes from top edge midpoint to left edge midpoint, NOT from corner to center of square. That line is not the usual diagonal to fold the entire corner to center; folding along that line would cause the corner to go to the center after a 180° rotation? If we fold the triangular region along that hypotenuse, the corner (0,0) would rotate and land near the center. Yes exactly: that is correct classic "fold corners to center" type, with each flap folding along the line connecting midpoints of adjacent sides, moving corner to center. But user wants "not along its bisextric but along its diagonals". The bisextric is maybe referring to the angle bisector (line from corner to center). In many square folds, bisextric line would be from corner to center (45° line) whereas the fold line used in current design is the line connecting midpoints: that's perpendicular to the bisector? Actually, the line that connects midpoints of two sides forms a crease that makes the corner meet the center. The phrase "not along its bisextric but along its diagonals" could request folds along the actual diagonals of the square (from corner to opposite corner) which would produce a different effect: folding each corner along the main diagonal line? That would split square into four large triangles by the two diagonals, and each flap would fold along a diagonal axis, but each flap would be different? For four corners to fold inward along the main diagonals not possible because each diagonal passes through two opposite corners, so folding along diagonal would not cause each corner individually to move. Therefore the likely meaning: They want the crease to be exactly along the diagonal line from corner to center? Or from corner to center line (bisector) instead of the current fold line (midpoints). But the phrase says "not along its bisextric" - meaning they don't want the fold line to be the bisector? And "but along its diagonals" meaning they want each flap's fold line to be along the diagonal of the original square (which from corner to opposite corner). But each flap currently is a quadrant of the square, and the diagonal of the overall square goes from top-left to bottom-right (in TL flap that diagonal is from (0,0) to (200,200) relative to TL? But that line cuts the TL flap into two smaller triangles. However, the crease would be that diagonal, making the fold line passing through the quadrant's interior, dividing it. The user expects the fold line to be along the diagonal of the square, not along the midline.
+
+Given the confusion, the best interpretation: They want the fold line to be the actual diagonal of each corner triangle that connects the outer corner to the center (bisextric line? Actually bisextric not common, but the line from corner to center is indeed angle bisector (45°). The "not along its bisextric" might mean they don't want the angle bisector? But then "but along its diagonals" could refer to the diagonal of the original square (which is also a bisector of angle). Possibly they currently have the flap cut by a line connecting midpoints of sides? And they want the flap to fold along a diagonal line (i.e. line connecting the corner to the center). Actually checking the initial clip-path: they have triangle shaped polygon: TL: 0% 0%, 100% 0%, 0% 100%. This is not a triangle that contains the diagonal from corner to center, but rather cut across the corner to create shape. The fold line along the hypotenuse (midpoints line) is not a diagonal of the original square. So the user likely wants to change each flap's geometry such that the fold line is along the diagonal of original square (connecting corner to opposite corner). That means for TL flap: the triangular area should be defined by vertices: outer corner (0,0), center of square (200,200), and maybe top edge? Actually the flap would be "corner triangle" with vertices at outer corner, center, and maybe the corner of the square? Alternatively simpler: each flap's shape will be triangle with vertices: outer corner (0,0 in flap relative), the center of the big square (200,200), and the point on adjacent side? Or we want the fold line to be segment from outer corner to center? Then after folding, the small triangle folds inward, but the central region becomes different.
+
+Given complexity but important: adapt the code to have each flap fold along its diagonal: meaning for the TL, the fold axis is the line connecting (0,0) - (200,200)? Actually the diagonal of the square (the main diagonal from top-left to bottom-right). Then the crease line should be that diagonal. Then after folding 180°, the corner will fold to some new location. But each flap must incorporate geometry consistent with that diagonal.
+
+Better approach: Redefine clip-path and flap positioning. The fold line for each flap should be the diagonal of the big square passing through that corner. For TL flap, the diagonal of the whole big square from (0,0) to (400,400) passes through the TL quadrant. So clip-path: use polygon that includes the outer corner, the center point (200,200) and also the point along top edge? Actually to remain a triangle which can be folded, we need to split the square into four congruent triangles each with a fold line along the main diagonal intersecting the center? Each flap will be triangle: region of the square that is bounded by the side edges and the diagonal from corner to center point? For TL: vertices: outer corner (0,0), center (200,200), and point at (200,0) or (0,200) – but that would create two triangles that combine? Best approach: To fold each corner along the diagonal of the entire square (line from top-left to bottom-right) for TL only: Actually main diagonal splits the square into two large triangles: from top-left to bottom-right diagonal. Not for each corner individually. However, the requirement may be misunderstood. Given the ambiguity, maybe the user wants the fold to be along the diagonal of each flap's square region (i.e., the line from corner to the opposite corner of the small quadrant). The current flap's hypotenuse is along the line that connects midpoints of edges, and they consider that "bisextric". So flip: change the clip-path to be triangle with vertices (0,0) [outer corner], (200,0) [top midpoint], (200,200) [center]? That does not resemble diagonal. Or to have the fold line be true diagonal from top-left corner to the bottom-right corner of the flap region – i.e., from (0,0) to (200,200) – that divides the flap into two equal right triangles. Then each flap would fold along that diagonal axis.
+
+Hence I propose to implement robustly: Redefine each flap's triangle such that the fold line is exactly the line from outer corner (0,0) to the center of the big square (200,200) in TL coordinates, making the flap shape be triangle region: vertices (0,0), (200,0), (200,200)? Or (0,0), (0,200), (200,200)? That would form a right triangle with diagonal fold. So TL flap: polygon(0% 0%, 100% 0%, 100% 100%)? But that gives whole quarter square, not the corner triangle. Actually I need: create a flap that includes corner, center, and top-right corner of that quadrant? Wait shape: Must ensure when folded around diagonal axis (0,0)-(200,200), the flap covers some region. Use shape: TL flap will be triangle with points: (0,0), (200,0), (200,200). And also transform-origin and rotation around that diagonal axis.
+
+Similarly for TR flap: outer corner is (400,0) in absolute, fold line from corner to center (200,200), flap shape defined accordingly; for BR, BL accordingly. The transforms become rotate3d axis aligned with diagonal vectors.
+
+To implement: For TL, we must compute axis direction (1,1,0) normalized? Then use rotate3d. But for performance, we can set transform-style, apply rotation.
+
+Also ensure the inner square background and shadow effects correct. The inner square appears after fold.
+
+Therefore, I must rewrite styles, adjust clip-path for each flap to new triangles, recalc transform-origin to the diagonal line? Since rotate3d uses global space, maybe better to set transform property with rotate3d and define perspective. But to make each flap rotate 180 degrees around the axis that goes from outer corner to the center point, we need to define the rotation vector. For TL, axis vector from (0,0) to (200,200) => direction (1,1). Use rotate3d(1, 1, 0, 180deg). But also because flap initially positioned, we may need to shift origin of transform? Under rotate3d the transform origin matters. However, we can set transform origin to (0,0) relative to flap, but we need axis passing through that origin? Actually easier: set transform-origin: 0% 0%; perform rotation around axis direction (1,1) anchored at origin, so the rotation will go along the line from (0,0) to (200,200). Combined with transform property and perspective parent.
+
+Alternatively, using combined transforms. I choose to define a .folded class that applies rotate3d.
+
+Because the flaps may also need to translate to avoid overlapping issues. For each flap we define initial clip-path, background.
+
+Given the code also includes inner square, and for each new flap, after fold they must completely cover the inner region or hide.
+
+Implementation details: Redesign flaps positions.
+
+Let's recode: Adjust container grid. I will maintain responsive and adjust coordinates accordingly.
+
+Write updated version: for TL flap: width:200px, height:200px, left:0, top:0, clip-path: polygon(0% 0%, 100% 0%, 100% 100%) => That yields a right triangle with vertices (0,0), (200,0), (200,200) - the fold diagonal axis is from corner (0,0) to point (200,200) which lies exactly on that hypotenuse? Wait shape vertices: (0,0), (200,0), (200,200). Fold diagonal line is from (0,0) to (200,200) which is the diagonal of the flap, not an edge currently the shape includes (0,0)-(200,0) horizontal and (200,0)-(200,200) vertical edges, the diagonal is internal. To fold triangle, we need to use that line as fold axis, rotating the triangular part to inner region. The region to fold is the part of flap on one side of axis. Since whole flap is triangle that includes the axis on its boundary (axis from (0,0) to (200,200)). Actually the axis is not a boundary but the line divides triangle into two shapes. But I will just rotate 180 degrees about axis anchored at origin; the whole triangle will sweep, revealing inner square.
+
+Similarly adjust other corners accordingly: For TR flap: coordinates top-right: absolute top:0, right:0; width 200, height200, clip-path: polygon(0% 0%, 0% 100%, 100% 100%) – that represents triangle with outer corner (200,0) relative? Actually inner coordinates (200,0), (200,200), (0,200). Fold axis from corner (200,0) to center (200,200) relative? For TR, points: corner at top-right (200,0) to center point (200,200) relative to flap? Wait flap local: x from 0 to 200, y 0 to 200 but the absolute outer corner is at (400,0) but flap positioning right:0, top:0. Thus local (200,0) is absolute (400,0) outer corner, center absolute (200,200) maps to local (0,200) /? Actually we need careful coordinate.
+
+I handle each flap transform accordingly: using custom local geometry.
+
+Alternative, avoid confusion: For TL flap: triangle defined by points relative to flap: (0,0) – corner (0,0) absolute, (200,0) top edge midpoint, (200,200) center point. Diagonal axis from (0,0) to (200,200) thus rotate3d(1, 1, 0, 180deg) anchored at (0,0). For TR flap: relative coordinates: flap positioned top-right. Outer corner local (200,0), center point local (0,200). Diagonal axis from (200,0) to (0,200) vector: (-200,200) direction normalized (-1,1,0). Rotate3d(-1,1,0,180deg) anchored at outer corner coordinates (200,0). For BR flap: outer corner relative (200,200), center point relative (0,0). Diagonal axis direction (-1,-1). For BL flap: outer corner relative (0,200), center point relative (200,0) direction (1,-1).
+
+Implement each flap's specific transform and rotation, adjust transition. Also keep flap content such that after folding they hide.
+
+Inner square works.
+
+Write new styles and JS.
+
+Need to rewrite CSS selectors and transitions, set backface-visibility, preserve-3d.
+
+Also ensure folded class applies toggles.
+
+Testing: ensure flaps fold inward properly with realistic effect.
+
+Write final HTML/CSS/JS.
+
+Provide final output.
+
+Here is an HTML document that creates a folding square where each corner flap folds along its diagonal axis toward the center, revealing a smaller inner square.
+
+html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Diagonal Fold · Four Corners Inward (3D Fold Along Diagonals)</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      user-select: none;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(145deg, #d9e0d4 0%, #a7b8a4 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Segoe UI', 'Roboto', system-ui, -apple-system, sans-serif;
+      padding: 2rem;
+    }
+
+    /* main 3D container */
+    .folding-square {
+      position: relative;
+      width: 420px;
+      height: 420px;
+      transform-style: preserve-3d;
+      cursor: pointer;
+      border-radius: 16px;
+      box-shadow: 0 30px 40px rgba(0, 0, 0, 0.3), inset 0 0 0 1px rgba(255,245,220,0.3);
+      transition: box-shadow 0.3s ease;
+    }
+
+    /* inner core square (revealed after folding) */
+    .core-square {
+      position: absolute;
+      top: 105px;
+      left: 105px;
+      width: 210px;
+      height: 210px;
+      background: radial-gradient(ellipse at 35% 35%, #fff3e0, #f5e2ca);
+      border-radius: 12px;
+      box-shadow: inset 0 2px 4px rgba(255,250,230,0.9), 0 10px 20px rgba(0, 0, 0, 0.2);
+      opacity: 0;
+      transition: opacity 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1) 0.15s;
+      pointer-events: none;
+      z-index: 2;
+      backdrop-filter: blur(1px);
+    }
+
+    /* each flap: triangle region that folds along the true diagonal (corner → center) */
+    .flap {
+      position: absolute;
+      width: 210px;
+      height: 210px;
+      transform-style: preserve-3d;
+      transition: transform 1.2s cubic-bezier(0.22, 0.88, 0.36, 1);
+      will-change: transform;
+      backface-visibility: hidden;
+      border-radius: 8px;
+    }
+
+    /* paper face + subtle texture */
+    .flap .face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(125deg, #faf0e2, #f7e7d3);
+      box-shadow: inset 0 1px 3px rgba(255, 245, 215, 0.9), 0 2px 5px rgba(0, 0, 0, 0.08);
+      border-radius: 8px;
+      transition: box-shadow 0.2s;
+    }
+
+    /* shadow overlay for depth when folded */
+    .flap .shadow-layer {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 30% 30%, rgba(0, 0, 0, 0.28), transparent 75%);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s;
+      border-radius: 8px;
+    }
+
+    /* ---------- FLAP POSITIONING & UNIQUE CLIP-PATH (DIAGONAL AXIS: corner ↔ center) ---------- */
+    
+    /* TOP-LEFT flap: diagonal axis from outer corner (0,0) to center (210,210) 
+       triangle shape = region that will be rotated around that diagonal */
+    .flap-tl {
+      top: 0;
+      left: 0;
+      clip-path: polygon(0% 0%, 100% 0%, 100% 100%);
+      transform-origin: 0% 0%;
+    }
+    
+    /* TOP-RIGHT flap: outer corner (210,0) relative, center at (0,210) local */
+    .flap-tr {
+      top: 0;
+      right: 0;
+      clip-path: polygon(0% 0%, 0% 100%, 100% 100%);
+      transform-origin: 100% 0%;
+    }
+    
+    /* BOTTOM-RIGHT flap: outer corner (210,210) local, center at (0,0) */
+    .flap-br {
+      bottom: 0;
+      right: 0;
+      clip-path: polygon(100% 0%, 100% 100%, 0% 100%);
+      transform-origin: 100% 100%;
+    }
+    
+    /* BOTTOM-LEFT flap: outer corner (0,210) local, center at (210,0) */
+    .flap-bl {
+      bottom: 0;
+      left: 0;
+      clip-path: polygon(0% 100%, 100% 100%, 0% 0%);
+      transform-origin: 0% 100%;
+    }
+
+    /* ========== 3D FOLD TRANSFORMS ==========
+       each flap rotates 180° around its diagonal axis (vector from corner to center)
+       Axis definitions:
+       - TL: axis direction (1, 1, 0)  anchored at top-left corner
+       - TR: axis direction (-1, 1, 0) anchored at top-right corner
+       - BR: axis direction (-1, -1, 0) anchored at bottom-right corner
+       - BL: axis direction (1, -1, 0) anchored at bottom-left corner
+       rotate3d(x, y, z, angle) -> clean 180° flip along the exact diagonal crease
+    */
+    .folding-square.folded .flap-tl {
+      transform: rotate3d(1, 1, 0, 180deg);
+    }
+    .folding-square.folded .flap-tr {
+      transform: rotate3d(-1, 1, 0, 180deg);
+    }
+    .folding-square.folded .flap-br {
+      transform: rotate3d(-1, -1, 0, 180deg);
+    }
+    .folding-square.folded .flap-bl {
+      transform: rotate3d(1, -1, 0, 180deg);
+    }
+
+    /* enhance folded shadows */
+    .folding-square.folded .flap .shadow-layer {
+      opacity: 0.55;
+    }
+
+    /* core square becomes visible only after folding */
+    .folding-square.folded .core-square {
+      opacity: 1;
+    }
+
+    /* decorative crease guidelines (subtle diagonals to indicate fold lines) */
+    .crease-diagonals {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 15;
+      transition: opacity 0.4s ease;
+    }
+    .diagonal-line {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: repeating-linear-gradient(45deg, 
+        rgba(140, 95, 55, 0.2) 0px, rgba(140, 95, 55, 0.2) 2px,
+        transparent 2px, transparent 12px);
+      mix-blend-mode: multiply;
+    }
+    .diagonal-line-rev {
+      background: repeating-linear-gradient(135deg, 
+        rgba(140, 95, 55, 0.2) 0px, rgba(140, 95, 55, 0.2) 2px,
+        transparent 2px, transparent 12px);
+    }
+    .folding-square.folded .crease-diagonals {
+      opacity: 0;
+      transition: opacity 0.5s;
+    }
+
+    /* controls & status panel */
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 1.8rem;
+      margin-top: 2.5rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    button {
+      background: #2c402a;
+      border: none;
+      font-size: 1rem;
+      font-weight: 600;
+      padding: 0.7rem 2rem;
+      border-radius: 3rem;
+      color: #fdf6e6;
+      font-family: inherit;
+      cursor: pointer;
+      transition: 0.12s linear;
+      box-shadow: 0 5px 0 #192218;
+      letter-spacing: 0.5px;
+      backdrop-filter: blur(2px);
+    }
+    button:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px 0 #192218;
+    }
+    button:hover {
+      background: #3f5c3c;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 0 #192218;
+    }
+
+    .state-badge {
+      background: #2c402acc;
+      backdrop-filter: blur(8px);
+      padding: 0.4rem 1.5rem;
+      border-radius: 3rem;
+      font-weight: 600;
+      color: #fef3df;
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-family: monospace;
+      letter-spacing: 0.3px;
+    }
+    .state-badge span {
+      background: #ffefcf;
+      color: #2a3a27;
+      padding: 0.2rem 0.9rem;
+      border-radius: 2rem;
+      font-weight: bold;
+      font-size: 0.85rem;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.7rem;
+      margin-top: 1.4rem;
+      color: #1f2c1b;
+      opacity: 0.8;
+      font-weight: 500;
+    }
+
+    /* responsive adjustments */
+    @media (max-width: 580px) {
+      .folding-square {
+        width: 300px;
+        height: 300px;
+      }
+      .core-square {
+        top: 75px;
+        left: 75px;
+        width: 150px;
+        height: 150px;
+      }
+      .flap {
+        width: 150px;
+        height: 150px;
+      }
+      button {
+        font-size: 0.8rem;
+        padding: 0.5rem 1.2rem;
+      }
+      .state-badge {
+        font-size: 0.75rem;
+        padding: 0.3rem 1rem;
+      }
+    }
+
+    /* additional 3D perspective for realistic depth */
+    .folding-square {
+      perspective: 1200px;
+      perspective-origin: 50% 50%;
+    }
+    .flap .face {
+      backface-visibility: hidden;
+    }
+
+    /* small inner glow effect when folded */
+    .folding-square.folded .core-square {
+      box-shadow: inset 0 2px 6px rgba(255,250,210,0.8), 0 10px 18px rgba(0,0,0,0.2);
+    }
+  </style>
+</head>
+<body>
+<div style="display: flex; flex-direction: column; align-items: center;">
+  <div class="folding-square" id="foldingCube">
+    <!-- central smaller square that emerges after folding corners -->
+    <div class="core-square"></div>
+
+    <!-- four flaps – each cut along diagonal axis (corner-to-center) -->
+    <div class="flap flap-tl">
+      <div class="face"></div>
+      <div class="shadow-layer"></div>
+    </div>
+    <div class="flap flap-tr">
+      <div class="face"></div>
+      <div class="shadow-layer"></div>
+    </div>
+    <div class="flap flap-br">
+      <div class="face"></div>
+      <div class="shadow-layer"></div>
+    </div>
+    <div class="flap flap-bl">
+      <div class="face"></div>
+      <div class="shadow-layer"></div>
+    </div>
+
+    <!-- elegant diagonal fold guides (shows crease lines along the actual diagonals) -->
+    <div class="crease-diagonals">
+      <div class="diagonal-line"></div>
+      <div class="diagonal-line diagonal-line-rev"></div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button id="foldAction">✨ FOLD ALONG DIAGONALS</button>
+    <button id="resetAction">⟳ UNFOLD / RESET</button>
+    <div class="state-badge">📐 FOLD STATE <span id="foldIndicator">FLAT</span></div>
+  </div>
+  <footer>▼ each corner folds inward — true diagonal crease (corner → center) | 3D rotate3d axis fold ▼</footer>
+</div>
+
+<script>
+  (function() {
+    const container = document.getElementById('foldingCube');
+    const foldBtn = document.getElementById('foldAction');
+    const resetBtn = document.getElementById('resetAction');
+    const stateSpan = document.getElementById('foldIndicator');
+    
+    let isFolded = false;   // false = flat unfolded, true = corners folded inward along diagonals
+
+    // toggle CSS class to trigger 3D rotations (each flap rotates 180° around its diagonal axis)
+    function setFoldedState(folded) {
+      if (folded) {
+        container.classList.add('folded');
+        stateSpan.textContent = 'FOLDED ✦ SMALL SQUARE';
+      } else {
+        container.classList.remove('folded');
+        stateSpan.textContent = 'FLAT ▢ FULL SQUARE';
+      }
+      isFolded = folded;
+    }
+
+    // trigger fold animation (only if not already folded)
+    function foldInward() {
+      if (isFolded) return;
+      setFoldedState(true);
+    }
+
+    // unfold back to original flat square
+    function unfoldFlat() {
+      if (!isFolded) return;
+      setFoldedState(false);
+    }
+
+    // click on the whole square toggles state (intuitive)
+    function onContainerClick(e) {
+      // prevent accidental toggling if button click propagates (already stopped)
+      if (isFolded) {
+        unfoldFlat();
+      } else {
+        foldInward();
+      }
+    }
+
+    // event binding with stopPropagation on buttons to avoid double toggles
+    if (container) container.addEventListener('click', onContainerClick);
+    
+    if (foldBtn) {
+      foldBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        foldInward();
+      });
+    }
+    
+    if (resetBtn) {
+      resetBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        unfoldFlat();
+      });
+    }
+
+    // initial state: fully flat, all flaps visible
+    setFoldedState(false);
+
+    // small additional detail: ensures that 3D transforms get proper rendering on all browsers
+    // force hardware acceleration hint
+    container.style.transformStyle = 'preserve-3d';
+    
+    // log clarity
+    console.log('✨ Diagonal folding active — each flap rotates 180° around diagonal axis (corner→center) using rotate3d');
+    
+    // optional: add subtle dynamic shadow enhancement on hover for better feedback
+    container.addEventListener('mouseenter', () => {
+      if (!isFolded) container.style.boxShadow = '0 35px 48px rgba(0, 0, 0, 0.35)';
+    });
+    container.addEventListener('mouseleave', () => {
+      if (!isFolded) container.style.boxShadow = '0 30px 40px rgba(0, 0, 0, 0.3)';
+    });
+  })();
+</script>
+</body>
+</html>

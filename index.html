@@ -10,6 +10,23 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --parchment: #fefcf8;
+            --parchment-dark: #f6f1e8;
+            --ink: #1f1e1c;
+            --ink-light: #3d3a35;
+            --ink-faded: #8f7f6e;
+            --accent-warm: #b45f3b;
+            --accent-gold: #c4945a;
+            --accent-red: #c0392b;
+            --crease: #d4b28c;
+            /* uniform quarter palette – topographical shades */
+            --q1: #e5d8c4;
+            --q2: #dcccb3;
+            --q3: #d3c0a2;
+            --q4: #cab491;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -18,21 +35,111 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: #fefcf8;
-            color: #1f1e1c;
+            background: var(--parchment);
+            color: var(--ink);
             line-height: 1.5;
             scroll-behavior: smooth;
+            position: relative;
+            overflow-x: hidden;
+            cursor: default;
+            user-select: none;
+        }
+
+        /* ── Map grid background ── */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            background:
+                repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(139, 115, 85, 0.05) 39px, rgba(139, 115, 85, 0.05) 40px),
+                repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(139, 115, 85, 0.05) 39px, rgba(139, 115, 85, 0.05) 40px);
+            opacity: 0.7;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+            background: radial-gradient(ellipse at center, transparent 60%, rgba(180, 160, 130, 0.15) 100%);
+        }
+
+        /* Cursor trail canvas */
+        #cursorTrailCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 150;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 2rem;
+            position: relative;
+            z-index: 2;
         }
 
-        /* ── header & nav ── */
+        /* Floating sparkles */
+        .sparkle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 50;
+            width: 4px;
+            height: 4px;
+            background: #d4a853;
+            border-radius: 50%;
+            box-shadow: 0 0 6px 2px rgba(212, 168, 83, 0.6), 0 0 12px 4px rgba(212, 168, 83, 0.3);
+            animation: sparkleFloat 8s ease-in-out infinite;
+            opacity: 0;
+        }
+        .sparkle:nth-child(1){animation-delay:0s; animation-duration:7s;}
+        .sparkle:nth-child(2){animation-delay:2s; animation-duration:9s;}
+        .sparkle:nth-child(3){animation-delay:4s; animation-duration:6.5s;}
+        .sparkle:nth-child(4){animation-delay:1s; animation-duration:8.5s;}
+        .sparkle:nth-child(5){animation-delay:3s; animation-duration:7.5s;}
+        .sparkle:nth-child(6){animation-delay:5s; animation-duration:10s;}
+        .sparkle:nth-child(7){animation-delay:0.5s; animation-duration:6s;}
+        .sparkle:nth-child(8){animation-delay:6s; animation-duration:8s;}
+
+        @keyframes sparkleFloat {
+            0%,100%{opacity:0; transform:translate(0,0) scale(0.5);}
+            10%{opacity:0.8;}
+            20%{opacity:0;}
+            25%{opacity:0; transform:translate(40px,-60px) scale(1.2);}
+            30%{opacity:0.9;}
+            40%{opacity:0; transform:translate(80px,-120px) scale(0.3);}
+            50%{opacity:0; transform:translate(30px,-30px) scale(0.8);}
+            55%{opacity:0.7;}
+            65%{opacity:0; transform:translate(-20px,-90px) scale(1);}
+            75%{opacity:0; transform:translate(-60px,-50px) scale(0.4);}
+            80%{opacity:0.6;}
+            90%{opacity:0; transform:translate(0,-100px) scale(0.6);}
+        }
+
+        .compass-rose {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 60;
+            pointer-events: none;
+            opacity: 0.5;
+            font-size: 2.5rem;
+            color: #8b7355;
+            animation: compassSpin 120s linear infinite;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+        @keyframes compassSpin { from{transform:rotate(0deg);} to{transform:rotate(360deg);} }
+
+        /* Header & nav */
         header {
-            background: rgba(254, 252, 248, 0.92);
+            background: rgba(254,252,248,0.85);
             backdrop-filter: blur(12px);
             position: sticky;
             top: 0;
@@ -40,7 +147,6 @@
             border-bottom: 1px solid #eae6df;
             padding: 1rem 0;
         }
-
         nav {
             display: flex;
             justify-content: space-between;
@@ -48,7 +154,6 @@
             flex-wrap: wrap;
             gap: 1rem;
         }
-
         .logo h1 {
             font-size: 1.5rem;
             font-weight: 600;
@@ -57,58 +162,53 @@
             background-clip: text;
             -webkit-background-clip: text;
             color: transparent;
+            cursor: pointer;
+            transition: transform 0.3s;
         }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-        }
-
+        .logo h1:hover { transform: scale(1.04); }
+        .nav-links { display: flex; gap: 2rem; list-style: none; }
         .nav-links a {
             text-decoration: none;
             font-weight: 500;
-            color: #3d3a35;
-            transition: color 0.2s;
+            color: var(--ink-light);
+            transition: color 0.2s, transform 0.2s;
             font-size: 0.95rem;
-        }
-
-        .nav-links a:hover {
-            color: #b45f3b;
-        }
-
-        /* ── sections ── */
-        section {
-            padding: 5rem 0;
-            border-bottom: 1px solid #f0ede8;
-        }
-
-        .section-title {
-            font-size: 2rem;
-            font-weight: 600;
-            letter-spacing: -0.02em;
-            margin-bottom: 2rem;
             position: relative;
-            display: inline-block;
         }
-
-        .section-title::after {
+        .nav-links a:hover { color: var(--accent-warm); transform: translateY(-2px); }
+        .nav-links a::after {
             content: '';
             position: absolute;
-            bottom: -8px;
+            bottom: -4px;
             left: 0;
-            width: 48px;
-            height: 3px;
-            background: #d4b28c;
-            border-radius: 4px;
+            width: 0;
+            height: 2px;
+            background: var(--accent-warm);
+            border-radius: 2px;
+            transition: width 0.3s;
         }
+        .nav-links a:hover::after { width: 100%; }
 
-        /* ── hero ── */
+        /* Hero (always visible) */
         .hero {
-            padding: 0 0 3rem;
+            padding: 0 0 2rem;
             background: linear-gradient(145deg, #fffbf5 0%, #faf6ef 100%);
             border-bottom: none;
+            position: relative;
         }
+        .hero::after {
+            content: '🗺️ You are here';
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 0.7rem;
+            color: #8b7355;
+            opacity: 0.6;
+            letter-spacing: 0.05em;
+            pointer-events: none;
+            animation: youAreHerePulse 3s ease-in-out infinite;
+        }
+        @keyframes youAreHerePulse { 0%,100%{opacity:0.4;} 50%{opacity:0.9;} }
 
         .banner-container {
             margin: 0 0 1rem 0;
@@ -117,8 +217,10 @@
             border-radius: 28px;
             overflow: hidden;
             max-height: 33vh;
+            cursor: pointer;
+            transition: box-shadow 0.3s;
         }
-
+        .banner-container:hover { box-shadow: 0 0 0 3px rgba(180,95,59,0.15); }
         .banner-image {
             width: 100%;
             height: auto;
@@ -127,7 +229,6 @@
             display: block;
             background: transparent;
         }
-
         .banner-placeholder {
             width: 100%;
             height: 140px;
@@ -140,7 +241,7 @@
             color: #5e4d39;
             font-weight: 500;
             text-transform: uppercase;
-            background-image: repeating-linear-gradient(45deg, rgba(255, 255, 240, 0.1) 0px, rgba(255, 255, 240, 0.1) 2px, transparent 2px, transparent 8px);
+            background-image: repeating-linear-gradient(45deg, rgba(255,255,240,0.1) 0px, rgba(255,255,240,0.1) 2px, transparent 2px, transparent 8px);
         }
 
         .hero-grid {
@@ -150,30 +251,24 @@
             align-items: center;
             margin-top: 2rem;
         }
-
-        .hero-content {
-            flex: 2;
-            min-width: 250px;
-        }
-
-        .hero-portrait {
-            background: transparent;
-        }
-
+        .hero-content { flex: 2; min-width: 250px; }
+        .hero-portrait { background: transparent; cursor: pointer; transition: transform 0.3s; }
+        .hero-portrait:hover { transform: scale(1.03); }
         .portrait-img {
             width: 100%;
             max-width: 220px;
             border-radius: 50%;
-            aspect-ratio: 1 / 1;
+            aspect-ratio: 1/1;
             object-fit: cover;
-            box-shadow: 0 12px 24px -12px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 12px 24px -12px rgba(0,0,0,0.15);
             border: 3px solid white;
+            transition: box-shadow 0.3s, border-color 0.3s;
         }
-
+        .hero-portrait:hover .portrait-img { box-shadow: 0 16px 32px -8px rgba(180,95,59,0.25); border-color: #f0e0d0; }
         .portrait-placeholder {
             width: 100%;
             max-width: 220px;
-            aspect-ratio: 1 / 1;
+            aspect-ratio: 1/1;
             background: #eae2d7;
             border-radius: 50%;
             display: flex;
@@ -182,8 +277,10 @@
             font-size: 3rem;
             color: #8b735b;
             margin: 0 auto;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            animation: placeholderPulse 2s ease-in-out infinite;
         }
+        @keyframes placeholderPulse { 0%,100%{box-shadow:0 8px 20px rgba(0,0,0,0.05);} 50%{box-shadow:0 12px 28px rgba(0,0,0,0.12);} }
 
         .hero-tag {
             display: inline-block;
@@ -194,29 +291,13 @@
             font-weight: 500;
             color: #5a3e2b;
             margin-bottom: 1rem;
+            transition: transform 0.2s, background 0.2s;
         }
+        .hero-tag:hover { transform: translateY(-2px); background: #dfd3c4; }
+        .hero h2 { font-size: 2.5rem; font-weight: 700; letter-spacing: -0.02em; line-height: 1.2; margin-bottom: 1rem; }
+        .hero p { font-size: 1.1rem; color: #4a453e; margin-bottom: 1.5rem; }
 
-        .hero h2 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            line-height: 1.2;
-            margin-bottom: 1rem;
-        }
-
-        .hero p {
-            font-size: 1.1rem;
-            color: #4a453e;
-            margin-bottom: 1.5rem;
-        }
-
-        .pill-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.6rem;
-            margin-top: 0.5rem;
-        }
-
+        .pill-list { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 0.5rem; }
         .pill {
             background: #ffffffd9;
             border: 1px solid #e2dbd1;
@@ -225,9 +306,222 @@
             font-size: 0.85rem;
             font-weight: 500;
             color: #5d4a38;
+            transition: all 0.25s;
+            cursor: default;
+        }
+        .pill:hover { transform: translateY(-3px); box-shadow: 0 6px 16px -6px rgba(0,0,0,0.15); border-color: #c9b896; background: #fffdf7; }
+
+        /* ══════════════════════════════════════
+           ORIGAMI 2x2 GRID
+           ══════════════════════════════════════ */
+        .overlay-content section.active-section {
+                display: block;
+        }
+        /* Origami grid is a square with four triangle primitives */
+        #origami-grid {
+            position: relative;
+            width: 100%;
+            max-width: 600px;   /* was 440px */
+            aspect-ratio: 1 / 1;
+            margin: 2rem auto 3rem;
+            border-radius: 24px;
+            overflow: visible;          /* allow quarters to pivot outside */
         }
 
-        /* ── cards grid ── */
+        .origami-mask {
+            position: absolute;
+            inset: 0;
+            border-radius: 24px;
+            background: #faf7f2;
+            box-shadow: 0 20px 40px -12px rgba(0,0,0,0.15);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Quarters are direct triangle primitives inside the square */
+        .quarter {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 2;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            align-items: center;       /* will be overridden for label positioning */
+            justify-content: center;
+            font-weight: 600;
+            font-size: 1rem;
+            color: #4a3b2e;
+            border: none;
+            pointer-events: auto;
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* Partition the square into four triangles that meet at the center */
+        .quarter.q1 { clip-path: polygon(0% 0%, 0% 100%, 50% 50%); }
+        .quarter.q2 { clip-path: polygon(0% 0%, 100% 0%, 50% 50%); }
+        .quarter.q3 { clip-path: polygon(100% 0%, 100% 100%, 50% 50%); }
+        .quarter.q4 { clip-path: polygon(0% 100%, 100% 100%, 50% 50%); }
+       
+
+        /* Background colours for each flap */
+        .quarter.q1 { background-color: var(--q1); }
+        .quarter.q2 { background-color: var(--q2); }
+        .quarter.q3 { background-color: var(--q3); }
+        .quarter.q4 { background-color: var(--q4); }
+
+
+        /* Label centering inside each triangle */
+        .quarter .quarter-label {
+            position: absolute;
+            background: rgba(255,255,255,0.8);
+            backdrop-filter: blur(4px);
+            padding: 0.3rem 0.8rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            transform: translate(-50%, -50%);
+            white-space: nowrap;
+        }
+        /* Position labels at the center of each square triangle */
+        .quarter.q1 .quarter-label { left: 25%; top: 50%; }
+        .quarter.q2 .quarter-label { left: 50%; top: 25%; }
+        .quarter.q3 .quarter-label { left: 75%; top: 50%; }
+        .quarter.q4 .quarter-label { left: 50%; top: 75%; }
+
+        /* Hover effect */
+        .quarter:hover {
+            transform: scale(1.03);
+            box-shadow: inset 0 0 0 3px rgba(180,95,59,0.25);
+            z-index: 2;
+        }
+        .quarter:active { transform: scale(0.97); }
+        .quarter:hover {
+            transform: scale(1.03);
+            box-shadow: inset 0 0 0 3px rgba(180,95,59,0.2);
+            z-index: 2;
+        }
+        .quarter:active { transform: scale(0.98); }
+        .quarter .quarter-label {
+            background: rgba(255,255,255,0.7);
+            backdrop-filter: blur(4px);
+            padding: 0.5rem 1rem;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            transition: background 0.3s;
+        }
+        .quarter:hover .quarter-label { background: rgba(255,255,255,0.9); }
+        /* Allow triangles to escape the diamond */
+        .quarter.unfold-active {
+            pointer-events: none;
+            transition: transform 1.0s cubic-bezier(0.25, 0.1, 0.15, 1),
+                        opacity 1.0s ease;
+            clip-path: none !important;
+        }
+
+        .quarter.unfold-active.q1 {
+            transform: translate(-150%, 150%) rotate(-10deg) scale(1.1);
+            opacity: 0;
+        }
+        .quarter.unfold-active.q2 {
+            transform: translate(-150%, -150%) rotate(10deg) scale(1.1);
+            opacity: 0;
+        }
+        .quarter.unfold-active.q3 {
+            transform: translate(150%, -150%) rotate(-10deg) scale(1.1);
+            opacity: 0;
+        }
+        .quarter.unfold-active.q4 {
+            transform: translate(150%, 150%) rotate(10deg) scale(1.1);
+            opacity: 0;
+        }
+        /* The dynamically created unfolding flap */
+        .unfold-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+            transform-origin: inherit;   /* will be set by JS */
+            transition: transform 0.6s cubic-bezier(0.25, 0.1, 0.15, 1);
+        }
+
+        /* Final state of the flap – opened flat, completing the square */
+        .unfold-flap.open {
+            transform: rotate(0deg) !important;
+        }
+
+        /* Hide the grid while the overlay is active */
+        #origami-grid.hidden {
+            display: none;
+        }
+        /* Optional wrapper (if you don't already have one) */
+        /* wrapper to give breathing room */
+        .origami-stage {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 4rem 0 6rem;
+        }
+        
+        #section-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--parchment);
+            z-index: 500;
+            overflow-y: auto;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            display: flex;                 /* always flex, just invisible */
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 2rem;
+            box-sizing: border-box;
+            transition: transform 0.5s cubic-bezier(0.25, 0.1, 0.15, 1),
+                        opacity 0.35s ease,
+                        visibility 0s 0.5s;   /* delay hiding until after transition */
+            transform: scale(0.8) rotate(-90deg);
+        }
+        #section-overlay.active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+            transform: scale(1) rotate(0deg);
+            transition: transform 0.5s cubic-bezier(0.25, 0.1, 0.15, 1),
+                        opacity 0.35s ease,
+                        visibility 0s 0s;      /* show immediately */
+        }
+        @keyframes overlayFadeIn { from{opacity:0; transform: scale(0.95);} to{opacity:1; transform: scale(1);} }
+        .overlay-close {
+            position: fixed;
+            top: 20px;
+            right: 30px;
+            font-size: 2.5rem;
+            color: #5a4a3a;
+            cursor: pointer;
+            z-index: 501;
+            transition: transform 0.3s, color 0.3s;
+        }
+        .overlay-close:hover { transform: rotate(90deg); color: var(--accent-warm); }
+        .overlay-content {
+            max-width: 1000px;
+            width: 100%;
+            margin-top: 3rem;
+        }
+        .overlay-content section { display: none; }
+        .overlay-content section.active-section { display: block; }
+
+
+        /* Card styles (identical to before, just kept for overlay) */
         .projects-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
@@ -235,459 +529,117 @@
             margin-top: 1rem;
             align-items: start;
         }
-
         .project-card {
             background: white;
             border-radius: 28px;
-            box-shadow: 0 12px 28px -8px rgba(0, 0, 0, 0.05);
-            transition: transform 0.2s ease, box-shadow 0.2s;
+            box-shadow: 0 12px 28px -8px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s;
             overflow: hidden;
             border: 1px solid #ede8e1;
             display: flex;
             flex-direction: column;
         }
+        .project-card:hover { transform: translateY(-6px); box-shadow: 0 28px 48px -12px rgba(0,0,0,0.14); }
+        .card-content { padding: 1.8rem; flex: 1; }
+        .project-title { font-size: 1.6rem; font-weight: 600; margin-bottom: 0.5rem; }
+        .project-meta { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; color: #b87c54; font-weight: 600; margin-bottom: 1rem; }
+        .project-desc { color: #3b3a37; margin-bottom: 1.4rem; font-size: 0.95rem; }
+        .image-placeholder { background: #f3efe9; min-height: 180px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .image-placeholder img { width: 100%; height: auto; object-fit: contain; transition: transform 0.4s; }
+        .project-card:hover .image-placeholder img { transform: scale(1.03); }
+        .pdf-embed { margin-top: 0.8rem; background: #faf8f4; border-radius: 20px; overflow: hidden; border: 1px solid #ece3da; }
+        .pdf-embed iframe { width: 100%; height: 350px; border: none; display: block; background: #faf8f4; }
 
-        .project-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 24px 40px -12px rgba(0, 0, 0, 0.12);
-        }
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+        .skill-table { width: 100%; border-collapse: collapse; background: white; border-radius: 24px; overflow: hidden; box-shadow: 0 6px 14px rgba(0,0,0,0.02); }
+        .skill-table td, .skill-table th { padding: 0.9rem 1.2rem; border-bottom: 1px solid #ece5dd; text-align: left; }
+        .skill-table th { background: #faf6f0; font-weight: 600; width: 120px; }
+        .education-item { margin-bottom: 1.8rem; }
 
-        .card-content {
-            padding: 1.8rem;
-            flex: 1;
-        }
+        .contact-links { display: flex; flex-wrap: wrap; gap: 1.8rem; margin-top: 1.5rem; }
+        .contact-links a { color: #2b2a27; text-decoration: none; font-weight: 500; border-bottom: 1px dashed #cdbcab; transition: all 0.25s; }
+        .contact-links a:hover { color: var(--accent-warm); border-bottom-style: solid; transform: translateY(-2px); }
 
-        .project-title {
-            font-size: 1.6rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
+        footer { text-align: center; padding: 2.5rem 0; color: #8f7f6e; font-size: 0.8rem; }
 
-        .project-meta {
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-            color: #b87c54;
-            font-weight: 600;
-            margin-bottom: 1rem;
-        }
-
-        .project-desc {
-            color: #3b3a37;
-            margin-bottom: 1.4rem;
-            font-size: 0.95rem;
-        }
-
-        .image-placeholder {
-            background: #f3efe9;
-            min-height: 180px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8rem;
-            color: #8f7a67;
-            overflow: hidden;
-        }
-
-        .image-placeholder img {
-            width: 100%;
-            height: auto;
-            object-fit: contain;
-        }
-
-        /* book cover (unused in current cards but kept for flexibility) */
-        .book-cover-img {
-            width: 100%;
-            max-height: 320px;
-            object-fit: contain;
-            border-radius: 16px;
-            margin-bottom: 1.2rem;
-            border: 1px solid #ede5db;
-        }
-
-        .book-cover-placeholder {
-            background: #e9e2d8;
-            height: 200px;
-            border-radius: 16px;
-            margin-bottom: 1.2rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-image: radial-gradient(circle at 20% 30%, rgba(180, 95, 59, 0.08) 2%, transparent 2.5%);
-            background-size: 28px 28px;
-            border: 1px solid #ddd4c8;
-            color: #8b765f;
-            font-weight: 500;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .pdf-embed {
-            margin-top: 0.8rem;
-            background: #faf8f4;
-            border-radius: 20px;
-            overflow: hidden;
-            border: 1px solid #ece3da;
-        }
-
-        .pdf-embed iframe {
-            width: 100%;
-            height: 350px;
-            border: none;
-            display: block;
-            background: #faf8f4;
-        }
-
-        /* ── two column layout ── */
-        .two-col {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-        }
-
-        .skill-table {
-            width: 100%;
-            border-collapse: collapse;
-            background: white;
-            border-radius: 24px;
-            overflow: hidden;
-            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.02);
-        }
-
-        .skill-table td,
-        .skill-table th {
-            padding: 0.9rem 1.2rem;
-            border-bottom: 1px solid #ece5dd;
-            text-align: left;
-        }
-
-        .skill-table th {
-            background: #faf6f0;
-            font-weight: 600;
-            width: 120px;
-        }
-
-        .education-item {
-            margin-bottom: 1.8rem;
-        }
-
-        .contact-links {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1.8rem;
-            margin-top: 1.5rem;
-        }
-
-        .contact-links a {
-            color: #2b2a27;
-            text-decoration: none;
-            font-weight: 500;
-            border-bottom: 1px dashed #cdbcab;
-        }
-
-        footer {
-            text-align: center;
-            padding: 2.5rem 0;
-            color: #8f7f6e;
-            font-size: 0.8rem;
-        }
-
-        /* ── collapsible cards ── */
-        .card-header {
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 1.8rem;
-            background: white;
-            border-radius: 28px 28px 0 0;
-        }
-
-        .toggle-icon {
-            font-size: 1.2rem;
-            color: #b87c54;
-            transition: transform 0.2s ease;
-        }
-
-        .card-content-inner {
-            padding: 0 1.8rem 1.8rem 1.8rem;
-        }
-
-        .card-content-inner.collapsed {
+        /* Collapsible cards (same logic) */
+        .card-header { cursor: pointer; display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.8rem; background: white; border-radius: 28px 28px 0 0; }
+        .toggle-icon { font-size: 1.2rem; color: #b87c54; transition: transform 0.3s; }
+        .card-content-inner { padding: 0 1.8rem 1.8rem 1.8rem; }
+        .card-content-inner.collapsed { display: none; }
+        .card-content-inner.expanded { display: block; animation: cardReveal 0.35s ease; }
+        @keyframes cardReveal { from{opacity:0; transform:translateY(-10px);} to{opacity:1; transform:translateY(0);} }
+        #creative-section .card-content-creative.collapsed {
             display: none;
         }
-
-        .card-content-inner.expanded {
+        #creative-section .card-content-creative.expanded {
             display: block;
+            animation: cardReveal 0.35s ease;
         }
-
-        /* ── creative work specific ── */
-        #work .image-placeholder {
-            width: 100%;
-            max-height: 25vh;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #f3efe9;
-        }
-
-        #work .image-placeholder img {
-            width: 100%;
-            height: auto;
-            object-fit: cover;
-            display: block;
-        }
-
-        #work .project-card {
-            cursor: pointer;
-        }
-
-        #work .card-content-creative {
-            transition: all 0.2s ease;
-        }
-
-        #work .card-content-creative.collapsed {
-            display: none;
-        }
-
-        #work .card-content-creative.expanded {
-            display: block;
-        }
-
-        #work .toggle-icon-creative {
+        #creative-section .toggle-icon-creative {
             float: right;
             font-size: 1.2rem;
             color: #b87c54;
-            transition: transform 0.2s ease;
+            transition: transform 0.3s;
         }
-
-        /* ── scientific work specific ── */
-        #scientific-work .image-placeholder {
-            height: 180px;
+        #creative-section .card-header-creative:hover .toggle-icon-creative {
+            transform: scale(1.2);
         }
+        /* Lightbox / gallery (unchanged) */
+        .lightbox { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.92); z-index:2000; justify-content:center; align-items:center; cursor:pointer; }
+        .lightbox.active { display:flex; }
+        .lightbox img { max-width:90%; max-height:90%; object-fit:contain; border-radius:16px; }
+        .lightbox-close { position:absolute; top:20px; right:40px; color:white; font-size:40px; font-weight:bold; cursor:pointer; z-index:2001; transition:0.2s; }
+        .lightbox-close:hover { color:#b87c54; transform:rotate(90deg); }
+        .gallery-lightbox { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:2000; justify-content:center; align-items:center; flex-direction:column; cursor:pointer; }
+        .gallery-lightbox.active { display:flex; }
+        .gallery-container { position:relative; width:90%; max-width:1000px; height:80%; display:flex; align-items:center; justify-content:center; }
+        .gallery-img { max-width:90%; max-height:90%; object-fit:contain; border-radius:16px; }
+        .gallery-close { position:absolute; top:20px; right:40px; color:white; font-size:40px; font-weight:bold; cursor:pointer; z-index:2001; transition:0.2s; }
+        .gallery-close:hover { color:#b87c54; transform:rotate(90deg); }
+        .gallery-prev, .gallery-next { position:absolute; top:50%; transform:translateY(-50%); background:rgba(255,255,255,0.2); color:white; font-size:2rem; padding:1rem; cursor:pointer; border-radius:50%; width:50px; height:50px; display:flex; align-items:center; justify-content:center; z-index:2001; }
+        .gallery-prev { left:20px; } .gallery-next { right:20px; }
+        .gallery-counter { position:absolute; bottom:20px; left:0; right:0; text-align:center; color:white; background:rgba(0,0,0,0.5); padding:5px 10px; width:fit-content; margin:0 auto; border-radius:20px; }
 
-        #scientific-work .image-placeholder img {
-            height: 100%;
-            object-fit: cover;
+        .clickable-image { cursor:pointer; transition: opacity 0.2s; }
+        .clickable-image:hover { opacity:0.9; }
+
+        .ink-splatter {
+            position:fixed; pointer-events:none; z-index:160;
+            width:30px; height:30px; border-radius:50%;
+            background:radial-gradient(circle, rgba(180,95,59,0.7) 0%, rgba(180,95,59,0) 70%);
+            transform:translate(-50%,-50%) scale(0);
+            animation:inkPop 0.7s ease-out forwards;
         }
+        @keyframes inkPop { 0%{transform:translate(-50%,-50%) scale(0); opacity:1;} 60%{transform:translate(-50%,-50%) scale(1.8); opacity:0.5;} 100%{transform:translate(-50%,-50%) scale(2.5); opacity:0;} }
 
-        /* ── lightbox ── */
-        .lightbox {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-        }
-
-        .lightbox.active {
-            display: flex;
-        }
-
-        .lightbox img {
-            max-width: 90%;
-            max-height: 90%;
-            object-fit: contain;
-            border-radius: 16px;
-        }
-
-        .lightbox-close {
-            position: absolute;
-            top: 20px;
-            right: 40px;
-            color: white;
-            font-size: 40px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .lightbox-close:hover {
-            color: #b87c54;
-        }
-
-        /* ── gallery lightbox (banner / portrait sets) ── */
-        .gallery-lightbox {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            cursor: pointer;
-        }
-
-        .gallery-lightbox.active {
-            display: flex;
-        }
-
-        .gallery-container {
-            position: relative;
-            width: 90%;
-            max-width: 1000px;
-            height: 80%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .gallery-img {
-            max-width: 90%;
-            max-height: 90%;
-            object-fit: contain;
-            border-radius: 16px;
-            transition: transform 0.2s ease;
-        }
-
-        .gallery-close {
-            position: absolute;
-            top: 20px;
-            right: 40px;
-            color: white;
-            font-size: 40px;
-            font-weight: bold;
-            cursor: pointer;
-            z-index: 2001;
-            transition: 0.2s;
-        }
-
-        .gallery-close:hover {
-            color: #b87c54;
-        }
-
-        .gallery-prev,
-        .gallery-next {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            font-size: 2rem;
-            padding: 1rem;
-            cursor: pointer;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: 0.2s;
-            user-select: none;
-        }
-
-        .gallery-prev {
-            left: 20px;
-        }
-
-        .gallery-next {
-            right: 20px;
-        }
-
-        .gallery-prev:hover,
-        .gallery-next:hover {
-            background: rgba(255, 255, 255, 0.4);
-            color: #b87c54;
-        }
-
-        .gallery-counter {
-            position: absolute;
-            bottom: 20px;
-            left: 0;
-            right: 0;
-            text-align: center;
-            color: white;
-            font-size: 0.9rem;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 5px 10px;
-            width: fit-content;
-            margin: 0 auto;
-            border-radius: 20px;
-        }
-
-        /* ── clickable images ── */
-        .clickable-image {
-            cursor: pointer;
-            transition: opacity 0.2s;
-        }
-
-        .clickable-image:hover {
-            opacity: 0.9;
-        }
-
-        /* ── responsive ── */
-        @media (max-width: 720px) {
-            .container {
-                padding: 0 1.5rem;
-            }
-
-            .hero h2 {
-                font-size: 2rem;
-            }
-
-            .two-col {
-                grid-template-columns: 1fr;
-            }
-
-            .nav-links {
-                gap: 1rem;
-            }
-
-            section {
-                padding: 3rem 0;
-            }
-
-            .pdf-embed iframe {
-                height: 240px;
-            }
-
-            .hero-grid {
-                flex-direction: column-reverse;
-                text-align: center;
-            }
-
-            .hero-content {
-                text-align: center;
-            }
-
-            .pill-list {
-                justify-content: center;
-            }
-
-            .gallery-prev,
-            .gallery-next {
-                width: 40px;
-                height: 40px;
-                font-size: 1.5rem;
-            }
-
-            .gallery-close {
-                top: 15px;
-                right: 20px;
-                font-size: 30px;
-            }
+        @media (max-width:720px) {
+            .container { padding:0 1.5rem; }
+            .hero h2 { font-size:2rem; }
+            .two-col { grid-template-columns:1fr; }
+            #origami-grid { max-width:90vw; }
+            .quarter .quarter-label { font-size:0.7rem; padding:0.3rem 0.7rem; }
         }
     </style>
 </head>
 <body>
-    <!-- ── Regular lightbox (card images) ── -->
+    <!-- Sparkles & compass -->
+    <div class="sparkle" style="top:12%;left:8%;"></div>
+    <div class="sparkle" style="top:25%;left:72%;"></div>
+    <div class="sparkle" style="top:55%;left:15%;"></div>
+    <div class="sparkle" style="top:70%;left:80%;"></div>
+    <div class="sparkle" style="top:35%;left:45%;"></div>
+    <div class="sparkle" style="top:80%;left:30%;"></div>
+    <div class="sparkle" style="top:15%;left:55%;"></div>
+    <div class="sparkle" style="top:60%;left:60%;"></div>
+    <div class="compass-rose">🧭</div>
+    <canvas id="cursorTrailCanvas"></canvas>
+
+    <!-- Lightboxes -->
     <div id="lightbox" class="lightbox" onclick="closeLightbox()">
         <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
         <img id="lightbox-img" src="" alt="Expanded view">
     </div>
-
-    <!-- ── Gallery lightbox (banner / portrait slideshows) ── -->
     <div id="galleryLightbox" class="gallery-lightbox">
         <span class="gallery-close">&times;</span>
         <div class="gallery-container">
@@ -698,29 +650,28 @@
         <div class="gallery-counter" id="galleryCounter"></div>
     </div>
 
-    <!-- ── Header ── -->
     <header>
         <div class="container">
             <nav>
                 <div class="logo"><h1>Stefano Tiso</h1></div>
                 <ul class="nav-links">
-                    <li><a href="#work">Work</a></li>
-                    <li><a href="#practice">Practice</a></li>
-                    <li><a href="#skills">Skills</a></li>
-                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="#" onclick="openQuarter('creative')">Work</a></li>
+                    <li><a href="#" onclick="openQuarter('practice')">Practice</a></li>
+                    <li><a href="#" onclick="openQuarter('skills')">Skills</a></li>
+                    <li><a href="#" onclick="openQuarter('skills')">Contact</a></li>
                 </ul>
             </nav>
         </div>
     </header>
 
     <main>
-        <!-- ── Hero ── -->
+        <!-- Hero -->
         <section class="hero">
             <div class="container">
                 <div class="banner-container">
                     <img src="Abbronzatura.png" alt="banner" class="banner-image"
-                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                    <div class="banner-placeholder" style="display: none;">📖 narrative design · interactive storytelling · playful learning</div>
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="banner-placeholder" style="display:none;">📖 narrative design · interactive storytelling · playful learning</div>
                 </div>
                 <div class="hero-grid">
                     <div class="hero-content">
@@ -731,786 +682,845 @@
                             <span class="pill">🇮🇹 Italian (native)</span>
                             <span class="pill">🇫🇷 French (fluent)</span>
                             <span class="pill">🇬🇧 English (fluent)</span>
+                            <span class="pill">Python · Jax · C++</span>
                             <span class="pill">Unity · C#</span>
                             <span class="pill">Dialogue trees</span>
                         </div>
                     </div>
                     <div class="hero-portrait">
                         <img src="portrait1.png" alt="Stefano Tiso" class="portrait-img"
-                        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        <div class="portrait-placeholder" style="display: none;">📷</div>
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="portrait-placeholder" style="display:none;">📷</div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- ── Creative Work ── -->
-        <section id="work">
-            <div class="container">
-                <h2 class="section-title">Creative work</h2>
-                <div class="projects-grid">
-                    <!-- Sognetti -->
-                    <div class="project-card">
-                        <div class="card-header-creative" onclick="toggleCreativeCard(this)">
-                            <div class="image-placeholder">
-                                <img src="sognetti.png" alt="Sognetti book cover" class="clickable-image"
-                                onerror="this.src='https://placehold.co/600x300/f3efe9/8f7a67?text=Sognetti+Cover'">
+        <!-- ═══ ORIGAMI 2x2 GRID ═══ -->
+        <div class="origami-stage">
+            <div id="origami-grid">
+                <div class="origami-mask" aria-hidden="true"></div>
+                <div class="quarter q1" data-section="creative" onclick="openQuarter('creative', this)">
+                    <span class="jaffee" style="--bg:transparent;">
+                        <span class="a"></span>
+                        <span class="bc">
+                            <span class="b"></span>
+                            <span class="c"></span>
+                        </span>
+                    </span>
+                    <span class="quarter-label">🎨 Creative Work</span>
+                </div>
+                <div class="quarter q2" data-section="scientific" onclick="openQuarter('scientific', this)">
+                    <span class="jaffee" style="--bg:transparent;">
+                        <span class="a"></span>
+                        <span class="bc">
+                            <span class="b"></span>
+                            <span class="c"></span>
+                        </span>
+                    </span>
+                    <span class="quarter-label">🔬 Scientific Work</span>
+                </div>
+                <div class="quarter q3" data-section="practice" onclick="openQuarter('practice', this)">
+                    <span class="jaffee" style="--bg:transparent;">
+                        <span class="a"></span>
+                        <span class="bc">
+                            <span class="b"></span>
+                            <span class="c"></span>
+                        </span>
+                    </span>
+                    <span class="quarter-label">🎭 Practice</span>
+                </div>
+                <div class="quarter q4" data-section="skills" onclick="openQuarter('skills', this)">
+                    <span class="jaffee" style="--bg:transparent;">
+                        <span class="a"></span>
+                        <span class="bc">
+                            <span class="b"></span>
+                            <span class="c"></span>
+                        </span>
+                    </span>
+                    <span class="quarter-label">📋 Skills & Contact</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ═══ SECTION OVERLAY (hidden until unfolded) ═══ -->
+    <div id="section-overlay">
+        <span class="overlay-close" onclick="closeOverlay()">&times;</span>
+        <div class="overlay-content">
+            <!-- Creative Work -->
+            <section id="creative-section">
+                <div class="container">
+                    <h2 class="section-title">Creative work</h2>
+                    <div class="projects-grid">
+                        <!-- Sognetti -->
+                        <div class="project-card">
+                            <div class="card-header-creative" onclick="toggleCreativeCard(event, this)">
+                                <div class="image-placeholder">
+                                    <img src="sognetti.png" alt="Sognetti book cover" class="clickable-image"
+                                         onerror="this.src='https://placehold.co/600x300/f3efe9/8f7a67?text=Sognetti+Cover'">
+                                </div>
+                                <div style="display:flex; justify-content:space-between; align-items:center; padding:0.5rem 1.8rem 1rem 1.8rem;">
+                                    <div class="project-title">Sognetti</div>
+                                    <span class="toggle-icon-creative">▼</span>
+                                </div>
                             </div>
-                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 1.8rem 1rem 1.8rem;">
-                                <div class="project-title">Sognetti</div>
-                                <span class="toggle-icon-creative">▼</span>
+                            <div class="card-content-creative expanded">
+                                <div class="card-content" style="padding:0 1.8rem 1.8rem 1.8rem;">
+                                    <div class="project-meta">2025–present · Author, Editor, Art director</div>
+                                    <ul class="project-desc" style="list-style-type:disc; padding-left:1.2rem; margin-bottom:1.4rem;">
+                                        <li>Collective literary anthology</li>
+                                        <li>Curated texts from multiple writers; wrote majority of stories</li>
+                                        <li>Handled editing and typography</li>
+                                        <li>Book project bringing diverse voices into a shared narrative universe</li>
+                                    </ul>
+                                    <div class="pdf-embed" style="background:#faf8f4; border-radius:20px; padding:1rem; text-align:center; border:1px solid #ece3da;">
+                                        <iframe src="260513_SOGNO.pdf" title="Sognetti excerpt" loading="lazy" style="width:100%; height:350px; border:none; display:block;"
+                                                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"></iframe>
+                                        <div style="display:none; padding:2rem; text-align:center;">
+                                            <p>📄 <a href="260513_SOGNO.pdf" target="_blank" style="color:#b45f3b;">Click here to view PDF</a></p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="card-content-creative expanded">
-                            <div class="card-content" style="padding: 0 1.8rem 1.8rem 1.8rem;">
-                                <div class="project-meta">2025–present · Author, Editor, Art director</div>
-                                <ul class="project-desc" style="list-style-type: disc; padding-left: 1.2rem; margin-bottom: 1.4rem;">
-                                    <li>Collective literary anthology</li>
-                                    <li>Curated texts from multiple writers; wrote majority of stories</li>
-                                    <li>Handled editing and typography</li>
-                                    <li>Book project bringing diverse voices into a shared narrative universe</li>
-                                </ul>
-                                <div class="pdf-embed" style="background: #faf8f4; border-radius: 20px; padding: 1rem; text-align: center; border: 1px solid #ece3da;">
-                                    <iframe src="260513_SOGNO.pdf" title="Sognetti excerpt" loading="lazy" style="width:100%; height:350px; border:none; display:block;"
-                                    onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                                </iframe>
-                                <div style="display:none; padding: 2rem; text-align: center;">
-                                    <p>📄 <a href="260513_SOGNO.pdf" target="_blank" style="color: #b45f3b;">Click here to view PDF</a></p>
+                        <!-- Passage technique -->
+                        <div class="project-card">
+                            <div class="card-header-creative" onclick="toggleCreativeCard(event, this)">
+                                <div class="image-placeholder">
+                                    <img src="GRANDE_CARTE_FINALE_1.png" alt="Passage technique map preview" class="clickable-image"
+                                         onerror="this.src='https://placehold.co/600x300/f3efe9/8f7a67?text=map+preview'">
+                                </div>
+                                <div style="display:flex; justify-content:space-between; align-items:center; padding:0.5rem 1.8rem 1rem 1.8rem;">
+                                    <div class="project-title">Passage technique</div>
+                                    <span class="toggle-icon-creative">▼</span>
+                                </div>
+                            </div>
+                            <div class="card-content-creative expanded">
+                                <div class="card-content" style="padding:0 1.8rem 1.8rem 1.8rem;">
+                                    <div class="project-meta">2026–present · Narrative video game</div>
+                                    <ul class="project-desc" style="list-style-type:disc; padding-left:1.2rem; margin-bottom:1.4rem;">
+                                        <li>Branching narrative set in a parallel Briançon after climatic collapse</li>
+                                        <li>Interactive map with moving characters and dialogue-driven choices</li>
+                                        <li>Hand‑crafted dialogue trees and narrative coherence</li>
+                                        <li>Authentic cultural elements</li>
+                                    </ul>
+                                    <div style="margin-top:0.8rem;">
+                                        <img src="Animation.gif" alt="game animation" style="max-width:100%; border-radius:16px; margin-top:0.5rem; border:1px solid #f0eae2;" onerror="this.style.display='none'">
+                                        <img src="Animation1.gif" alt="game animation" style="max-width:100%; border-radius:16px; margin-top:0.5rem; border:1px solid #f0eae2;" onerror="this.style.display='none'">
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </section>
 
-                <!-- Passage technique -->
-                <div class="project-card">
-                    <div class="card-header-creative" onclick="toggleCreativeCard(this)">
-                        <div class="image-placeholder">
-                            <img src="GRANDE_CARTE_FINALE_1.png" alt="Passage technique map preview" class="clickable-image"
-                            onerror="this.src='https://placehold.co/600x300/f3efe9/8f7a67?text=map+preview'">
+            <!-- Scientific Work -->
+            <section id="scientific-section">
+                <div class="container">
+                    <h2 class="section-title">Scientific work</h2>
+                    <div class="projects-grid">
+                        <!-- PhD Thesis -->
+                        <div class="project-card">
+                            <div class="card-header" onclick="toggleCard(this)">
+                                <div class="project-title">PhD Thesis</div>
+                                <span class="toggle-icon">▶</span>
+                            </div>
+                            <div class="card-content-inner collapsed">
+                                <div class="project-meta">Computational Biology · University of Groningen (2024)</div>
+                                <ul class="project-desc" style="list-style-type:disc; padding-left:1.2rem; margin-bottom:1.4rem;">
+                                    <li><strong>Evolvability and organismal architecture:</strong> The blind watchmaker and the reminiscent architect</li>
+                                    <li>Research at the intersection of evolutionary theory, genetics, and artificial intelligence</li>
+                                    <li>Gene regulatory networks · evolutionary robotics · developmental genetics · morphology</li>
+                                    <li>Individual-based modeling of density dependence and reverse evolution</li>
+                                </ul>
+                                <div class="pdf-embed"><iframe src="Written samples.pdf" title="PhD Thesis Preview" loading="lazy" style="width:100%; height:350px; border:none;"></iframe></div>
+                                <p style="font-size:0.75rem; color:#8f7f6e; margin-top:0.5rem; text-align:right;">PDF preview — <a href="https://research.rug.nl/en/publications/evolvability-and-organismal-architecture-the-blind-watchmaker-and" target="_blank" style="color:#b45f3b;">view full thesis →</a></p>
+                            </div>
                         </div>
-                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 1.8rem 1rem 1.8rem;">
-                            <div class="project-title">Passage technique</div>
-                            <span class="toggle-icon-creative">▼</span>
+                        <!-- GECCO 2023 -->
+                        <div class="project-card">
+                            <div class="card-header" onclick="toggleCard(this)">
+                                <div class="project-title">Biological insights on grammar‑structured mutations improve fitness and diversity</div>
+                                <span class="toggle-icon">▶</span>
+                            </div>
+                            <div class="card-content-inner collapsed">
+                                <div class="project-meta">GECCO 2023 · First author</div>
+                                <ul class="project-desc" style="list-style-type:disc; padding-left:1.2rem; margin-bottom:1.4rem;">
+                                    <li>Proposed <strong>Facilitated Mutation (FM)</strong> inspired by Facilitated Variation theory</li>
+                                    <li><strong>Results:</strong> +0.5% test accuracy, +53% average population fitness, +523 more high-quality solutions</li>
+                                </ul>
+                                <div class="pdf-embed"><iframe src="grammarmutation.pdf" title="GECCO 2023 Paper Preview" loading="lazy" style="width:100%; height:350px; border:none;"></iframe></div>
+                                <p style="font-size:0.75rem; color:#8f7f6e; margin-top:0.5rem; text-align:right;">PDF preview — <a href="https://doi.org/10.1145/3583131.3590472" target="_blank" style="color:#b45f3b;">view on ACM Digital Library →</a></p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="card-content-creative expanded">
-                        <div class="card-content" style="padding: 0 1.8rem 1.8rem 1.8rem;">
-                            <div class="project-meta">2026–present · Narrative video game</div>
-                            <ul class="project-desc" style="list-style-type: disc; padding-left: 1.2rem; margin-bottom: 1.4rem;">
-                                <li>Branching narrative set in a parallel Briançon after climatic collapse</li>
-                                <li>Interactive map with moving characters and dialogue-driven choices</li>
-                                <li>Hand‑crafted dialogue trees and narrative coherence</li>
-                                <li>Authentic cultural elements</li>
-                            </ul>
-                            <div style="margin-top: 0.8rem;">
-                                <img src="Animation.gif" alt="game animation" style="max-width: 100%; border-radius: 16px; margin-top: 0.5rem; border: 1px solid #f0eae2;"
-                                onerror="this.style.display='none'">
-                                <img src="Animation1.gif" alt="game animation" style="max-width: 100%; border-radius: 16px; margin-top: 0.5rem; border: 1px solid #f0eae2;"
-                                onerror="this.style.display='none'">
+                        <!-- TREE 2022 -->
+                        <div class="project-card">
+                            <div class="card-header" onclick="toggleCard(this)">
+                                <div class="project-title">Capturing the facets of evolvability in a mechanistic framework</div>
+                                <span class="toggle-icon">▶</span>
+                            </div>
+                            <div class="card-content-inner collapsed">
+                                <div class="project-meta">Trends in Ecology & Evolution · 2022 · Co-author</div>
+                                <ul class="project-desc" style="list-style-type:disc; padding-left:1.2rem; margin-bottom:1.4rem;">
+                                    <li>Published in <em>Trends in Ecology & Evolution</em> (Impact factor: 20.6)</li>
+                                    <li>Proposed a unifying framework for evolvability determinants</li>
+                                </ul>
+                                <div class="pdf-embed"><iframe src="Capturing the facets of evolvability in a mechanistic framework (1).pdf" title="Evolvability Paper Preview" loading="lazy" style="width:100%; height:350px; border:none;"></iframe></div>
+                                <p style="font-size:0.75rem; color:#8f7f6e; margin-top:0.5rem; text-align:right;">PDF preview — <a href="https://doi.org/10.1016/j.tree.2022.01.004" target="_blank" style="color:#b45f3b;">view on publisher's website →</a></p>
+                            </div>
+                        </div>
+                        <!-- Reverse Evolution -->
+                        <div class="project-card">
+                            <div class="card-header" onclick="toggleCard(this)">
+                                <div class="project-title">Reverse Evolution & Phenotypic Plasticity</div>
+                                <span class="toggle-icon">▶</span>
+                            </div>
+                            <div class="card-content-inner collapsed">
+                                <div class="project-meta">Evolutionary Biology · Peer-reviewed article</div>
+                                <ul class="project-desc" style="list-style-type:disc; padding-left:1.2rem; margin-bottom:1.4rem;">
+                                    <li>Dollo's law of irreversibility and plastic traits in parasitic wasps</li>
+                                    <li>Lipogenesis switches on in fat-poor environments and off in fat-rich environments</li>
+                                </ul>
+                                <div class="pdf-embed"><iframe src="DollosLaw.pdf" title="Journal Article Preview" loading="lazy" style="width:100%; height:350px; border:none;"></iframe></div>
+                                <p style="font-size:0.75rem; color:#8f7f6e; margin-top:0.5rem; text-align:right;">PDF preview — download available</p>
+                            </div>
+                        </div>
+                        <!-- Social Environments -->
+                        <div class="project-card">
+                            <div class="card-header" onclick="toggleCard(this)">
+                                <div class="project-title">Social Environments & Mate Attraction</div>
+                                <span class="toggle-icon">▶</span>
+                            </div>
+                            <div class="card-content-inner collapsed">
+                                <div class="project-meta">Behavioral Ecology · Field study</div>
+                                <ul class="project-desc" style="list-style-type:disc; padding-left:1.2rem; margin-bottom:1.4rem;">
+                                    <li>Automated RFID-surveillance system in wild field crickets (<em>Gryllus campestris</em>)</li>
+                                    <li>Attractiveness increases from low to intermediate density (Allee effect)</li>
+                                </ul>
+                                <div class="pdf-embed"><iframe src="Crickets.pdf" title="Second Journal Article Preview" loading="lazy" style="width:100%; height:350px; border:none;"></iframe></div>
+                                <p style="font-size:0.75rem; color:#8f7f6e; margin-top:0.5rem; text-align:right;">PDF preview — download available</p>
+                            </div>
+                        </div>
+                        <!-- Google Scholar -->
+                        <div class="project-card">
+                            <div class="card-header" onclick="toggleCard(this)">
+                                <div class="project-title">Google Scholar</div>
+                                <span class="toggle-icon">▶</span>
+                            </div>
+                            <div class="card-content-inner collapsed">
+                                <div class="project-meta">Publications & citation metrics</div>
+                                <ul class="project-desc" style="list-style-type:disc; padding-left:1.2rem; margin-bottom:1.4rem;">
+                                    <li>Complete list of peer-reviewed publications including the 2022 TREE paper</li>
+                                    <li>PhD thesis on evolvability and organismal architecture</li>
+                                </ul>
+                                <a href="https://scholar.google.com/citations?user=s.tiso" target="_blank" style="display:inline-flex; align-items:center; gap:0.5rem; margin-top:1rem; color:#b45f3b; text-decoration:none; font-weight:500;">📚 View Google Scholar Profile →</a>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </section>
+            </section>
 
-    <!-- ── Scientific Work ── -->
-    <section id="scientific-work">
-        <div class="container">
-            <h2 class="section-title">Scientific work</h2>
-            <div class="projects-grid">
-                <!-- PhD Thesis -->
-                <div class="project-card">
-                    <div class="card-header" onclick="toggleCard(this)">
-                        <div class="project-title">PhD Thesis</div>
-                        <span class="toggle-icon">▶</span>
-                    </div>
-                    <div class="card-content-inner collapsed">
-                        <div class="project-meta">Computational Biology · University of Groningen (2024)</div>
-                        <ul class="project-desc" style="list-style-type: disc; padding-left: 1.2rem; margin-bottom: 1.4rem;">
-                            <li><strong>Evolvability and organismal architecture:</strong> The blind watchmaker and the reminiscent architect</li>
-                            <li>Research at the intersection of evolutionary theory, genetics, and artificial intelligence</li>
-                            <li>Gene regulatory networks · evolutionary robotics · developmental genetics · morphology</li>
-                            <li>Individual-based modeling of density dependence and reverse evolution</li>
-                        </ul>
-                        <div class="pdf-embed" style="margin-top: 0.8rem;">
-                            <iframe src="Written samples.pdf" title="PhD Thesis Preview" loading="lazy" style="width:100%; height:350px; border:none; display:block;"></iframe>
+            <!-- Practice -->
+            <section id="practice-section">
+                <div class="container">
+                    <h2 class="section-title">Practice</h2>
+                    <div class="two-col">
+                        <div class="practice-card" style="background:white; border-radius:24px; padding:1.8rem; box-shadow:0 6px 12px -6px rgba(0,0,0,0.05);">
+                            <h3 style="font-size:1.5rem; margin-bottom:0.5rem;">🧩 Teaching (2020–2023)</h3>
+                            <p style="color:#4f4a43;">Volunteer teacher — game programming for children. Weekly Unity/C# workshops for ages 6–12; progressive learning sequences combining craft, curiosity, and play.</p>
                         </div>
-                        <p style="font-size: 0.75rem; color: #8f7f6e; margin-top: 0.5rem; text-align: right;">PDF preview — <a href="https://research.rug.nl/en/publications/evolvability-and-organismal-architecture-the-blind-watchmaker-and" target="_blank" style="color: #b45f3b;">view full thesis on University of Groningen portal →</a></p>
-                    </div>
-                </div>
-
-                <!-- GECCO 2023 -->
-                <div class="project-card">
-                    <div class="card-header" onclick="toggleCard(this)">
-                        <div class="project-title">Biological insights on grammar‑structured mutations improve fitness and diversity</div>
-                        <span class="toggle-icon">▶</span>
-                    </div>
-                    <div class="card-content-inner collapsed">
-                        <div class="project-meta">GECCO 2023 · First author</div>
-                        <ul class="project-desc" style="list-style-type: disc; padding-left: 1.2rem; margin-bottom: 1.4rem;">
-                            <li>Proposed <strong>Facilitated Mutation (FM)</strong> inspired by evolutionary biology's Facilitated Variation theory</li>
-                            <li><strong>Results:</strong> +0.5% test accuracy, +53% average population fitness, +523 more high-quality solutions</li>
-                            <li>Co-authored with Carvalho, Lourenço, and Machado (University of Coimbra)</li>
-                        </ul>
-                        <div class="pdf-embed" style="margin-top: 0.8rem;">
-                            <iframe src="grammarmutation.pdf" title="GECCO 2023 Paper Preview" loading="lazy" style="width:100%; height:350px; border:none; display:block;"></iframe>
+                        <div class="practice-card" style="background:white; border-radius:24px; padding:1.8rem; box-shadow:0 6px 12px -6px rgba(0,0,0,0.05);">
+                            <h3 style="font-size:1.5rem; margin-bottom:0.5rem;">🎭 TTRPG & theatre (2009–present)</h3>
+                            <p style="color:#4f4a43;">Campaign GMing and homebrew worlds; theatre writing, acting, and directing — including immersive one‑spectator performances.</p>
                         </div>
-                        <p style="font-size: 0.75rem; color: #8f7f6e; margin-top: 0.5rem; text-align: right;">PDF preview — <a href="https://doi.org/10.1145/3583131.3590472" target="_blank" style="color: #b45f3b;">view on ACM Digital Library →</a></p>
                     </div>
                 </div>
+            </section>
 
-                <!-- TREE 2022 -->
-                <div class="project-card">
-                    <div class="card-header" onclick="toggleCard(this)">
-                        <div class="project-title">Capturing the facets of evolvability in a mechanistic framework</div>
-                        <span class="toggle-icon">▶</span>
-                    </div>
-                    <div class="card-content-inner collapsed">
-                        <div class="project-meta">Trends in Ecology & Evolution · 2022 · Co-author</div>
-                        <ul class="project-desc" style="list-style-type: disc; padding-left: 1.2rem; margin-bottom: 1.4rem;">
-                            <li>Published in <em>Trends in Ecology & Evolution</em> (Impact factor: 20.6), one of the leading journals in evolutionary biology</li>
-                            <li>Proposed a unifying framework to categorize evolvability determinants into three key categories: <strong>(1)</strong> determinants providing variation, <strong>(2)</strong> determinants shaping fitness effects, and <strong>(3)</strong> determinants shaping the selection process</li>
-                            <li>Introduced critical distinctions between <strong>general vs. specific evolvability</strong> and <strong>broad vs. narrow scope</strong> of evolvability determinants</li>
-                            <li>Co-authored with Jana M. Riederer, Timo J.B. van Eldijk, and Franz J. Weissing</li>
-                            <li>Framework designed to reduce misunderstandings across disciplines and guide future evolutionary research</li>
-                        </ul>
-                        <div class="pdf-embed" style="margin-top: 0.8rem;">
-                            <iframe src="Capturing the facets of evolvability in a mechanistic framework (1).pdf" title="Evolvability Paper Preview" loading="lazy" style="width:100%; height:350px; border:none; display:block;"></iframe>
+            <!-- Skills & Contact -->
+            <section id="skills-section">
+                <div class="container">
+                    <h2 class="section-title">Skills & education</h2>
+                    <div class="two-col">
+                        <div>
+                            <table class="skill-table">
+                                <tr><th>Narrative</th><td>Script editing, dialogue trees, interactive narrative design, worldbuilding, editorial leadership</td></tr>
+                                <tr><th>Technical</th><td>Unity (C#), Python, LangGraph, text-based scripting, multimodal (sound + image)</td></tr>
+                                <tr><th>Collaboration</th><td>Iteration, feedback loops, documentation, cross‑discipline communication</td></tr>
+                            </table>
                         </div>
-                        <p style="font-size: 0.75rem; color: #8f7f6e; margin-top: 0.5rem; text-align: right;">PDF preview — <a href="https://doi.org/10.1016/j.tree.2022.01.004" target="_blank" style="color: #b45f3b;">view on publisher's website →</a></p>
-                    </div>
-                </div>
-
-                <!-- Reverse Evolution -->
-                <div class="project-card">
-                    <div class="card-header" onclick="toggleCard(this)">
-                        <div class="project-title">Reverse Evolution & Phenotypic Plasticity</div>
-                        <span class="toggle-icon">▶</span>
-                    </div>
-                    <div class="card-content-inner collapsed">
-                        <div class="project-meta">Evolutionary Biology · Peer-reviewed article</div>
-                        <ul class="project-desc" style="list-style-type: disc; padding-left: 1.2rem; margin-bottom: 1.4rem;">
-                            <li>Dollo's law of irreversibility and plastic traits in parasitic wasps</li>
-                            <li>Lipogenesis switches on in fat-poor environments and off in fat-rich environments</li>
-                            <li>Lineages that lost lipogenic ability >200 million years ago still retain fat synthesis as a plastic trait</li>
-                            <li>Individual-based simulations show plasticity can persist for thousands of generations</li>
-                        </ul>
-                        <div class="pdf-embed" style="margin-top: 0.8rem;">
-                            <iframe src="DollosLaw.pdf" title="Journal Article Preview" loading="lazy" style="width:100%; height:350px; border:none; display:block;"></iframe>
+                        <div>
+                            <div class="education-item"><strong>PhD in Computational Biology</strong><br>University of Groningen (2019–2024)</div>
+                            <div class="education-item"><strong>Erasmus Mundus Master's</strong><br>LMU Munich, Groningen, Montpellier (2016–2018)</div>
+                            <div style="margin-top:1rem; font-style:italic; color:#6b5a4b;">📄 References available upon request.</div>
                         </div>
-                        <p style="font-size: 0.75rem; color: #8f7f6e; margin-top: 0.5rem; text-align: right;">PDF preview — download available</p>
                     </div>
                 </div>
-
-                <!-- Social Environments -->
-                <div class="project-card">
-                    <div class="card-header" onclick="toggleCard(this)">
-                        <div class="project-title">Social Environments & Mate Attraction</div>
-                        <span class="toggle-icon">▶</span>
-                    </div>
-                    <div class="card-content-inner collapsed">
-                        <div class="project-meta">Behavioral Ecology · Field study</div>
-                        <ul class="project-desc" style="list-style-type: disc; padding-left: 1.2rem; margin-bottom: 1.4rem;">
-                            <li>Automated RFID-surveillance system in wild field crickets (<em>Gryllus campestris</em>)</li>
-                            <li>Attractiveness increases from low to intermediate density (Allee effect), then declines at higher densities</li>
-                            <li>Individual-specific Allee effects that may be evolvable</li>
-                            <li>Males attractive under low densities remain attractive under higher densities</li>
-                        </ul>
-                        <div class="pdf-embed" style="margin-top: 0.8rem;">
-                            <iframe src="Crickets.pdf" title="Second Journal Article Preview" loading="lazy" style="width:100%; height:350px; border:none; display:block;"></iframe>
-                        </div>
-                        <p style="font-size: 0.75rem; color: #8f7f6e; margin-top: 0.5rem; text-align: right;">PDF preview — download available</p>
+                <div class="container" style="margin-top:3rem;">
+                    <h2 class="section-title">Contact</h2>
+                    <div class="contact-links">
+                        <a href="mailto:stefano.tiso.evo@gmail.com">📧 stefano.tiso.evo@gmail.com</a>
+                        <a href="tel:+33763935724">📞 +33 7 63 93 57 24</a>
+                        <a href="https://www.linkedin.com/in/stefano-tiso-evo-data" target="_blank">🔗 LinkedIn</a>
+                        <a href="https://github.com/swom" target="_blank">🐙 GitHub</a>
                     </div>
                 </div>
-
-                <!-- Google Scholar -->
-                <div class="project-card">
-                    <div class="card-header" onclick="toggleCard(this)">
-                        <div class="project-title">Google Scholar</div>
-                        <span class="toggle-icon">▶</span>
-                    </div>
-                    <div class="card-content-inner collapsed">
-                        <div class="project-meta">Publications & citation metrics</div>
-                        <ul class="project-desc" style="list-style-type: disc; padding-left: 1.2rem; margin-bottom: 1.4rem;">
-                            <li>Complete list of peer-reviewed publications including the 2022 TREE paper</li>
-                            <li>PhD thesis on evolvability and organismal architecture</li>
-                            <li>Articles on evolutionary plasticity, Dollo's law, and behavioral ecology</li>
-                            <li>Citation metrics and research impact tracking</li>
-                        </ul>
-                        <a href="https://scholar.google.com/citations?user=s.tiso" target="_blank" style="display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 1rem; color: #b45f3b; text-decoration: none; font-weight: 500; border-bottom: 1px solid transparent; transition: 0.2s;"
-                        onmouseover="this.style.borderBottomColor='#b45f3b'"
-                        onmouseout="this.style.borderBottomColor='transparent'">
-                        📚 View Google Scholar Profile →
-                    </a>
-                </div>
-            </div>
+            </section>
         </div>
     </div>
-</section>
 
-<!-- ── Practice & Teaching ── -->
-<section id="practice">
-    <div class="container">
-        <h2 class="section-title">Practice</h2>
-        <div class="two-col">
-            <div class="practice-card" style="background: white; border-radius: 24px; padding: 1.8rem; box-shadow: 0 6px 12px -6px rgba(0,0,0,0.05);">
-                <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem;">🧩 Teaching (2020–2023)</h3>
-                <p style="color: #4f4a43;">Volunteer teacher — game programming for children. Weekly Unity/C# workshops for ages 6–12; progressive learning sequences combining craft, curiosity, and play.</p>
-            </div>
-            <div class="practice-card" style="background: white; border-radius: 24px; padding: 1.8rem; box-shadow: 0 6px 12px -6px rgba(0,0,0,0.05);">
-                <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem;">🎭 TTRPG & theatre (2009–present)</h3>
-                <p style="color: #4f4a43;">Campaign GMing and homebrew worlds; theatre writing, acting, and directing — including immersive one‑spectator performances.</p>
-            </div>
-        </div>
-    </div>
-</section>
+    <script>
+        // Banner & portrait: show placeholder while loading and attempt fallback images
+        document.addEventListener('DOMContentLoaded', function(){
+            const banner = document.querySelector('.banner-image');
+            const bannerPlaceholder = document.querySelector('.banner-placeholder');
+            if(banner && bannerPlaceholder){
+                // show placeholder until image loads successfully
+                bannerPlaceholder.style.display = 'flex';
+                banner.addEventListener('load', function(){
+                    banner.style.display = 'block';
+                    bannerPlaceholder.style.display = 'none';
+                });
+                banner.addEventListener('error', function(){
+                    // try a sane default once (avoid infinite loops)
+                    if(!this.dataset.triedDefault){
+                        this.dataset.triedDefault = '1';
+                        this.src = 'banner1.png';
+                    } else {
+                        this.style.display = 'none';
+                        bannerPlaceholder.style.display = 'flex';
+                    }
+                });
+            }
 
-<!-- ── Skills & Education ── -->
-<section id="skills">
-    <div class="container">
-        <h2 class="section-title">Skills & education</h2>
-        <div class="two-col">
-            <div>
-                <table class="skill-table">
-                    <tr><th>Narrative</th><td>Script editing, dialogue trees, interactive narrative design, worldbuilding, editorial leadership</td></tr>
-                    <tr><th>Technical</th><td>Unity (C#), Python, LangGraph, text-based scripting, multimodal (sound + image)</td></tr>
-                    <tr><th>Collaboration</th><td>Iteration, feedback loops, documentation, cross‑discipline communication</td></tr>
-                </table>
-            </div>
-            <div>
-                <div class="education-item"><strong>PhD in Computational Biology</strong><br>University of Groningen (2019–2024)</div>
-                <div class="education-item"><strong>Erasmus Mundus Master's</strong><br>LMU Munich, Groningen, Montpellier (2016–2018)</div>
-                <div style="margin-top: 1rem; font-style: italic; color: #6b5a4b;">📄 References available upon request.</div>
-            </div>
-        </div>
-    </div>
-</section>
+            const portrait = document.querySelector('.portrait-img');
+            const portraitPlaceholder = document.querySelector('.portrait-placeholder');
+            if(portrait && portraitPlaceholder){
+                portraitPlaceholder.style.display = 'flex';
+                portrait.addEventListener('load', function(){
+                    portrait.style.display = 'block';
+                    portraitPlaceholder.style.display = 'none';
+                });
+                portrait.addEventListener('error', function(){
+                    if(!this.dataset.triedDefault){
+                        this.dataset.triedDefault = '1';
+                        this.src = 'portrait-default.png';
+                    } else {
+                        this.style.display = 'none';
+                        portraitPlaceholder.style.display = 'flex';
+                    }
+                });
+            }
 
-<!-- ── Contact ── -->
-<section id="contact">
-    <div class="container">
-        <h2 class="section-title">Contact</h2>
-        <div class="contact-links">
-            <a href="mailto:stefano.tiso.evo@gmail.com">📧 stefano.tiso.evo@gmail.com</a>
-            <a href="tel:+33763935724">📞 +33 7 63 93 57 24</a>
-            <a href="https://www.linkedin.com/in/stefano-tiso-evo-data" target="_blank">🔗 LinkedIn</a>
-            <a href="https://github.com/swom" target="_blank">🐙 GitHub</a>
-        </div>
-    </div>
-</section>
-</main>
+            // ORIGAMI: quarter fold -> small center square -> open overlay
+            const origami = document.getElementById('origami-grid');
+            const quarters = Array.from(document.querySelectorAll('.quarter'));
+            const overlay = document.getElementById('section-overlay');
+            function clearActiveSections(){
+                document.querySelectorAll('.overlay-content section').forEach(s=>s.classList.remove('active-section'));
+            }
 
-<footer>
-    <div class="container">
-        Stefano Tiso — Narrative design · playful learning
-    </div>
-</footer>
+            // Add folded CSS rules dynamically (3D corner-fold effect)
+            const style = document.createElement('style');
+            style.textContent = `
+                #origami-grid { perspective: 2000px; }
+                .quarter { transform-style: preserve-3d; backface-visibility: visible; transition: transform 0.8s cubic-bezier(.25,.1,.15,1), box-shadow 0.5s; }
+                /* set transform-origin at the midpoint of each outer edge */
+                .quarter.q1 { transform-origin: 0 50%; }   /* left edge midpoint */
+                .quarter.q2 { transform-origin: 50% 0; }   /* top edge midpoint */
+                .quarter.q3 { transform-origin: 100% 50%; } /* right edge midpoint */
+                .quarter.q4 { transform-origin: 50% 100%; } /* bottom edge midpoint */
+                /* folded rotations that bend corners outward from the centre */
+                .quarter.folded.q1 { transform: rotate3d(0, 1, 0, -180deg); box-shadow: 0 28px 56px rgba(0,0,0,0.12); z-index:6; }
+                .quarter.folded.q2 { transform: rotate3d(1, 0, 0, 180deg); box-shadow: 0 28px 56px rgba(0,0,0,0.12); z-index:6; }
+                .quarter.folded.q3 { transform: rotate3d(0, 1, 0, 180deg); box-shadow: 0 28px 56px rgba(0,0,0,0.12); z-index:6; }
+                .quarter.folded.q4 { transform: rotate3d(1, 0, 0, -180deg); box-shadow: 0 28px 56px rgba(0,0,0,0.12); z-index:6; }
+                /* unfolded outward motion when closing overlay */
+                .quarter.unfold-active { transition: transform 0.7s cubic-bezier(.22,.9,.27,1), opacity 0.5s; }
+                /* Jaffee-style split flap structure */
+                .quarter .jaffee { position:absolute; inset:0; display:block; transform-style: preserve-3d; cursor: pointer; }
+                .quarter .jaffee img { opacity:0; }
+                .quarter .jaffee .a,
+                .quarter .jaffee .b,
+                .quarter .jaffee .c { position:absolute; top:0; height:100%; background-size:cover; background-repeat:no-repeat; backface-visibility:visible; }
+                .quarter .jaffee .a { left:0; width:50%; background-color: transparent; }
+                .quarter .jaffee .bc { position:absolute; left:50%; top:0; width:50%; height:100%; display:inline-flex; transform-origin:left center; transform-style:preserve-3d; }
+                .quarter .jaffee .b, .quarter .jaffee .c { position:relative; width:50%; }
+                .quarter .jaffee .b:after { content:""; position:absolute; inset:0; background:rgba(0,0,0,0.08); transform:rotateY(180deg) translateZ(1px); backface-visibility:hidden; }
 
-<!-- ──────────────────────────────────────── -->
-<!-- All JavaScript consolidated into one block -->
-<!-- ──────────────────────────────────────── -->
-<script>
-    (function() {
-        /* ────────────────────────────────
-           Globals & shared state
-           ──────────────────────────────── */
-        const extensions = ['png', 'jpg', 'jpeg', 'gif', 'webp'];
-        const galleryState = {
-            bannerImages: [],
-            portraitImages: [],
-            currentImages: [],
-            currentIndex: 0,
-            type: ''
-        };
+                /* per-quarter hinge orientations (bc transform-origin and rotation axis) */
+                .quarter.q1 .jaffee .bc { transform-origin: left center; }
+                .quarter.q1.folded .jaffee .bc { transform: rotate3d(0, 1, 0, -180deg); }
+                .quarter.q1.folded .jaffee .c { transform: rotate3d(0, 1, 0, -180deg); }
 
-        /* ────────────────────────────────
-           Utility: load numbered images
-           ──────────────────────────────── */
-        function loadNumberedImages(baseName, maxAttempts, callback) {
-            const found = [];
-            let completed = 0;
-            const total = maxAttempts * extensions.length;
+                .quarter.q2 .jaffee .bc { transform-origin: left center; }
+                .quarter.q2.folded .jaffee .bc { transform: rotate3d(1, 0, 0, 180deg); }
+                .quarter.q2.folded .jaffee .c { transform: rotate3d(1, 0, 0, 180deg); }
 
-            for (let i = 1; i <= maxAttempts; i++) {
-                extensions.forEach(ext => {
-                    const path = `${baseName}${i}.${ext}`;
-                    const img = new Image();
-                    img.onload = () => {
-                        if (!found.includes(path)) found.push(path);
-                        completed++;
-                        if (completed === total) callback(found);
-                    };
-                    img.onerror = () => {
-                        completed++;
-                        if (completed === total) callback(found);
-                    };
+                .quarter.q3 .jaffee .bc { transform-origin: left center; }
+                .quarter.q3.folded .jaffee .bc { transform: rotate3d(0, 1, 0, 180deg); }
+                .quarter.q3.folded .jaffee .c { transform: rotate3d(0, 1, 0, 180deg); }
+
+                .quarter.q4 .jaffee .bc { transform-origin: left center; }
+                .quarter.q4.folded .jaffee .bc { transform: rotate3d(1, 0, 0, -180deg); }
+                .quarter.q4.folded .jaffee .c { transform: rotate3d(1, 0, 0, -180deg); }
+                /* color the split pieces with the quarter palette */
+                .quarter.q1 .jaffee .a, .quarter.q1 .jaffee .b, .quarter.q1 .jaffee .c { background: var(--q1); }
+                .quarter.q2 .jaffee .a, .quarter.q2 .jaffee .b, .quarter.q2 .jaffee .c { background: var(--q2); }
+                .quarter.q3 .jaffee .a, .quarter.q3 .jaffee .b, .quarter.q3 .jaffee .c { background: var(--q3); }
+                .quarter.q4 .jaffee .a, .quarter.q4 .jaffee .b, .quarter.q4 .jaffee .c { background: var(--q4); }
+                /* keyframe unfold animations from folded -> outward -> flat */
+                @keyframes unfold-q1 { 
+                    0% { transform: rotate3d(0, 1, 0, -180deg); }
+                    50% { transform: rotate3d(0, 1, 0, -60deg); }
+                    100% { transform: none; }
+                }
+                @keyframes unfold-q2 { 
+                    0% { transform: rotate3d(1, 0, 0, 180deg); }
+                    50% { transform: rotate3d(1, 0, 0, 60deg); }
+                    100% { transform: none; }
+                }
+                @keyframes unfold-q3 { 
+                    0% { transform: rotate3d(0, 1, 0, 180deg); }
+                    50% { transform: rotate3d(0, 1, 0, 60deg); }
+                    100% { transform: none; }
+                }
+                @keyframes unfold-q4 { 
+                    0% { transform: rotate3d(1, 0, 0, -180deg); }
+                    50% { transform: rotate3d(1, 0, 0, -60deg); }
+                    100% { transform: none; }
+                }
+                /* Apply keyframe unfold to the inner .bc element per quarter */
+                .quarter.q1 .jaffee .bc.unfold-anim { animation: unfold-q1 0.85s cubic-bezier(.22,.9,.27,1) forwards; }
+                .quarter.q2 .jaffee .bc.unfold-anim { animation: unfold-q2 0.85s cubic-bezier(.22,.9,.27,1) forwards; }
+                .quarter.q3 .jaffee .bc.unfold-anim { animation: unfold-q3 0.85s cubic-bezier(.22,.9,.27,1) forwards; }
+                .quarter.q4 .jaffee .bc.unfold-anim { animation: unfold-q4 0.85s cubic-bezier(.22,.9,.27,1) forwards; }
+            `;
+            document.head.appendChild(style);
+
+            let activeQuarter = null;
+            window.openQuarter = function(sectionId, el){
+                // only the clicked quarter folds toward the center (tacked)
+                if(origami.dataset.animating === '1') return;
+                origami.dataset.animating = '1';
+                // clear any previous
+                quarters.forEach(q=> q.classList.remove('unfold-active'));
+                // find element if string passed
+                const clicked = (el instanceof Element) ? el : document.querySelector('.quarter[data-section="'+sectionId+'"]');
+                if(!clicked) { origami.dataset.animating = '0'; return; }
+                activeQuarter = clicked;
+                // add folded class to clicked quarter only
+                clicked.classList.add('folded');
+
+                // after fold completes, reveal overlay and show requested section
+                setTimeout(()=>{
+                    clearActiveSections();
+                    const target = document.getElementById(sectionId + '-section');
+                    if(target) target.classList.add('active-section');
+                    overlay.classList.add('active');
+                    // keep grid visible (so the tacked corner remains visible behind overlay)
+                    origami.classList.remove('hidden');
+                    origami.dataset.animating = '0';
+                }, 520);
+            };
+
+            window.closeOverlay = function(){
+                // close overlay and perform per-quarter unfold animation
+                overlay.classList.remove('active');
+                origami.classList.remove('hidden');
+                if(origami.dataset.animating === '1') return;
+                origami.dataset.animating = '1';
+                const q = activeQuarter;
+                if(q){
+                    // trigger keyframe animation on the inner bc element
+                    const inner = q.querySelector('.jaffee .bc');
+                    if(inner){
+                        inner.classList.add('unfold-anim');
+                        const onEnd = function(){
+                            inner.classList.remove('unfold-anim');
+                            q.classList.remove('folded');
+                            inner.removeEventListener('animationend', onEnd);
+                            activeQuarter = null;
+                            origami.dataset.animating = '0';
+                        };
+                        inner.addEventListener('animationend', onEnd);
+                    } else {
+                        q.classList.remove('folded');
+                        activeQuarter = null;
+                        origami.dataset.animating = '0';
+                    }
+                } else {
+                    origami.dataset.animating = '0';
+                }
+                clearActiveSections();
+            };
+
+            // small helpers for lightbox & cards used elsewhere
+            window.closeLightbox = function(){
+                const lb = document.getElementById('lightbox'); if(lb) lb.classList.remove('active');
+            };
+            window.toggleCreativeCard = function(e, el){
+                const content = el.nextElementSibling; if(!content) return; content.classList.toggle('expanded');
+            };
+            window.toggleCard = function(el){
+                const content = el.nextElementSibling; if(!content) return; content.classList.toggle('collapsed');
+            };
+        });
+    </script>
+
+    <footer>
+        <div class="container">Stefano Tiso — Narrative design · playful learning</div>
+    </footer>
+
+    <!-- ═══════════════════════════════════════
+         JAVASCRIPT (consolidated)
+         ═══════════════════════════════════════ -->
+    <script>
+        (function() {
+            /* ── GLOBALS ── */
+            const extensions = ['png','jpg','jpeg','gif','webp'];
+            const galleryState = { bannerImages:[], portraitImages:[], currentImages:[], currentIndex:0, type:'' };
+            const trailPoints = [], clickMarkers = [];
+            const MAX_TRAIL = 80, TRAIL_AGE = 3000, CLICK_AGE = 1800;
+            let trailCanvas, trailCtx, mouseX = -100, mouseY = -100;
+
+            /* ── LOAD NUMBERED IMAGES ── */
+            function loadNumberedImages(base, max, cb) {
+                const found = []; let done = 0; const total = max * extensions.length;
+                if (!total) { cb(found); return; }
+                for (let i=1; i<=max; i++) extensions.forEach(ext => {
+                    const path = `${base}${i}.${ext}`; const img = new Image();
+                    img.onload = () => { if (!found.includes(path)) found.push(path); done++; if (done>=total) cb(found); };
+                    img.onerror = () => { done++; if (done>=total) cb(found); };
                     img.src = path;
                 });
             }
-        }
 
-        /* ────────────────────────────────
-           Gallery lightbox
-           ──────────────────────────────── */
-        const galleryEl = document.getElementById('galleryLightbox');
-        const galleryImg = document.getElementById('galleryImg');
-        const galleryCounter = document.getElementById('galleryCounter');
-        const galleryCloseBtn = galleryEl.querySelector('.gallery-close');
-        const galleryPrevBtn = galleryEl.querySelector('.gallery-prev');
-        const galleryNextBtn = galleryEl.querySelector('.gallery-next');
-
-        function openGallery(images, startIndex, type) {
-            if (!images || images.length === 0) return;
-            galleryState.currentImages = images;
-            galleryState.currentIndex = startIndex;
-            galleryState.type = type;
-            updateGalleryImage();
-            galleryEl.classList.add('active');
-        }
-
-        function updateGalleryImage() {
-            const imgs = galleryState.currentImages;
-            const idx = galleryState.currentIndex;
-            if (imgs[idx]) {
-                galleryImg.src = imgs[idx];
-                galleryCounter.textContent = `${idx + 1} / ${imgs.length}`;
+            /* ── GALLERY LIGHTBOX ── */
+            const gel = document.getElementById('galleryLightbox');
+            const gImg = document.getElementById('galleryImg');
+            const gCnt = document.getElementById('galleryCounter');
+            function openGallery(imgs, idx, type) {
+                if (!imgs?.length) return;
+                galleryState.currentImages = imgs; galleryState.currentIndex = idx; galleryState.type = type;
+                gImg.src = imgs[idx]; gCnt.textContent = `${idx+1} / ${imgs.length}`; gel.classList.add('active');
             }
-        }
+            function galleryNext() { const imgs = galleryState.currentImages; if (imgs.length) { galleryState.currentIndex = (galleryState.currentIndex+1)%imgs.length; gImg.src = imgs[galleryState.currentIndex]; gCnt.textContent = `${galleryState.currentIndex+1} / ${imgs.length}`; } }
+            function galleryPrev() { const imgs = galleryState.currentImages; if (imgs.length) { galleryState.currentIndex = (galleryState.currentIndex-1+imgs.length)%imgs.length; gImg.src = imgs[galleryState.currentIndex]; gCnt.textContent = `${galleryState.currentIndex+1} / ${imgs.length}`; } }
+            function closeGallery() { gel.classList.remove('active'); }
+            gel.querySelector('.gallery-close').onclick = closeGallery;
+            gel.querySelector('.gallery-prev').onclick = galleryPrev;
+            gel.querySelector('.gallery-next').onclick = galleryNext;
+            gel.addEventListener('click', e => { if (e.target===gel) closeGallery(); });
+            document.addEventListener('keydown', e => { if (!gel.classList.contains('active')) return; if (e.key==='ArrowLeft') galleryPrev(); if (e.key==='ArrowRight') galleryNext(); if (e.key==='Escape') closeGallery(); });
+            gImg.addEventListener('touchstart', e => { gImg.dataset.startX = e.changedTouches[0].screenX; });
+            gImg.addEventListener('touchend', e => { const dx = (gImg.dataset.startX||0) - e.changedTouches[0].screenX; if (dx>50) galleryNext(); if (dx<-50) galleryPrev(); });
 
-        function galleryNext() {
-            const imgs = galleryState.currentImages;
-            if (imgs.length === 0) return;
-            galleryState.currentIndex = (galleryState.currentIndex + 1) % imgs.length;
-            updateGalleryImage();
-        }
-
-        function galleryPrev() {
-            const imgs = galleryState.currentImages;
-            if (imgs.length === 0) return;
-            galleryState.currentIndex = (galleryState.currentIndex - 1 + imgs.length) % imgs.length;
-            updateGalleryImage();
-        }
-
-        function closeGallery() {
-            galleryEl.classList.remove('active');
-        }
-
-        galleryCloseBtn.addEventListener('click', closeGallery);
-        galleryPrevBtn.addEventListener('click', galleryPrev);
-        galleryNextBtn.addEventListener('click', galleryNext);
-        galleryEl.addEventListener('click', (e) => {
-            if (e.target === galleryEl) closeGallery();
-        });
-
-        document.addEventListener('keydown', (e) => {
-            if (!galleryEl.classList.contains('active')) return;
-            if (e.key === 'ArrowLeft') galleryPrev();
-            if (e.key === 'ArrowRight') galleryNext();
-            if (e.key === 'Escape') closeGallery();
-        });
-
-        // Touch/swipe
-        let touchStartX = 0;
-        galleryImg.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; });
-        galleryImg.addEventListener('touchend', (e) => {
-            const diff = touchStartX - e.changedTouches[0].screenX;
-            if (diff > 50) galleryNext();
-            if (diff < -50) galleryPrev();
-        });
-
-        /* ────────────────────────────────
-           Banner slider
-           ──────────────────────────────── */
-        function setupBannerSlider(images) {
-            const container = document.querySelector('.banner-container');
-            if (!container || images.length < 2) return;
-
-            // Store for gallery
-            galleryState.bannerImages = images;
-
-            container.innerHTML = '';
-            container.style.position = 'relative';
-            container.style.overflow = 'hidden';
-
-            const imgA = document.createElement('img');
-            const imgB = document.createElement('img');
-            imgA.src = images[0];
-            imgB.src = images[1];
-            imgA.className = imgB.className = 'banner-image';
-
-            const baseStyle = {
-                position: 'absolute',
-                top: '0',
-                width: '100%',
-                height: 'auto',
-                maxHeight: '33vh',
-                objectFit: 'contain',
-                display: 'block',
-                transition: 'transform 0.5s ease-in-out'
-            };
-            Object.assign(imgA.style, baseStyle);
-            Object.assign(imgB.style, baseStyle);
-            imgA.style.left = '0';
-            imgB.style.left = '-100%';
-
-            container.append(imgA, imgB);
-
-            const setHeight = () => {
-                const h = imgA.offsetHeight || imgB.offsetHeight;
-                if (h) container.style.height = h + 'px';
-            };
-            imgA.onload = setHeight;
-            imgB.onload = setHeight;
-            setHeight();
-
-            let active = imgA;
-            let hidden = imgB;
-            let nextIdx = 1;
-            const total = images.length;
-
-            setInterval(() => {
-                active.style.transform = 'translateX(100%)';
-                hidden.style.transform = 'translateX(100%)';
-
-                setTimeout(() => {
-                    active.style.transition = 'none';
-                    hidden.style.transition = 'none';
-                    active.src = images[nextIdx];
-                    nextIdx = (nextIdx + 1) % total;
-                    active.style.transform = '';
-                    hidden.style.transform = '';
-                    active.style.left = '-100%';
-                    hidden.style.left = '0';
-                    [active, hidden] = [hidden, active];
-                    hidden.src = images[nextIdx];
-                    setHeight();
-                    setTimeout(() => {
-                        active.style.transition = 'transform 0.5s ease-in-out';
-                        hidden.style.transition = 'transform 0.5s ease-in-out';
-                    }, 10);
-                }, 500);
-            }, 5000);
-
-            // Click handler for gallery
-            container.addEventListener('click', (e) => {
-                const target = e.target;
-                if (target.tagName === 'IMG' && target.classList.contains('banner-image')) {
-                    const currentSrc = target.src.split('/').pop();
-                    let startIdx = galleryState.bannerImages.findIndex(img => img === currentSrc);
-                    if (startIdx === -1) startIdx = 0;
-                    openGallery(galleryState.bannerImages, startIdx, 'banner');
-                    e.stopPropagation();
-                }
-            });
-        }
-
-        /* ────────────────────────────────
-           Portrait slider
-           ──────────────────────────────── */
-        function setupPortraitSlider(images) {
-            const container = document.querySelector('.hero-portrait');
-            if (!container || images.length < 2) return;
-
-            // Store for gallery
-            galleryState.portraitImages = images;
-
-            container.innerHTML = '';
-            container.style.position = 'relative';
-            container.style.overflow = 'hidden';
-            container.style.display = 'flex';
-            container.style.justifyContent = 'center';
-            container.style.minWidth = '150px';
-
-            const imgA = document.createElement('img');
-            const imgB = document.createElement('img');
-            imgA.src = images[0];
-            imgB.src = images[1];
-            imgA.className = imgB.className = 'portrait-img';
-
-            const baseStyle = {
-                position: 'absolute',
-                top: '0',
-                width: '100%',
-                maxWidth: '220px',
-                borderRadius: '50%',
-                aspectRatio: '1/1',
-                objectFit: 'cover',
-                display: 'block',
-                transition: 'transform 0.5s ease-in-out'
-            };
-            Object.assign(imgA.style, baseStyle);
-            Object.assign(imgB.style, baseStyle);
-            imgA.style.left = '0';
-            imgA.style.right = '0';
-            imgA.style.margin = '0 auto';
-            imgB.style.left = '100%';
-            imgB.style.right = 'auto';
-
-            container.append(imgA, imgB);
-
-            const setHeight = () => {
-                const h = imgA.offsetHeight || imgB.offsetHeight;
-                if (h) container.style.height = h + 'px';
-            };
-            imgA.onload = setHeight;
-            imgB.onload = setHeight;
-            setHeight();
-
-            let active = imgA;
-            let hidden = imgB;
-            let nextIdx = 1;
-            const total = images.length;
-
-            setInterval(() => {
-                active.style.transform = 'translateX(-100%)';
-                hidden.style.transform = 'translateX(-100%)';
-
-                setTimeout(() => {
-                    active.style.transition = 'none';
-                    hidden.style.transition = 'none';
-                    active.src = images[nextIdx];
-                    nextIdx = (nextIdx + 1) % total;
-                    active.style.transform = '';
-                    hidden.style.transform = '';
-                    active.style.left = '100%';
-                    active.style.right = 'auto';
-                    hidden.style.left = '0';
-                    hidden.style.right = '0';
-                    hidden.style.margin = '0 auto';
-                    [active, hidden] = [hidden, active];
-                    hidden.src = images[nextIdx];
-                    setHeight();
-                    setTimeout(() => {
-                        active.style.transition = 'transform 0.5s ease-in-out';
-                        hidden.style.transition = 'transform 0.5s ease-in-out';
-                    }, 10);
-                }, 500);
-            }, 5000);
-
-            // Click handler for gallery
-            container.addEventListener('click', (e) => {
-                const target = e.target;
-                if (target.tagName === 'IMG' && target.classList.contains('portrait-img')) {
-                    const currentSrc = target.src.split('/').pop();
-                    let startIdx = galleryState.portraitImages.findIndex(img => img === currentSrc);
-                    if (startIdx === -1) startIdx = 0;
-                    openGallery(galleryState.portraitImages, startIdx, 'portrait');
-                    e.stopPropagation();
-                }
-            });
-        }
-
-        /* ────────────────────────────────
-           Collapsible cards – scientific
-           ──────────────────────────────── */
-        window.toggleCard = function(header) {
-            const inner = header.nextElementSibling;
-            const icon = header.querySelector('.toggle-icon');
-            if (inner.classList.contains('expanded')) {
-                inner.classList.remove('expanded');
-                inner.classList.add('collapsed');
-                icon.textContent = '▶';
-            } else {
-                inner.classList.remove('collapsed');
-                inner.classList.add('expanded');
-                icon.textContent = '▼';
-            }
-        };
-
-        /* ────────────────────────────────
-           Collapsible cards – creative
-           ──────────────────────────────── */
-        window.toggleCreativeCard = function(header) {
-            const card = header.closest('.project-card');
-            const content = card.querySelector('.card-content-creative');
-            const icon = header.querySelector('.toggle-icon-creative');
-            if (content.classList.contains('expanded')) {
-                content.classList.remove('expanded');
-                content.classList.add('collapsed');
-                if (icon) icon.textContent = '▶';
-            } else {
-                content.classList.remove('collapsed');
-                content.classList.add('expanded');
-                if (icon) icon.textContent = '▼';
-            }
-        };
-
-        /* ────────────────────────────────
-           Lightbox for card images
-           ──────────────────────────────── */
-        window.openLightbox = function(imgSrc) {
-            const lb = document.getElementById('lightbox');
-            const lbImg = document.getElementById('lightbox-img');
-            lbImg.src = imgSrc;
-            lb.classList.add('active');
-        };
-
-        window.closeLightbox = function() {
-            document.getElementById('lightbox').classList.remove('active');
-        };
-
-        /* ────────────────────────────────
-           PDF.js – render local PDFs as canvas
-           ──────────────────────────────── */
-        function initPdfPreviews() {
-            if (typeof pdfjsLib === 'undefined') return;
-            pdfjsLib.GlobalWorkerOptions.workerSrc =
-                'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
-
-            document.querySelectorAll('.pdf-embed').forEach(embed => {
-                const iframe = embed.querySelector('iframe');
-                if (!iframe) return;
-                const pdfSrc = iframe.src;
-                if (!pdfSrc.endsWith('.pdf') && !pdfSrc.includes('.pdf')) return;
-                let filename = pdfSrc.split('/').pop();
-                if (filename.includes('?')) filename = filename.split('?')[0];
-
-                const container = document.createElement('div');
-                container.style.cssText =
-                    'width:100%; max-height:400px; overflow:auto; background:#faf8f4; border-radius:16px; padding:10px;';
-                iframe.style.display = 'none';
-                embed.appendChild(container);
-
-                pdfjsLib.getDocument(filename).promise.then(pdf => {
-                    const info = document.createElement('div');
-                    info.style.cssText = 'text-align:center; font-size:0.75rem; color:#8f7f6e; margin-bottom:8px;';
-                    info.innerHTML =
-                        `📄 ${pdf.numPages} page${pdf.numPages > 1 ? 's' : ''} · <a href="${filename}" target="_blank" style="color:#b45f3b">Download PDF</a>`;
-                    container.appendChild(info);
-
-                    const pagesToShow = Math.min(3, pdf.numPages);
-                    for (let i = 1; i <= pagesToShow; i++) {
-                        pdf.getPage(i).then(page => {
-                            const canvas = document.createElement('canvas');
-                            const ctx = canvas.getContext('2d');
-                            const scale = 1.2;
-                            const viewport = page.getViewport({ scale });
-                            canvas.width = viewport.width;
-                            canvas.height = viewport.height;
-                            canvas.style.cssText =
-                                'width:100%; height:auto; margin-bottom:8px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1);';
-                            container.appendChild(canvas);
-                            page.render({ canvasContext: ctx, viewport });
-                        });
+            /* ── BANNER & PORTRAIT SLIDERS ── */
+            function setupBannerSlider(images) {
+                const c = document.querySelector('.banner-container'); if (!c||images.length<2) return;
+                galleryState.bannerImages = images; c.innerHTML = ''; c.style.position='relative'; c.style.overflow='hidden';
+                const a = document.createElement('img'), b = document.createElement('img');
+                a.src=images[0]; b.src=images[1]; a.className=b.className='banner-image';
+                const s = {position:'absolute',top:'0',width:'100%',height:'auto',maxHeight:'33vh',objectFit:'contain',display:'block',transition:'transform 0.5s ease-in-out'};
+                Object.assign(a.style,s); Object.assign(b.style,s); a.style.left='0'; b.style.left='-100%'; c.append(a,b);
+                const setH = () => { const h = a.offsetHeight||b.offsetHeight; if(h) c.style.height=h+'px'; };
+                a.onload=setH; b.onload=setH; setH();
+                let active=a, hidden=b, nextIdx=1, total=images.length;
+                setInterval(()=>{
+                    active.style.transform='translateX(100%)'; hidden.style.transform='translateX(100%)';
+                    setTimeout(()=>{
+                        active.style.transition='none'; hidden.style.transition='none'; active.src=images[nextIdx]; nextIdx=(nextIdx+1)%total;
+                        active.style.transform=''; hidden.style.transform=''; active.style.left='-100%'; hidden.style.left='0';
+                        [active,hidden]=[hidden,active]; hidden.src=images[nextIdx]; setH();
+                        setTimeout(()=>{ active.style.transition='transform 0.5s ease-in-out'; hidden.style.transition='transform 0.5s ease-in-out'; },10);
+                    },500);
+                },5000);
+                c.addEventListener('click', e => {
+                    const t = e.target; if (t.tagName==='IMG' && t.classList.contains('banner-image')) {
+                        const cur = t.src.split('/').pop(); let idx = galleryState.bannerImages.findIndex(i=>i===cur); if(idx<0) idx=0;
+                        openGallery(galleryState.bannerImages, idx, 'banner'); e.stopPropagation();
                     }
-                }).catch(() => {
-                    container.innerHTML = `
-                <div style="padding:2rem; text-align:center; background:#faf8f4; border-radius:16px;">
-                  <p style="color:#b87c54; margin-bottom:0.5rem;">⚠️ PDF preview unavailable</p>
-                  <p style="font-size:0.85rem; color:#8f7f6e;">
-                    <a href="${filename}" target="_blank" style="color:#b45f3b;">Click here to open PDF directly</a>
-                  </p>
-                </div>`;
                 });
-            });
-        }
+            }
+            function setupPortraitSlider(images) {
+                const c = document.querySelector('.hero-portrait'); if (!c||images.length<2) return;
+                galleryState.portraitImages = images; c.innerHTML=''; c.style.position='relative'; c.style.overflow='hidden'; c.style.display='flex'; c.style.justifyContent='center';
+                const a=document.createElement('img'), b=document.createElement('img'); a.src=images[0]; b.src=images[1]; a.className=b.className='portrait-img';
+                const s={position:'absolute',top:'0',width:'100%',maxWidth:'220px',borderRadius:'50%',aspectRatio:'1/1',objectFit:'cover',display:'block',transition:'transform 0.5s ease-in-out'};
+                Object.assign(a.style,s); Object.assign(b.style,s); a.style.left='0'; a.style.right='0'; a.style.margin='0 auto'; b.style.left='100%'; b.style.right='auto'; c.append(a,b);
+                const setH=()=>{ const h=a.offsetHeight||b.offsetHeight; if(h) c.style.height=h+'px'; };
+                a.onload=setH; b.onload=setH; setH();
+                let active=a, hidden=b, nextIdx=1, total=images.length;
+                setInterval(()=>{
+                    active.style.transform='translateX(-100%)'; hidden.style.transform='translateX(-100%)';
+                    setTimeout(()=>{
+                        active.style.transition='none'; hidden.style.transition='none'; active.src=images[nextIdx]; nextIdx=(nextIdx+1)%total;
+                        active.style.transform=''; hidden.style.transform=''; active.style.left='100%'; active.style.right='auto';
+                        hidden.style.left='0'; hidden.style.right='0'; hidden.style.margin='0 auto'; [active,hidden]=[hidden,active]; hidden.src=images[nextIdx]; setH();
+                        setTimeout(()=>{ active.style.transition='transform 0.5s ease-in-out'; hidden.style.transition='transform 0.5s ease-in-out'; },10);
+                    },500);
+                },5000);
+                c.addEventListener('click', e => {
+                    const t=e.target; if(t.tagName==='IMG'&&t.classList.contains('portrait-img')){
+                        const cur=t.src.split('/').pop(); let idx=galleryState.portraitImages.findIndex(i=>i===cur); if(idx<0) idx=0;
+                        openGallery(galleryState.portraitImages, idx, 'portrait'); e.stopPropagation();
+                    }
+                });
+            }
 
-        /* ────────────────────────────────
-           Attach clickable-image handlers
-           ──────────────────────────────── */
-        function attachClickableImages() {
-            document.querySelectorAll('#work .image-placeholder img, #work .card-content img, #scientific-work .image-placeholder img')
-                .forEach(img => {
+            /* ── OVERLAY LOGIC (origami unfold) ── */
+            const overlay = document.getElementById('section-overlay');
+            const overlayContent = overlay.querySelector('.overlay-content');
+            const sections = {
+                creative: document.getElementById('creative-section'),
+                scientific: document.getElementById('scientific-section'),
+                practice: document.getElementById('practice-section'),
+                skills: document.getElementById('skills-section')
+            };
+            let currentSection = null;
+
+            window.openQuarter = function(sectionId) {
+                if (currentSection === sectionId) return;
+                const grid = document.getElementById('origami-grid');
+                const quarterEl = document.querySelector(`.quarter[data-section="${sectionId}"]`);
+                if (!grid || !quarterEl) return;
+
+                // 1. Identify which triangle was clicked and its colour
+                const isQ1 = quarterEl.classList.contains('q1');
+                const isQ2 = quarterEl.classList.contains('q2');
+                const isQ3 = quarterEl.classList.contains('q3');
+                const isQ4 = quarterEl.classList.contains('q4');
+
+                // 2. Create the mirror flap
+                const flap = document.createElement('div');
+                flap.className = 'unfold-flap';
+                flap.style.backgroundColor = getComputedStyle(quarterEl).backgroundColor;
+                grid.appendChild(flap);
+
+                // 3. Set the flap’s clip‑path to the complementary triangle
+                //    (the one that completes the square with the clicked quarter)
+                if (isQ1) {
+                    // q1 is left triangle → complement is right triangle (q3)
+                    flap.style.clipPath = 'polygon(100% 50%, 50% 0%, 50% 50%)';
+                    flap.style.transformOrigin = '0% 50%';    // hinge at the left edge of the flap (the diagonal)
+                    flap.style.transform = 'rotateY(90deg)';  // start folded
+                } else if (isQ2) {
+                    // q2 is top triangle → complement is bottom (q4)
+                    flap.style.clipPath = 'polygon(50% 100%, 100% 50%, 50% 50%)';
+                    flap.style.transformOrigin = '50% 0%';
+                    flap.style.transform = 'rotateX(-90deg)';
+                } else if (isQ3) {
+                    // q3 is right → complement is left (q1)
+                    flap.style.clipPath = 'polygon(0% 50%, 50% 100%, 50% 50%)';
+                    flap.style.transformOrigin = '100% 50%';
+                    flap.style.transform = 'rotateY(-90deg)';
+                } else if (isQ4) {
+                    // q4 is bottom → complement is top (q2)
+                    flap.style.clipPath = 'polygon(50% 0%, 0% 50%, 50% 50%)';
+                    flap.style.transformOrigin = '50% 100%';
+                    flap.style.transform = 'rotateX(90deg)';
+                }
+
+                // 4. Force a reflow, then open the flap
+                flap.getBoundingClientRect();
+                requestAnimationFrame(() => {
+                    flap.classList.add('open');
+                });
+
+                // 5. After the flap has opened, lift the square into the overlay
+                setTimeout(() => {
+                    // Hide the whole grid
+                    grid.classList.add('hidden');
+                    // Show the overlay
+                    Object.values(sections).forEach(s => s.classList.remove('active-section'));
+                    if (sections[sectionId]) {
+                        sections[sectionId].classList.add('active-section');
+                        currentSection = sectionId;
+                    }
+                    overlay.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                    initPdfPreviews();
+
+                    // Clean up the flap and grid
+                    if (grid.contains(flap)) grid.removeChild(flap);
+                    grid.classList.remove('hidden');
+                }, 650);   // matches the 0.6s transition + small buffer
+            };
+
+            window.closeOverlay = function() {
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
+                currentSection = null;
+
+                const grid = document.getElementById('origami-grid');
+                if (grid) {
+                    // Remove any leftover flaps
+                    grid.querySelectorAll('.unfold-flap').forEach(f => f.remove());
+                    grid.classList.remove('hidden');
+                }
+            };
+            // Close with Escape
+            document.addEventListener('keydown', e => { if (e.key==='Escape' && overlay.classList.contains('active')) closeOverlay(); });
+
+            /* ── COLLAPSIBLE CARDS (scientific) ── */
+            window.toggleCard = function(header) {
+                const inner = header.nextElementSibling;
+                const icon = header.querySelector('.toggle-icon');
+                if (inner.classList.contains('expanded')) {
+                    inner.classList.remove('expanded'); inner.classList.add('collapsed'); icon.textContent='▶';
+                } else {
+                    inner.classList.remove('collapsed'); inner.classList.add('expanded'); icon.textContent='▼';
+                }
+            };
+            /* ── COLLAPSIBLE CARDS (creative) ── */
+            window.toggleCreativeCard = function(event, header) {
+                event.stopPropagation();
+                const card = header.closest('.project-card');
+                const content = card.querySelector('.card-content-creative');
+                const icon = header.querySelector('.toggle-icon-creative');
+                if (content.classList.contains('expanded')) {
+                    content.classList.remove('expanded'); content.classList.add('collapsed'); icon.textContent='▶';
+                } else {
+                    content.classList.remove('collapsed'); content.classList.add('expanded'); icon.textContent='▼';
+                }
+            };
+
+            /* ── LIGHTBOX ── */
+            window.openLightbox = function(src) { document.getElementById('lightbox-img').src=src; document.getElementById('lightbox').classList.add('active'); };
+            window.closeLightbox = function() { document.getElementById('lightbox').classList.remove('active'); };
+
+            /* ── PDF.JS ── */
+            function initPdfPreviews() {
+                if (typeof pdfjsLib === 'undefined') return;
+                pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+                document.querySelectorAll('.pdf-embed').forEach(embed => {
+                    const iframe = embed.querySelector('iframe'); if (!iframe) return;
+                    const src = iframe.src; if (!src.endsWith('.pdf') && !src.includes('.pdf')) return;
+                    let filename = src.split('/').pop(); if (filename.includes('?')) filename = filename.split('?')[0];
+                    const container = document.createElement('div');
+                    container.style.cssText = 'width:100%; max-height:400px; overflow:auto; background:#faf8f4; border-radius:16px; padding:10px;';
+                    iframe.style.display='none'; embed.appendChild(container);
+                    pdfjsLib.getDocument(filename).promise.then(pdf => {
+                        const info = document.createElement('div'); info.style.cssText = 'text-align:center; font-size:0.75rem; color:#8f7f6e; margin-bottom:8px;';
+                        info.innerHTML = `📄 ${pdf.numPages} page${pdf.numPages>1?'s':''} · <a href="${filename}" target="_blank" style="color:#b45f3b">Download PDF</a>`;
+                        container.appendChild(info);
+                        for (let i=1; i<=Math.min(3, pdf.numPages); i++) pdf.getPage(i).then(page => {
+                            const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d'); const scale=1.2; const vp=page.getViewport({scale});
+                            canvas.width=vp.width; canvas.height=vp.height; canvas.style.cssText='width:100%; height:auto; margin-bottom:8px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1);';
+                            container.appendChild(canvas); page.render({canvasContext:ctx, viewport:vp});
+                        });
+                    }).catch(() => { container.innerHTML = `<div style="padding:2rem; text-align:center;"><p>⚠️ PDF preview unavailable</p><a href="${filename}" target="_blank">Open PDF</a></div>`; });
+                });
+            }
+
+            /* ── CURSOR TRAIL (dashed, no dots, no crosshair) ── */
+            function initCursorTrail() {
+                trailCanvas = document.getElementById('cursorTrailCanvas');
+                if (!trailCanvas) return;
+                trailCtx = trailCanvas.getContext('2d');
+                function resize() { trailCanvas.width = window.innerWidth; trailCanvas.height = window.innerHeight; }
+                resize(); window.addEventListener('resize', resize);
+                document.addEventListener('mousemove', e => {
+                    mouseX = e.clientX; mouseY = e.clientY;
+                    trailPoints.push({x:mouseX, y:mouseY, time:performance.now()});
+                    while (trailPoints.length > MAX_TRAIL) trailPoints.shift();
+                });
+                document.addEventListener('click', e => {
+                    clickMarkers.push({x:e.clientX, y:e.clientY, time:performance.now()});
+                    spawnInkSplatter(e.clientX, e.clientY);
+                });
+                function draw(ts) {
+                    if (!trailCtx) { requestAnimationFrame(draw); return; }
+                    trailCtx.clearRect(0,0,trailCanvas.width, trailCanvas.height);
+                    // Dashed line
+                    if (trailPoints.length > 1) {
+                        trailCtx.beginPath();
+                        trailCtx.strokeStyle = '#8b7355';
+                        trailCtx.lineWidth = 2;
+                        trailCtx.lineCap = 'round';
+                        trailCtx.setLineDash([12, 14]);
+                        trailCtx.lineDashOffset = -ts / 30;
+                        let first = true;
+                        for (const pt of trailPoints) {
+                            const age = ts - pt.time;
+                            if (age > TRAIL_AGE) continue;
+                            const alpha = Math.max(0, 1 - age / TRAIL_AGE);
+                            trailCtx.globalAlpha = alpha * 0.6;
+                            if (first) { trailCtx.moveTo(pt.x, pt.y); first = false; }
+                            else trailCtx.lineTo(pt.x, pt.y);
+                        }
+                        trailCtx.stroke();
+                        trailCtx.setLineDash([]);
+                        trailCtx.globalAlpha = 1;
+                    }
+                    // Red click markers (dot + glow, no crosshair)
+                    for (let i = clickMarkers.length-1; i >= 0; i--) {
+                        const mk = clickMarkers[i];
+                        const age = ts - mk.time;
+                        if (age > CLICK_AGE) { clickMarkers.splice(i,1); continue; }
+                        const progress = age / CLICK_AGE;
+                        const alpha = 1 - progress;
+                        const radius = 4 + progress * 8;
+                        trailCtx.beginPath();
+                        trailCtx.arc(mk.x, mk.y, radius+6, 0, Math.PI*2);
+                        trailCtx.fillStyle = `rgba(192,57,43,${alpha * 0.2})`;
+                        trailCtx.fill();
+                        trailCtx.beginPath();
+                        trailCtx.arc(mk.x, mk.y, radius, 0, Math.PI*2);
+                        trailCtx.fillStyle = `rgba(192,57,43,${alpha * 0.85})`;
+                        trailCtx.fill();
+                        trailCtx.beginPath();
+                        trailCtx.arc(mk.x, mk.y, 2, 0, Math.PI*2);
+                        trailCtx.fillStyle = `rgba(255,255,255,${alpha * 0.7})`;
+                        trailCtx.fill();
+                    }
+                    while (trailPoints.length && ts - trailPoints[0].time > TRAIL_AGE) trailPoints.shift();
+                    requestAnimationFrame(draw);
+                }
+                requestAnimationFrame(draw);
+            }
+
+            function spawnInkSplatter(x,y) {
+                const el = document.createElement('div'); el.className='ink-splatter';
+                el.style.left = x+'px'; el.style.top = y+'px';
+                document.body.appendChild(el);
+                el.addEventListener('animationend', () => el.remove());
+            }
+
+            /* ── INIT ── */
+            function init() {
+                // Scientific cards collapsed
+                document.querySelectorAll('#scientific-section .card-content-inner').forEach(c => { c.classList.add('collapsed'); c.classList.remove('expanded'); });
+                document.querySelectorAll('#scientific-section .toggle-icon').forEach(i => i.textContent='▶');
+                // Creative cards collapsed
+                document.querySelectorAll('.card-content-creative').forEach(c => { c.classList.add('collapsed'); c.classList.remove('expanded'); });
+                document.querySelectorAll('.toggle-icon-creative').forEach(i => i.textContent='▶');
+                // Fallbacks
+                document.querySelector('.banner-image')?.addEventListener('error', function(){ this.style.display='none'; this.nextElementSibling.style.display='flex'; });
+                document.querySelector('.portrait-img')?.addEventListener('error', function(){ this.style.display='none'; this.nextElementSibling.style.display='flex'; });
+                // Sliders
+                loadNumberedImages('banner',20, imgs => { if (!imgs.length) { const e=document.querySelector('.banner-image'); if(e?.src) imgs=[e.src.split('/').pop()]; } if(imgs.length) setupBannerSlider(imgs); });
+                loadNumberedImages('portrait',20, imgs => { if (!imgs.length) { const e=document.querySelector('.portrait-img'); if(e?.src) imgs=[e.src.split('/').pop()]; } if(imgs.length) setupPortraitSlider(imgs); });
+                initCursorTrail();
+                attachClickableImages();
+                initPdfPreviews();
+            }
+
+            function attachClickableImages() {
+                document.querySelectorAll('.image-placeholder img, .card-content img').forEach(img => {
                     if (img.src && !img.src.includes('placehold')) {
                         img.classList.add('clickable-image');
-                        img.addEventListener('click', function(e) {
-                            e.stopPropagation();
-                            openLightbox(this.src);
-                        });
-                    }
-                });
-
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape') closeLightbox();
-            });
-        }
-
-        /* ────────────────────────────────
-           Initialization on DOM ready
-           ──────────────────────────────── */
-        function init() {
-            // Set all scientific cards to collapsed
-            document.querySelectorAll('#scientific-work .card-content-inner').forEach(card => {
-                card.classList.remove('expanded');
-                card.classList.add('collapsed');
-                const header = card.previousElementSibling;
-                if (header && header.classList.contains('card-header')) {
-                    const icon = header.querySelector('.toggle-icon');
-                    if (icon) icon.textContent = '▶';
-                }
-            });
-
-            // Set creative cards to collapsed
-            document.querySelectorAll('#work .card-content-creative').forEach(content => {
-                content.classList.add('collapsed');
-                content.classList.remove('expanded');
-            });
-            document.querySelectorAll('#work .toggle-icon-creative').forEach(icon => {
-                icon.textContent = '▶';
-            });
-
-            // Banner fallback
-            const bannerImg = document.querySelector('.banner-image');
-            if (bannerImg) {
-                if (bannerImg.complete && bannerImg.naturalWidth === 0) {
-                    bannerImg.style.display = 'none';
-                    const placeholder = bannerImg.nextElementSibling;
-                    if (placeholder && placeholder.classList.contains('banner-placeholder')) {
-                        placeholder.style.display = 'flex';
-                    }
-                }
-                bannerImg.addEventListener('error', function() {
-                    this.style.display = 'none';
-                    const placeholder = this.nextElementSibling;
-                    if (placeholder && placeholder.classList.contains('banner-placeholder')) {
-                        placeholder.style.display = 'flex';
+                        img.addEventListener('click', e => { e.stopPropagation(); openLightbox(img.src); });
                     }
                 });
             }
 
-            // Portrait fallback
-            const portraitImg = document.querySelector('.portrait-img');
-            if (portraitImg) {
-                portraitImg.addEventListener('error', function() {
-                    this.style.display = 'none';
-                    const placeholder = this.nextElementSibling;
-                    if (placeholder && placeholder.classList.contains('portrait-placeholder')) {
-                        placeholder.style.display = 'flex';
-                    }
-                });
-            }
-
-            // Load numbered images & start sliders
-            loadNumberedImages('banner', 20, (banners) => {
-                if (banners.length === 0) {
-                    const existing = document.querySelector('.banner-image');
-                    if (existing && existing.src) banners = [existing.src.split('/').pop()];
-                }
-                if (banners.length > 0) setupBannerSlider(banners);
-            });
-
-            loadNumberedImages('portrait', 20, (portraits) => {
-                if (portraits.length === 0) {
-                    const existing = document.querySelector('.portrait-img');
-                    if (existing && existing.src) portraits = [existing.src.split('/').pop()];
-                }
-                if (portraits.length > 0) setupPortraitSlider(portraits);
-            });
-
-            attachClickableImages();
-            initPdfPreviews();
-        }
-
-        // Run on DOMContentLoaded
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', init);
-        } else {
-            init();
-        }
-    })();
-</script>
+            if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+            else init();
+        })();
+    </script>
 </body>
 </html>
