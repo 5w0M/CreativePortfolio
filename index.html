@@ -1,1545 +1,1516 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Stefano Tiso · Narrative Design Portfolio</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #fefcf8;
-      color: #1f1e1c;
-      line-height: 1.5;
-      scroll-behavior: smooth;
-    }
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js">
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Stefano Tiso · Narrative Design Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 2rem;
-    }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #fefcf8;
+            color: #1f1e1c;
+            line-height: 1.5;
+            scroll-behavior: smooth;
+        }
 
-    /* header & nav */
-    header {
-      background: rgba(254, 252, 248, 0.92);
-      backdrop-filter: blur(12px);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      border-bottom: 1px solid #eae6df;
-      padding: 1rem 0;
-    }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
 
-    nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
+        /* ── header & nav ── */
+        header {
+            background: rgba(254, 252, 248, 0.92);
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid #eae6df;
+            padding: 1rem 0;
+        }
 
-    .logo h1 {
-      font-size: 1.5rem;
-      font-weight: 600;
-      letter-spacing: -0.01em;
-      background: linear-gradient(135deg, #2b2a27, #6b4e3a);
-      background-clip: text;
-      -webkit-background-clip: text;
-      color: transparent;
-    }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
 
-    .nav-links {
-      display: flex;
-      gap: 2rem;
-      list-style: none;
-    }
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            background: linear-gradient(135deg, #2b2a27, #6b4e3a);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
 
-    .nav-links a {
-      text-decoration: none;
-      font-weight: 500;
-      color: #3d3a35;
-      transition: color 0.2s;
-      font-size: 0.95rem;
-    }
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
 
-    .nav-links a:hover {
-      color: #b45f3b;
-    }
+        .nav-links a {
+            text-decoration: none;
+            font-weight: 500;
+            color: #3d3a35;
+            transition: color 0.2s;
+            font-size: 0.95rem;
+        }
 
-    /* sections */
-    section {
-      padding: 5rem 0;
-      border-bottom: 1px solid #f0ede8;
-    }
+        .nav-links a:hover {
+            color: #b45f3b;
+        }
 
-    .section-title {
-      font-size: 2rem;
-      font-weight: 600;
-      letter-spacing: -0.02em;
-      margin-bottom: 2rem;
-      position: relative;
-      display: inline-block;
-    }
-    .section-title::after {
-      content: '';
-      position: absolute;
-      bottom: -8px;
-      left: 0;
-      width: 48px;
-      height: 3px;
-      background: #d4b28c;
-      border-radius: 4px;
-    }
-    /* hero */
-    .hero {
-      padding: 0 0 3rem;
-      background: linear-gradient(145deg, #fffbf5 0%, #faf6ef 100%);
-      border-bottom: none;
-    }
-    /* Banner container - rounded like cards */
-    /* Banner height limited to 1/3 of page */
-    /* Banner height limited to 1/3 of viewport */
-    /* Banner container – transparent background, matches site */
-    .banner-container {
-      margin: 0 0 1rem 0;
-      padding: 0;
-      background:transparent;   /* or 'transparent' – both match the page */
-      border-radius: 28px;
-      overflow: hidden;
-      max-height: 33vh;
-    }
-    .banner-image {
-      width: 100%;
-      height: auto;
-      max-height: 33vh;
-      object-fit: contain;
-      display: block;
-      background:transparent;   /* fill any empty space with site color */
-    }
-    /* Portrait container – no extra background */
-    .hero-portrait {
-      background: transparent;
-    }
-    /* fade at left and right borders (inside the container) */
-    /* .banner-container::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      background: linear-gradient(90deg, #fefcf8 0%, transparent 8%, transparent 92%, #fefcf8 100%);
-      border-radius: inherit;
-    } */
-    .banner-placeholder {
-      width: 100%;
-      height: 140px;
-      background: linear-gradient(120deg, #e0d8cd, #cbc0b0);
-      border-radius: 0 0 32px 32px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.9rem;
-      color: #5e4d39;
-      font-weight: 500;
-      text-transform: uppercase;
-      background-image: repeating-linear-gradient(45deg, rgba(255,255,240,0.1) 0px, rgba(255,255,240,0.1) 2px, transparent 2px, transparent 8px);
-    }
-    .hero-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 2rem;
-      align-items: center;
-      margin-top: 2rem;
-    }
-    .hero-content {
-      flex: 2;
-      min-width: 250px;
-    }
-    .portrait-img {
-      width: 100%;
-      max-width: 220px;
-      border-radius: 50%;
-      aspect-ratio: 1 / 1;
-      object-fit: cover;
-      box-shadow: 0 12px 24px -12px rgba(0,0,0,0.15);
-      border: 3px solid white;
-    }
-    .portrait-placeholder {
-      width: 100%;
-      max-width: 220px;
-      aspect-ratio: 1 / 1;
-      background: #eae2d7;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 3rem;
-      color: #8b735b;
-      margin: 0 auto;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-    }
-        /* Gallery lightbox (for banner & portrait) */
-    .gallery-lightbox {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.95);
-      z-index: 2000;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      cursor: pointer;
-    }
-    .gallery-lightbox.active {
-      display: flex;
-    }
-    .gallery-container {
-      position: relative;
-      width: 90%;
-      max-width: 1000px;
-      height: 80%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .gallery-img {
-      max-width: 90%;
-      max-height: 90%;
-      object-fit: contain;
-      border-radius: 16px;
-      transition: transform 0.2s ease;
-    }
-    .gallery-close {
-      position: absolute;
-      top: 20px;
-      right: 40px;
-      color: white;
-      font-size: 40px;
-      font-weight: bold;
-      cursor: pointer;
-      z-index: 2001;
-      transition: 0.2s;
-    }
-    .gallery-close:hover {
-      color: #b87c54;
-    }
-    .gallery-prev, .gallery-next {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background: rgba(255,255,255,0.2);
-      color: white;
-      font-size: 2rem;
-      padding: 1rem;
-      cursor: pointer;
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: 0.2s;
-      user-select: none;
-    }
-    .gallery-prev { left: 20px; }
-    .gallery-next { right: 20px; }
-    .gallery-prev:hover, .gallery-next:hover {
-      background: rgba(255,255,255,0.4);
-      color: #b87c54;
-    }
-    .gallery-counter {
-      position: absolute;
-      bottom: 20px;
-      left: 0;
-      right: 0;
-      text-align: center;
-      color: white;
-      font-size: 0.9rem;
-      background: rgba(0,0,0,0.5);
-      padding: 5px 10px;
-      width: fit-content;
-      margin: 0 auto;
-      border-radius: 20px;
-    }
-    @media (max-width: 720px) {
-      .gallery-prev, .gallery-next {
-        width: 40px;
-        height: 40px;
-        font-size: 1.5rem;
-      }
-      .gallery-close { top: 15px; right: 20px; font-size: 30px; }
-    }
-    .hero-tag {
-      display: inline-block;
-      background: #eae2d7;
-      padding: 0.25rem 0.85rem;
-      border-radius: 40px;
-      font-size: 0.8rem;
-      font-weight: 500;
-      color: #5a3e2b;
-      margin-bottom: 1rem;
-    }
-    .hero h2 {
-      font-size: 2.5rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      line-height: 1.2;
-      margin-bottom: 1rem;
-    }
-    .hero p {
-      font-size: 1.1rem;
-      color: #4a453e;
-      margin-bottom: 1.5rem;
-    }
-    .pill-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.6rem;
-      margin-top: 0.5rem;
-    }
-    .pill {
-      background: #ffffffd9;
-      border: 1px solid #e2dbd1;
-      padding: 0.3rem 1rem;
-      border-radius: 60px;
-      font-size: 0.85rem;
-      font-weight: 500;
-      color: #5d4a38;
-    }
+        /* ── sections ── */
+        section {
+            padding: 5rem 0;
+            border-bottom: 1px solid #f0ede8;
+        }
 
-    /* cards grid */
-    .projects-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-      gap: 2rem;
-      margin-top: 1rem;
-    }
-    .project-card {
-      background: white;
-      border-radius: 28px;
-      box-shadow: 0 12px 28px -8px rgba(0,0,0,0.05);
-      transition: transform 0.2s ease, box-shadow 0.2s;
-      overflow: hidden;
-      border: 1px solid #ede8e1;
-      display: flex;
-      flex-direction: column;
-    }
-    .project-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 24px 40px -12px rgba(0,0,0,0.12);
-    }
-    .card-content {
-      padding: 1.8rem;
-      flex: 1;
-    }
-    .project-title {
-      font-size: 1.6rem;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-    }
-    .project-meta {
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      color: #b87c54;
-      font-weight: 600;
-      margin-bottom: 1rem;
-    }
-    .project-desc {
-      color: #3b3a37;
-      margin-bottom: 1.4rem;
-      font-size: 0.95rem;
-    }
-    .image-placeholder {
-      background: #f3efe9;
-      min-height: 180px;      /* changed from fixed height to min-height */
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.8rem;
-      color: #8f7a67;
-      overflow: hidden;
-    }
-    .image-placeholder img {
-      width: 100%;
-      height: auto;           /* allow natural height */
-      object-fit: contain;    /* show full image instead of cropping */
-    }
-    /* book cover */
-    .book-cover-img {
-      width: 100%;
-      max-height: 320px;
-      object-fit: contain;
-      border-radius: 16px;
-      margin-bottom: 1.2rem;
-      border: 1px solid #ede5db;
-    }
-    .book-cover-placeholder {
-      background: #e9e2d8;
-      height: 200px;
-      border-radius: 16px;
-      margin-bottom: 1.2rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-image: radial-gradient(circle at 20% 30%, rgba(180,95,59,0.08) 2%, transparent 2.5%);
-      background-size: 28px 28px;
-      border: 1px solid #ddd4c8;
-      color: #8b765f;
-      font-weight: 500;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-    .pdf-embed {
-      margin-top: 0.8rem;        /* matches GIF's top margin */
-      background: #faf8f4;
-      border-radius: 20px;
-      overflow: hidden;
-      border: 1px solid #ece3da;
-    }
-    /* Hide Chrome PDF toolbar as much as possible */
-    .pdf-embed iframe {
-      width: 100%;
-      height: 350px;
-      border: none;
-      display: block;
-      background: #faf8f4;
-    }
-    
-    /* This helps hide the Chrome PDF toolbar on some browsers */
-    .pdf-embed iframe[src*=".pdf"] {
-      position: relative;
-    }
-    /* two column layout */
-    .two-col {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2rem;
-    }
-    .skill-table {
-      width: 100%;
-      border-collapse: collapse;
-      background: white;
-      border-radius: 24px;
-      overflow: hidden;
-      box-shadow: 0 6px 14px rgba(0,0,0,0.02);
-    }
-    .skill-table td, .skill-table th {
-      padding: 0.9rem 1.2rem;
-      border-bottom: 1px solid #ece5dd;
-      text-align: left;
-    }
-    .skill-table th {
-      background: #faf6f0;
-      font-weight: 600;
-      width: 120px;
-    }
-    .education-item {
-      margin-bottom: 1.8rem;
-    }
-    .contact-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1.8rem;
-      margin-top: 1.5rem;
-    }
-    .contact-links a {
-      color: #2b2a27;
-      text-decoration: none;
-      font-weight: 500;
-      border-bottom: 1px dashed #cdbcab;
-    }
-    footer {
-      text-align: center;
-      padding: 2.5rem 0;
-      color: #8f7f6e;
-      font-size: 0.8rem;
-    }
-    @media (max-width: 720px) {
-      .container { padding: 0 1.5rem; }
-      .hero h2 { font-size: 2rem; }
-      .two-col { grid-template-columns: 1fr; }
-      .nav-links { gap: 1rem; }
-      section { padding: 3rem 0; }
-      .pdf-embed iframe { height: 240px; }
-      .hero-grid { flex-direction: column-reverse; text-align: center; }
-      .hero-content { text-align: center; }
-      .pill-list { justify-content: center; }
-    }
-            /* Collapsible card styles */
-    .card-header {
-      cursor: pointer;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1rem 1.8rem;
-      background: white;
-      border-radius: 28px 28px 0 0;
-    }
-    .toggle-icon {
-      font-size: 1.2rem;
-      color: #b87c54;
-      transition: transform 0.2s ease;
-    }
-    .card-content-inner {
-      padding: 0 1.8rem 1.8rem 1.8rem;
-    }
-    .card-content-inner.collapsed {
-      display: none;
-    }
-    .card-content-inner.expanded {
-      display: block;
-    }
-    
-    /* Ensure cards in grid maintain equal height regardless of content */
-    .projects-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-      gap: 2rem;
-      margin-top: 1rem;
-      align-items: start;  /* prevents cards from stretching to same height */
-    }
-    .project-card {
-      background: white;
-      border-radius: 28px;
-      box-shadow: 0 12px 28px -8px rgba(0,0,0,0.05);
-      transition: transform 0.2s ease, box-shadow 0.2s;
-      overflow: hidden;
-      border: 1px solid #ede8e1;
-      display: flex;
-      flex-direction: column;
-      /* height: 100%;        ensures consistent card height within its row */
-    }
-    /* Creative work images - fill width, maintain aspect ratio */
-    #work .image-placeholder {
-      width: 100%;
-      max-height: 25vh;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #f3efe9;
-    }
-    
-    #work .image-placeholder img {
-      width: 100%;
-      height: auto;
-      object-fit: cover;     /* fills the width, crops top/bottom if needed */
-      display: block;
-    }
-    
-    /* Scientific work keeps original fixed height */
-    #scientific-work .image-placeholder {
-      height: 180px;
-    }
-    #scientific-work .image-placeholder img {
-      height: 100%;
-      object-fit: cover;
-    }
-        /* Creative work collapsible cards */
-    #work .project-card {
-      cursor: pointer;
-    }
-    #work .card-header-creative {
-      cursor: pointer;
-    }
-    #work .card-content-creative {
-      transition: all 0.2s ease;
-    }
-    #work .card-content-creative.collapsed {
-      display: none;
-    }
-    #work .card-content-creative.expanded {
-      display: block;
-    }
-    #work .toggle-icon-creative {
-      float: right;
-      font-size: 1.2rem;
-      color: #b87c54;
-      transition: transform 0.2s ease;
-    }
-        /* Lightbox styles for expandable images */
-    .lightbox {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.9);
-      z-index: 1000;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-    }
-    .lightbox.active {
-      display: flex;
-    }
-    .lightbox img {
-      max-width: 90%;
-      max-height: 90%;
-      object-fit: contain;
-      border-radius: 16px;
-    }
-    .lightbox-close {
-      position: absolute;
-      top: 20px;
-      right: 40px;
-      color: white;
-      font-size: 40px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-    .lightbox-close:hover {
-      color: #b87c54;
-    }
-    
-    /* Make images clickable */
-    .clickable-image {
-      cursor: pointer;
-      transition: opacity 0.2s;
-    }
-    .clickable-image:hover {
-      opacity: 0.9;
-    }
-        /* Sliding animation for images */
-    .slider-container {
-      position: relative;
-      overflow: hidden;
-    }
-    .slide-image {
-      transition: transform 0.5s ease-in-out;
-    }
-    .slide-out-left {
-      transform: translateX(-100%);
-    }
-    .slide-in-right {
-      transform: translateX(0);
-    }
-    .slide-out-right {
-      transform: translateX(100%);
-    }
-    .slide-in-left {
-      transform: translateX(0);
-    }
-  </style>
+        .section-title {
+            font-size: 2rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 2rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 48px;
+            height: 3px;
+            background: #d4b28c;
+            border-radius: 4px;
+        }
+
+        /* ── hero ── */
+        .hero {
+            padding: 0 0 3rem;
+            background: linear-gradient(145deg, #fffbf5 0%, #faf6ef 100%);
+            border-bottom: none;
+        }
+
+        .banner-container {
+            margin: 0 0 1rem 0;
+            padding: 0;
+            background: transparent;
+            border-radius: 28px;
+            overflow: hidden;
+            max-height: 33vh;
+        }
+
+        .banner-image {
+            width: 100%;
+            height: auto;
+            max-height: 33vh;
+            object-fit: contain;
+            display: block;
+            background: transparent;
+        }
+
+        .banner-placeholder {
+            width: 100%;
+            height: 140px;
+            background: linear-gradient(120deg, #e0d8cd, #cbc0b0);
+            border-radius: 0 0 32px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            color: #5e4d39;
+            font-weight: 500;
+            text-transform: uppercase;
+            background-image: repeating-linear-gradient(45deg, rgba(255, 255, 240, 0.1) 0px, rgba(255, 255, 240, 0.1) 2px, transparent 2px, transparent 8px);
+        }
+
+        .hero-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            align-items: center;
+            margin-top: 2rem;
+        }
+
+        .hero-content {
+            flex: 2;
+            min-width: 250px;
+        }
+
+        .hero-portrait {
+            background: transparent;
+        }
+
+        .portrait-img {
+            width: 100%;
+            max-width: 220px;
+            border-radius: 50%;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            box-shadow: 0 12px 24px -12px rgba(0, 0, 0, 0.15);
+            border: 3px solid white;
+        }
+
+        .portrait-placeholder {
+            width: 100%;
+            max-width: 220px;
+            aspect-ratio: 1 / 1;
+            background: #eae2d7;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #8b735b;
+            margin: 0 auto;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .hero-tag {
+            display: inline-block;
+            background: #eae2d7;
+            padding: 0.25rem 0.85rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #5a3e2b;
+            margin-bottom: 1rem;
+        }
+
+        .hero h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: #4a453e;
+            margin-bottom: 1.5rem;
+        }
+
+        .pill-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin-top: 0.5rem;
+        }
+
+        .pill {
+            background: #ffffffd9;
+            border: 1px solid #e2dbd1;
+            padding: 0.3rem 1rem;
+            border-radius: 60px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #5d4a38;
+        }
+
+        /* ── cards grid ── */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 2rem;
+            margin-top: 1rem;
+            align-items: start;
+        }
+
+        .project-card {
+            background: white;
+            border-radius: 28px;
+            box-shadow: 0 12px 28px -8px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s ease, box-shadow 0.2s;
+            overflow: hidden;
+            border: 1px solid #ede8e1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .project-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 24px 40px -12px rgba(0, 0, 0, 0.12);
+        }
+
+        .card-content {
+            padding: 1.8rem;
+            flex: 1;
+        }
+
+        .project-title {
+            font-size: 1.6rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .project-meta {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: #b87c54;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .project-desc {
+            color: #3b3a37;
+            margin-bottom: 1.4rem;
+            font-size: 0.95rem;
+        }
+
+        .image-placeholder {
+            background: #f3efe9;
+            min-height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            color: #8f7a67;
+            overflow: hidden;
+        }
+
+        .image-placeholder img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+
+        /* book cover (unused in current cards but kept for flexibility) */
+        .book-cover-img {
+            width: 100%;
+            max-height: 320px;
+            object-fit: contain;
+            border-radius: 16px;
+            margin-bottom: 1.2rem;
+            border: 1px solid #ede5db;
+        }
+
+        .book-cover-placeholder {
+            background: #e9e2d8;
+            height: 200px;
+            border-radius: 16px;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: radial-gradient(circle at 20% 30%, rgba(180, 95, 59, 0.08) 2%, transparent 2.5%);
+            background-size: 28px 28px;
+            border: 1px solid #ddd4c8;
+            color: #8b765f;
+            font-weight: 500;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .pdf-embed {
+            margin-top: 0.8rem;
+            background: #faf8f4;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid #ece3da;
+        }
+
+        .pdf-embed iframe {
+            width: 100%;
+            height: 350px;
+            border: none;
+            display: block;
+            background: #faf8f4;
+        }
+
+        /* ── two column layout ── */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .skill-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.02);
+        }
+
+        .skill-table td,
+        .skill-table th {
+            padding: 0.9rem 1.2rem;
+            border-bottom: 1px solid #ece5dd;
+            text-align: left;
+        }
+
+        .skill-table th {
+            background: #faf6f0;
+            font-weight: 600;
+            width: 120px;
+        }
+
+        .education-item {
+            margin-bottom: 1.8rem;
+        }
+
+        .contact-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.8rem;
+            margin-top: 1.5rem;
+        }
+
+        .contact-links a {
+            color: #2b2a27;
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px dashed #cdbcab;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2.5rem 0;
+            color: #8f7f6e;
+            font-size: 0.8rem;
+        }
+
+        /* ── collapsible cards ── */
+        .card-header {
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.8rem;
+            background: white;
+            border-radius: 28px 28px 0 0;
+        }
+
+        .toggle-icon {
+            font-size: 1.2rem;
+            color: #b87c54;
+            transition: transform 0.2s ease;
+        }
+
+        .card-content-inner {
+            padding: 0 1.8rem 1.8rem 1.8rem;
+        }
+
+        .card-content-inner.collapsed {
+            display: none;
+        }
+
+        .card-content-inner.expanded {
+            display: block;
+        }
+
+        /* ── creative work specific ── */
+        #work .image-placeholder {
+            width: 100%;
+            max-height: 25vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f3efe9;
+        }
+
+        #work .image-placeholder img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            display: block;
+        }
+
+        #work .project-card {
+            cursor: pointer;
+        }
+
+        #work .card-content-creative {
+            transition: all 0.2s ease;
+        }
+
+        #work .card-content-creative.collapsed {
+            display: none;
+        }
+
+        #work .card-content-creative.expanded {
+            display: block;
+        }
+
+        #work .toggle-icon-creative {
+            float: right;
+            font-size: 1.2rem;
+            color: #b87c54;
+            transition: transform 0.2s ease;
+        }
+
+        /* ── scientific work specific ── */
+        #scientific-work .image-placeholder {
+            height: 180px;
+        }
+
+        #scientific-work .image-placeholder img {
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* ── lightbox ── */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            border-radius: 16px;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .lightbox-close:hover {
+            color: #b87c54;
+        }
+
+        /* ── gallery lightbox (banner / portrait sets) ── */
+        .gallery-lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .gallery-lightbox.active {
+            display: flex;
+        }
+
+        .gallery-container {
+            position: relative;
+            width: 90%;
+            max-width: 1000px;
+            height: 80%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .gallery-img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            border-radius: 16px;
+            transition: transform 0.2s ease;
+        }
+
+        .gallery-close {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 2001;
+            transition: 0.2s;
+        }
+
+        .gallery-close:hover {
+            color: #b87c54;
+        }
+
+        .gallery-prev,
+        .gallery-next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 2rem;
+            padding: 1rem;
+            cursor: pointer;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+            user-select: none;
+        }
+
+        .gallery-prev {
+            left: 20px;
+        }
+
+        .gallery-next {
+            right: 20px;
+        }
+
+        .gallery-prev:hover,
+        .gallery-next:hover {
+            background: rgba(255, 255, 255, 0.4);
+            color: #b87c54;
+        }
+
+        .gallery-counter {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: white;
+            font-size: 0.9rem;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 5px 10px;
+            width: fit-content;
+            margin: 0 auto;
+            border-radius: 20px;
+        }
+
+        /* ── clickable images ── */
+        .clickable-image {
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .clickable-image:hover {
+            opacity: 0.9;
+        }
+
+        /* ── responsive ── */
+        @media (max-width: 720px) {
+            .container {
+                padding: 0 1.5rem;
+            }
+
+            .hero h2 {
+                font-size: 2rem;
+            }
+
+            .two-col {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+
+            section {
+                padding: 3rem 0;
+            }
+
+            .pdf-embed iframe {
+                height: 240px;
+            }
+
+            .hero-grid {
+                flex-direction: column-reverse;
+                text-align: center;
+            }
+
+            .hero-content {
+                text-align: center;
+            }
+
+            .pill-list {
+                justify-content: center;
+            }
+
+            .gallery-prev,
+            .gallery-next {
+                width: 40px;
+                height: 40px;
+                font-size: 1.5rem;
+            }
+
+            .gallery-close {
+                top: 15px;
+                right: 20px;
+                font-size: 30px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <!-- Lightbox for expandable images -->
-  <div id="lightbox" class="lightbox" onclick="closeLightbox()">
-    <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
-    <img id="lightbox-img" src="" alt="Expanded view">
-  </div>
-    <!-- Gallery lightbox for banner/portrait sets -->
-  <div id="galleryLightbox" class="gallery-lightbox">
-    <span class="gallery-close">&times;</span>
-    <div class="gallery-container">
-      <div class="gallery-prev">&#10094;</div>
-      <img class="gallery-img" id="galleryImg" alt="Gallery view">
-      <div class="gallery-next">&#10095;</div>
+    <!-- ── Regular lightbox (card images) ── -->
+    <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+        <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+        <img id="lightbox-img" src="" alt="Expanded view">
     </div>
-    <div class="gallery-counter" id="galleryCounter"></div>
-  </div>
-<header>
-  <div class="container">
-    <nav>
-      <div class="logo"><h1>Stefano Tiso</h1></div>
-      <ul class="nav-links">
-        <li><a href="#work">Work</a></li>
-        <li><a href="#practice">Practice</a></li>
-        <li><a href="#skills">Skills</a></li>
-        <li><a href="#contact">Contact</a></li>
-      </ul>
-    </nav>
-  </div>
-</header>
 
-<main>
-  <!-- Hero with banner image (Abbronzature.png) -->
-    <!-- Hero with banner image (Abbronzature.png) -->
-  <section class="hero">
+    <!-- ── Gallery lightbox (banner / portrait slideshows) ── -->
+    <div id="galleryLightbox" class="gallery-lightbox">
+        <span class="gallery-close">&times;</span>
+        <div class="gallery-container">
+            <div class="gallery-prev">&#10094;</div>
+            <img class="gallery-img" id="galleryImg" alt="Gallery view">
+            <div class="gallery-next">&#10095;</div>
+        </div>
+        <div class="gallery-counter" id="galleryCounter"></div>
+    </div>
+
+    <!-- ── Header ── -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo"><h1>Stefano Tiso</h1></div>
+                <ul class="nav-links">
+                    <li><a href="#work">Work</a></li>
+                    <li><a href="#practice">Practice</a></li>
+                    <li><a href="#skills">Skills</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- ── Hero ── -->
+        <section class="hero">
+            <div class="container">
+                <div class="banner-container">
+                    <img src="Abbronzatura.png" alt="banner" class="banner-image"
+                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="banner-placeholder" style="display: none;">📖 narrative design · interactive storytelling · playful learning</div>
+                </div>
+                <div class="hero-grid">
+                    <div class="hero-content">
+                        <div class="hero-tag">Stefano Tiso</div>
+                        <h2>Narrative design & playful learning</h2>
+                        <p>I'm a narrative designer and interactive storyteller creating joyful, playful learning experiences for children.<br>I also volunteer-teach game programming (ages 6–12) and work comfortably across writing, design, and implementation.</p>
+                        <div class="pill-list">
+                            <span class="pill">🇮🇹 Italian (native)</span>
+                            <span class="pill">🇫🇷 French (fluent)</span>
+                            <span class="pill">🇬🇧 English (fluent)</span>
+                            <span class="pill">Unity · C#</span>
+                            <span class="pill">Dialogue trees</span>
+                        </div>
+                    </div>
+                    <div class="hero-portrait">
+                        <img src="portrait1.png" alt="Stefano Tiso" class="portrait-img"
+                        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="portrait-placeholder" style="display: none;">📷</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── Creative Work ── -->
+        <section id="work">
+            <div class="container">
+                <h2 class="section-title">Creative work</h2>
+                <div class="projects-grid">
+                    <!-- Sognetti -->
+                    <div class="project-card">
+                        <div class="card-header-creative" onclick="toggleCreativeCard(this)">
+                            <div class="image-placeholder">
+                                <img src="sognetti.png" alt="Sognetti book cover" class="clickable-image"
+                                onerror="this.src='https://placehold.co/600x300/f3efe9/8f7a67?text=Sognetti+Cover'">
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 1.8rem 1rem 1.8rem;">
+                                <div class="project-title">Sognetti</div>
+                                <span class="toggle-icon-creative">▼</span>
+                            </div>
+                        </div>
+                        <div class="card-content-creative expanded">
+                            <div class="card-content" style="padding: 0 1.8rem 1.8rem 1.8rem;">
+                                <div class="project-meta">2025–present · Author, Editor, Art director</div>
+                                <ul class="project-desc" style="list-style-type: disc; padding-left: 1.2rem; margin-bottom: 1.4rem;">
+                                    <li>Collective literary anthology</li>
+                                    <li>Curated texts from multiple writers; wrote majority of stories</li>
+                                    <li>Handled editing and typography</li>
+                                    <li>Book project bringing diverse voices into a shared narrative universe</li>
+                                </ul>
+                                <div class="pdf-embed" style="background: #faf8f4; border-radius: 20px; padding: 1rem; text-align: center; border: 1px solid #ece3da;">
+                                    <iframe src="260513_SOGNO.pdf" title="Sognetti excerpt" loading="lazy" style="width:100%; height:350px; border:none; display:block;"
+                                    onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                                </iframe>
+                                <div style="display:none; padding: 2rem; text-align: center;">
+                                    <p>📄 <a href="260513_SOGNO.pdf" target="_blank" style="color: #b45f3b;">Click here to view PDF</a></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Passage technique -->
+                <div class="project-card">
+                    <div class="card-header-creative" onclick="toggleCreativeCard(this)">
+                        <div class="image-placeholder">
+                            <img src="GRANDE_CARTE_FINALE_1.png" alt="Passage technique map preview" class="clickable-image"
+                            onerror="this.src='https://placehold.co/600x300/f3efe9/8f7a67?text=map+preview'">
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 1.8rem 1rem 1.8rem;">
+                            <div class="project-title">Passage technique</div>
+                            <span class="toggle-icon-creative">▼</span>
+                        </div>
+                    </div>
+                    <div class="card-content-creative expanded">
+                        <div class="card-content" style="padding: 0 1.8rem 1.8rem 1.8rem;">
+                            <div class="project-meta">2026–present · Narrative video game</div>
+                            <ul class="project-desc" style="list-style-type: disc; padding-left: 1.2rem; margin-bottom: 1.4rem;">
+                                <li>Branching narrative set in a parallel Briançon after climatic collapse</li>
+                                <li>Interactive map with moving characters and dialogue-driven choices</li>
+                                <li>Hand‑crafted dialogue trees and narrative coherence</li>
+                                <li>Authentic cultural elements</li>
+                            </ul>
+                            <div style="margin-top: 0.8rem;">
+                                <img src="Animation.gif" alt="game animation" style="max-width: 100%; border-radius: 16px; margin-top: 0.5rem; border: 1px solid #f0eae2;"
+                                onerror="this.style.display='none'">
+                                <img src="Animation1.gif" alt="game animation" style="max-width: 100%; border-radius: 16px; margin-top: 0.5rem; border: 1px solid #f0eae2;"
+                                onerror="this.style.display='none'">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── Scientific Work ── -->
+    <section id="scientific-work">
+        <div class="container">
+            <h2 class="section-title">Scientific work</h2>
+            <div class="projects-grid">
+                <!-- PhD Thesis -->
+                <div class="project-card">
+                    <div class="card-header" onclick="toggleCard(this)">
+                        <div class="project-title">PhD Thesis</div>
+                        <span class="toggle-icon">▶</span>
+                    </div>
+                    <div class="card-content-inner collapsed">
+                        <div class="project-meta">Computational Biology · University of Groningen (2024)</div>
+                        <ul class="project-desc" style="list-style-type: disc; padding-left: 1.2rem; margin-bottom: 1.4rem;">
+                            <li><strong>Evolvability and organismal architecture:</strong> The blind watchmaker and the reminiscent architect</li>
+                            <li>Research at the intersection of evolutionary theory, genetics, and artificial intelligence</li>
+                            <li>Gene regulatory networks · evolutionary robotics · developmental genetics · morphology</li>
+                            <li>Individual-based modeling of density dependence and reverse evolution</li>
+                        </ul>
+                        <div class="pdf-embed" style="margin-top: 0.8rem;">
+                            <iframe src="Written samples.pdf" title="PhD Thesis Preview" loading="lazy" style="width:100%; height:350px; border:none; display:block;"></iframe>
+                        </div>
+                        <p style="font-size: 0.75rem; color: #8f7f6e; margin-top: 0.5rem; text-align: right;">PDF preview — <a href="https://research.rug.nl/en/publications/evolvability-and-organismal-architecture-the-blind-watchmaker-and" target="_blank" style="color: #b45f3b;">view full thesis on University of Groningen portal →</a></p>
+                    </div>
+                </div>
+
+                <!-- GECCO 2023 -->
+                <div class="project-card">
+                    <div class="card-header" onclick="toggleCard(this)">
+                        <div class="project-title">Biological insights on grammar‑structured mutations improve fitness and diversity</div>
+                        <span class="toggle-icon">▶</span>
+                    </div>
+                    <div class="card-content-inner collapsed">
+                        <div class="project-meta">GECCO 2023 · First author</div>
+                        <ul class="project-desc" style="list-style-type: disc; padding-left: 1.2rem; margin-bottom: 1.4rem;">
+                            <li>Proposed <strong>Facilitated Mutation (FM)</strong> inspired by evolutionary biology's Facilitated Variation theory</li>
+                            <li><strong>Results:</strong> +0.5% test accuracy, +53% average population fitness, +523 more high-quality solutions</li>
+                            <li>Co-authored with Carvalho, Lourenço, and Machado (University of Coimbra)</li>
+                        </ul>
+                        <div class="pdf-embed" style="margin-top: 0.8rem;">
+                            <iframe src="grammarmutation.pdf" title="GECCO 2023 Paper Preview" loading="lazy" style="width:100%; height:350px; border:none; display:block;"></iframe>
+                        </div>
+                        <p style="font-size: 0.75rem; color: #8f7f6e; margin-top: 0.5rem; text-align: right;">PDF preview — <a href="https://doi.org/10.1145/3583131.3590472" target="_blank" style="color: #b45f3b;">view on ACM Digital Library →</a></p>
+                    </div>
+                </div>
+
+                <!-- TREE 2022 -->
+                <div class="project-card">
+                    <div class="card-header" onclick="toggleCard(this)">
+                        <div class="project-title">Capturing the facets of evolvability in a mechanistic framework</div>
+                        <span class="toggle-icon">▶</span>
+                    </div>
+                    <div class="card-content-inner collapsed">
+                        <div class="project-meta">Trends in Ecology & Evolution · 2022 · Co-author</div>
+                        <ul class="project-desc" style="list-style-type: disc; padding-left: 1.2rem; margin-bottom: 1.4rem;">
+                            <li>Published in <em>Trends in Ecology & Evolution</em> (Impact factor: 20.6), one of the leading journals in evolutionary biology</li>
+                            <li>Proposed a unifying framework to categorize evolvability determinants into three key categories: <strong>(1)</strong> determinants providing variation, <strong>(2)</strong> determinants shaping fitness effects, and <strong>(3)</strong> determinants shaping the selection process</li>
+                            <li>Introduced critical distinctions between <strong>general vs. specific evolvability</strong> and <strong>broad vs. narrow scope</strong> of evolvability determinants</li>
+                            <li>Co-authored with Jana M. Riederer, Timo J.B. van Eldijk, and Franz J. Weissing</li>
+                            <li>Framework designed to reduce misunderstandings across disciplines and guide future evolutionary research</li>
+                        </ul>
+                        <div class="pdf-embed" style="margin-top: 0.8rem;">
+                            <iframe src="Capturing the facets of evolvability in a mechanistic framework (1).pdf" title="Evolvability Paper Preview" loading="lazy" style="width:100%; height:350px; border:none; display:block;"></iframe>
+                        </div>
+                        <p style="font-size: 0.75rem; color: #8f7f6e; margin-top: 0.5rem; text-align: right;">PDF preview — <a href="https://doi.org/10.1016/j.tree.2022.01.004" target="_blank" style="color: #b45f3b;">view on publisher's website →</a></p>
+                    </div>
+                </div>
+
+                <!-- Reverse Evolution -->
+                <div class="project-card">
+                    <div class="card-header" onclick="toggleCard(this)">
+                        <div class="project-title">Reverse Evolution & Phenotypic Plasticity</div>
+                        <span class="toggle-icon">▶</span>
+                    </div>
+                    <div class="card-content-inner collapsed">
+                        <div class="project-meta">Evolutionary Biology · Peer-reviewed article</div>
+                        <ul class="project-desc" style="list-style-type: disc; padding-left: 1.2rem; margin-bottom: 1.4rem;">
+                            <li>Dollo's law of irreversibility and plastic traits in parasitic wasps</li>
+                            <li>Lipogenesis switches on in fat-poor environments and off in fat-rich environments</li>
+                            <li>Lineages that lost lipogenic ability >200 million years ago still retain fat synthesis as a plastic trait</li>
+                            <li>Individual-based simulations show plasticity can persist for thousands of generations</li>
+                        </ul>
+                        <div class="pdf-embed" style="margin-top: 0.8rem;">
+                            <iframe src="DollosLaw.pdf" title="Journal Article Preview" loading="lazy" style="width:100%; height:350px; border:none; display:block;"></iframe>
+                        </div>
+                        <p style="font-size: 0.75rem; color: #8f7f6e; margin-top: 0.5rem; text-align: right;">PDF preview — download available</p>
+                    </div>
+                </div>
+
+                <!-- Social Environments -->
+                <div class="project-card">
+                    <div class="card-header" onclick="toggleCard(this)">
+                        <div class="project-title">Social Environments & Mate Attraction</div>
+                        <span class="toggle-icon">▶</span>
+                    </div>
+                    <div class="card-content-inner collapsed">
+                        <div class="project-meta">Behavioral Ecology · Field study</div>
+                        <ul class="project-desc" style="list-style-type: disc; padding-left: 1.2rem; margin-bottom: 1.4rem;">
+                            <li>Automated RFID-surveillance system in wild field crickets (<em>Gryllus campestris</em>)</li>
+                            <li>Attractiveness increases from low to intermediate density (Allee effect), then declines at higher densities</li>
+                            <li>Individual-specific Allee effects that may be evolvable</li>
+                            <li>Males attractive under low densities remain attractive under higher densities</li>
+                        </ul>
+                        <div class="pdf-embed" style="margin-top: 0.8rem;">
+                            <iframe src="Crickets.pdf" title="Second Journal Article Preview" loading="lazy" style="width:100%; height:350px; border:none; display:block;"></iframe>
+                        </div>
+                        <p style="font-size: 0.75rem; color: #8f7f6e; margin-top: 0.5rem; text-align: right;">PDF preview — download available</p>
+                    </div>
+                </div>
+
+                <!-- Google Scholar -->
+                <div class="project-card">
+                    <div class="card-header" onclick="toggleCard(this)">
+                        <div class="project-title">Google Scholar</div>
+                        <span class="toggle-icon">▶</span>
+                    </div>
+                    <div class="card-content-inner collapsed">
+                        <div class="project-meta">Publications & citation metrics</div>
+                        <ul class="project-desc" style="list-style-type: disc; padding-left: 1.2rem; margin-bottom: 1.4rem;">
+                            <li>Complete list of peer-reviewed publications including the 2022 TREE paper</li>
+                            <li>PhD thesis on evolvability and organismal architecture</li>
+                            <li>Articles on evolutionary plasticity, Dollo's law, and behavioral ecology</li>
+                            <li>Citation metrics and research impact tracking</li>
+                        </ul>
+                        <a href="https://scholar.google.com/citations?user=s.tiso" target="_blank" style="display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 1rem; color: #b45f3b; text-decoration: none; font-weight: 500; border-bottom: 1px solid transparent; transition: 0.2s;"
+                        onmouseover="this.style.borderBottomColor='#b45f3b'"
+                        onmouseout="this.style.borderBottomColor='transparent'">
+                        📚 View Google Scholar Profile →
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── Practice & Teaching ── -->
+<section id="practice">
     <div class="container">
-      <div class="banner-container">
-        <img src="Abbronzatura.png" alt="banner" class="banner-image" onerror="this.style.display='none'; this.parentElement.nextElementSibling.style.display='flex';">
-        <div class="banner-placeholder" style="display: none;">📖 narrative design · interactive storytelling · playful learning</div>
-      </div>
-      <div class="hero-grid">
-        <div class="hero-content">
-          <div class="hero-tag">Stefano Tiso</div>
-          <h2>Narrative design & playful learning</h2>
-          <p>I'm a narrative designer and interactive storyteller creating joyful, playful learning experiences for children.<br>I also volunteer-teach game programming (ages 6–12) and work comfortably across writing, design, and implementation.</p>
-          <div class="pill-list">
-            <span class="pill">🇮🇹 Italian (native)</span>
-            <span class="pill">🇫🇷 French (fluent)</span>
-            <span class="pill">🇬🇧 English (fluent)</span>
-            <span class="pill">Unity · C#</span>
-            <span class="pill">Dialogue trees</span>
-          </div>
+        <h2 class="section-title">Practice</h2>
+        <div class="two-col">
+            <div class="practice-card" style="background: white; border-radius: 24px; padding: 1.8rem; box-shadow: 0 6px 12px -6px rgba(0,0,0,0.05);">
+                <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem;">🧩 Teaching (2020–2023)</h3>
+                <p style="color: #4f4a43;">Volunteer teacher — game programming for children. Weekly Unity/C# workshops for ages 6–12; progressive learning sequences combining craft, curiosity, and play.</p>
+            </div>
+            <div class="practice-card" style="background: white; border-radius: 24px; padding: 1.8rem; box-shadow: 0 6px 12px -6px rgba(0,0,0,0.05);">
+                <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem;">🎭 TTRPG & theatre (2009–present)</h3>
+                <p style="color: #4f4a43;">Campaign GMing and homebrew worlds; theatre writing, acting, and directing — including immersive one‑spectator performances.</p>
+            </div>
         </div>
-        <div class="hero-portrait">
-          <img src="portrait1.png" alt="Stefano Tiso" class="portrait-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-          <div class="portrait-placeholder" style="display: none;">📷</div>
-        </div>
-      </div>
     </div>
-  </section>
+</section>
 
-   <!-- Creative Work Section -->
-  <section id="work">
+<!-- ── Skills & Education ── -->
+<section id="skills">
     <div class="container">
-      <h2 class="section-title">Creative work</h2>
-      <div class="projects-grid">
-        
-        <!-- Sognetti (Collapsible) -->
-        <div class="project-card">
-          <div class="card-header-creative" onclick="toggleCreativeCard(this)">
-            <div class="image-placeholder">
-              <img src="sognetti.png" alt="Sognetti book cover" class="clickable-image" onerror="this.src='https://placehold.co/600x300/f3efe9/8f7a67?text=Sognetti+Cover'">
+        <h2 class="section-title">Skills & education</h2>
+        <div class="two-col">
+            <div>
+                <table class="skill-table">
+                    <tr><th>Narrative</th><td>Script editing, dialogue trees, interactive narrative design, worldbuilding, editorial leadership</td></tr>
+                    <tr><th>Technical</th><td>Unity (C#), Python, LangGraph, text-based scripting, multimodal (sound + image)</td></tr>
+                    <tr><th>Collaboration</th><td>Iteration, feedback loops, documentation, cross‑discipline communication</td></tr>
+                </table>
             </div>
-            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 1.8rem 1rem 1.8rem;">
-              <div class="project-title">Sognetti</div>
-              <span class="toggle-icon-creative">▼</span>
+            <div>
+                <div class="education-item"><strong>PhD in Computational Biology</strong><br>University of Groningen (2019–2024)</div>
+                <div class="education-item"><strong>Erasmus Mundus Master's</strong><br>LMU Munich, Groningen, Montpellier (2016–2018)</div>
+                <div style="margin-top: 1rem; font-style: italic; color: #6b5a4b;">📄 References available upon request.</div>
             </div>
-          </div>
-          <div class="card-content-creative expanded">
-            <div class="card-content" style="padding: 0 1.8rem 1.8rem 1.8rem;">
-              <div class="project-meta">2025–present · Author, Editor, Art director</div>
-              <ul class="project-desc" style="list-style-type: disc; padding-left: 1.2rem; margin-bottom: 1.4rem;">
-                <li>Collective literary anthology</li>
-                <li>Curated texts from multiple writers; wrote majority of stories</li>
-                <li>Handled editing and typography</li>
-                <li>Book project bringing diverse voices into a shared narrative universe</li>
-              </ul>
-             <div class="pdf-embed" style="background: #faf8f4; border-radius: 20px; padding: 1rem; text-align: center; border: 1px solid #ece3da;">
-              <iframe src="260513_SOGNO.pdf" title="Sognetti excerpt" loading="lazy" style="width:100%; height:350px; border:none; display:block;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-              </iframe>
-              <div style="display:none; padding: 2rem; text-align: center;">
-                <p>📄 <a href="260513_SOGNO.pdf" target="_blank" style="color: #b45f3b;">Click here to view PDF</a></p>
-              </div>
-            </div>
-            </div>
-          </div>
         </div>
-
-        <!-- Passage technique (Collapsible) -->
-        <div class="project-card">
-          <div class="card-header-creative" onclick="toggleCreativeCard(this)">
-            <div class="image-placeholder">
-              <img src="GRANDE_CARTE_FINALE_1.png" alt="Passage technique map preview" class="clickable-image" onerror="this.src='https://placehold.co/600x300/f3efe9/8f7a67?text=map+preview'">
-            </div>
-            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 1.8rem 1rem 1.8rem;">
-              <div class="project-title">Passage technique</div>
-              <span class="toggle-icon-creative">▼</span>
-            </div>
-          </div>
-          <div class="card-content-creative expanded">
-            <div class="card-content" style="padding: 0 1.8rem 1.8rem 1.8rem;">
-              <div class="project-meta">2026–present · Narrative video game</div>
-              <ul class="project-desc" style="list-style-type: disc; padding-left: 1.2rem; margin-bottom: 1.4rem;">
-                <li>Branching narrative set in a parallel Briançon after climatic collapse</li>
-                <li>Interactive map with moving characters and dialogue-driven choices</li>
-                <li>Hand‑crafted dialogue trees and narrative coherence</li>
-                <li>Authentic cultural elements</li>
-              </ul>
-              <div style="margin-top: 0.8rem;">
-                <img src="Animation.gif" alt="game animation" style="max-width: 100%; border-radius: 16px; margin-top: 0.5rem; border: 1px solid #f0eae2;" onerror="this.style.display='none'">
-                <img src="Animation1.gif" alt="game animation" style="max-width: 100%; border-radius: 16px; margin-top: 0.5rem; border: 1px solid #f0eae2;" onerror="this.style.display='none'">
-              </div>
-            </div>
-          </div>
-        </div>
-        
-      </div>
     </div>
-  </section>
+</section>
 
-    <!-- Scientific Work Section -->
-  <section id="scientific-work">
+<!-- ── Contact ── -->
+<section id="contact">
     <div class="container">
-      <h2 class="section-title">Scientific work</h2>
-      <div class="projects-grid">
-        <!-- 1. PhD Thesis -->
-        <div class="project-card">
-          <div class="card-header" onclick="toggleCard(this)">
-            <div class="project-title">PhD Thesis</div>
-            <span class="toggle-icon">▼</span>
-          </div>
-          <div class="card-content-inner collapsed">
-            <div class="project-meta">Computational Biology · University of Groningen (2024)</div>
-            <ul class="project-desc" style="list-style-type: disc; padding-left: 1.2rem; margin-bottom: 1.4rem;">
-              <li><strong>Evolvability and organismal architecture:</strong> The blind watchmaker and the reminiscent architect</li>
-              <li>Research at the intersection of evolutionary theory, genetics, and artificial intelligence</li>
-              <li>Gene regulatory networks · evolutionary robotics · developmental genetics · morphology</li>
-              <li>Individual-based modeling of density dependence and reverse evolution</li>
-            </ul>
-            <div class="pdf-embed" style="margin-top: 0.8rem;">
-              <iframe src="Written samples.pdf" title="PhD Thesis Preview" loading="lazy" style="width:100%; height:350px; border:none; display:block;"></iframe>
-            </div>
-            <p style="font-size: 0.75rem; color: #8f7f6e; margin-top: 0.5rem; text-align: right;">PDF preview — <a href="https://research.rug.nl/en/publications/evolvability-and-organismal-architecture-the-blind-watchmaker-and" target="_blank" style="color: #b45f3b;">view full thesis on University of Groningen portal →</a></p>
-          </div>
+        <h2 class="section-title">Contact</h2>
+        <div class="contact-links">
+            <a href="mailto:stefano.tiso.evo@gmail.com">📧 stefano.tiso.evo@gmail.com</a>
+            <a href="tel:+33763935724">📞 +33 7 63 93 57 24</a>
+            <a href="https://www.linkedin.com/in/stefano-tiso-evo-data" target="_blank">🔗 LinkedIn</a>
+            <a href="https://github.com/swom" target="_blank">🐙 GitHub</a>
         </div>
-
-        <!-- 2. GECCO 2023 Paper: Grammar-Structured Mutations -->
-        <div class="project-card">
-          <div class="card-header" onclick="toggleCard(this)">
-            <div class="project-title">Biological insights on grammar‑structured mutations improve fitness and diversity</div>
-            <span class="toggle-icon">▼</span>
-          </div>
-          <div class="card-content-inner collapsed">
-            <div class="project-meta">GECCO 2023 · First author</div>
-            <ul class="project-desc" style="list-style-type: disc; padding-left: 1.2rem; margin-bottom: 1.4rem;">
-              <li>Proposed <strong>Facilitated Mutation (FM)</strong> inspired by evolutionary biology's Facilitated Variation theory</li>
-              <li><strong>Results:</strong> +0.5% test accuracy, +53% average population fitness, +523 more high-quality solutions</li>
-              <li>Co-authored with Carvalho, Lourenço, and Machado (University of Coimbra)</li>
-            </ul>
-            <div class="pdf-embed" style="margin-top: 0.8rem;">
-              <iframe src="grammarmutation.pdf" title="GECCO 2023 Paper Preview" loading="lazy" style="width:100%; height:350px; border:none; display:block;"></iframe>
-            </div>
-            <p style="font-size: 0.75rem; color: #8f7f6e; margin-top: 0.5rem; text-align: right;">PDF preview — <a href="https://doi.org/10.1145/3583131.3590472" target="_blank" style="color: #b45f3b;">view on ACM Digital Library →</a></p>
-          </div>
-        </div>
-
-        <!-- 3. Trends in Ecology & Evolution Paper (2022) -->
-        <div class="project-card">
-          <div class="card-header" onclick="toggleCard(this)">
-            <div class="project-title">Capturing the facets of evolvability in a mechanistic framework</div>
-            <span class="toggle-icon">▼</span>
-          </div>
-          <div class="card-content-inner collapsed">
-            <div class="project-meta">Trends in Ecology & Evolution · 2022 · Co-author</div>
-            <ul class="project-desc" style="list-style-type: disc; padding-left: 1.2rem; margin-bottom: 1.4rem;">
-              <li>Published in <em>Trends in Ecology & Evolution</em> (Impact factor: 20.6), one of the leading journals in evolutionary biology</li>
-              <li>Proposed a unifying framework to categorize evolvability determinants into three key categories: <strong>(1)</strong> determinants providing variation, <strong>(2)</strong> determinants shaping fitness effects, and <strong>(3)</strong> determinants shaping the selection process</li>
-              <li>Introduced critical distinctions between <strong>general vs. specific evolvability</strong> and <strong>broad vs. narrow scope</strong> of evolvability determinants</li>
-              <li>Co-authored with Jana M. Riederer, Timo J.B. van Eldijk, and Franz J. Weissing</li>
-              <li>Framework designed to reduce misunderstandings across disciplines and guide future evolutionary research</li>
-            </ul>
-            <div class="pdf-embed" style="margin-top: 0.8rem;">
-              <iframe src="Capturing the facets of evolvability in a mechanistic framework (1).pdf" title="Evolvability Paper Preview" loading="lazy" style="width:100%; height:350px; border:none; display:block;"></iframe>
-            </div>
-            <p style="font-size: 0.75rem; color: #8f7f6e; margin-top: 0.5rem; text-align: right;">PDF preview — <a href="https://doi.org/10.1016/j.tree.2022.01.004" target="_blank" style="color: #b45f3b;">view on publisher's website →</a></p>
-          </div>
-        </div>
-
-        <!-- 4. Reverse Evolution & Phenotypic Plasticity -->
-        <div class="project-card">
-          <div class="card-header" onclick="toggleCard(this)">
-            <div class="project-title">Reverse Evolution & Phenotypic Plasticity</div>
-            <span class="toggle-icon">▼</span>
-          </div>
-          <div class="card-content-inner collapsed">
-            <div class="project-meta">Evolutionary Biology · Peer-reviewed article</div>
-            <ul class="project-desc" style="list-style-type: disc; padding-left: 1.2rem; margin-bottom: 1.4rem;">
-              <li>Dollo's law of irreversibility and plastic traits in parasitic wasps</li>
-              <li>Lipogenesis switches on in fat-poor environments and off in fat-rich environments</li>
-              <li>Lineages that lost lipogenic ability >200 million years ago still retain fat synthesis as a plastic trait</li>
-              <li>Individual-based simulations show plasticity can persist for thousands of generations</li>
-            </ul>
-            <div class="pdf-embed" style="margin-top: 0.8rem;">
-              <iframe src="DollosLaw.pdf" title="Journal Article Preview" loading="lazy" style="width:100%; height:350px; border:none; display:block;"></iframe>
-            </div>
-            <p style="font-size: 0.75rem; color: #8f7f6e; margin-top: 0.5rem; text-align: right;">PDF preview — download available</p>
-          </div>
-        </div>
-
-        <!-- 5. Social Environments & Mate Attraction -->
-        <div class="project-card">
-          <div class="card-header" onclick="toggleCard(this)">
-            <div class="project-title">Social Environments & Mate Attraction</div>
-            <span class="toggle-icon">▼</span>
-          </div>
-          <div class="card-content-inner collapsed">
-            <div class="project-meta">Behavioral Ecology · Field study</div>
-            <ul class="project-desc" style="list-style-type: disc; padding-left: 1.2rem; margin-bottom: 1.4rem;">
-              <li>Automated RFID-surveillance system in wild field crickets (<em>Gryllus campestris</em>)</li>
-              <li>Attractiveness increases from low to intermediate density (Allee effect), then declines at higher densities</li>
-              <li>Individual-specific Allee effects that may be evolvable</li>
-              <li>Males attractive under low densities remain attractive under higher densities</li>
-            </ul>
-            <div class="pdf-embed" style="margin-top: 0.8rem;">
-              <iframe src="Crickets.pdf" title="Second Journal Article Preview" loading="lazy" style="width:100%; height:350px; border:none; display:block;"></iframe>
-            </div>
-            <p style="font-size: 0.75rem; color: #8f7f6e; margin-top: 0.5rem; text-align: right;">PDF preview — download available</p>
-          </div>
-        </div>
-
-        <!-- 6. Google Scholar Profile -->
-        <div class="project-card">
-          <div class="card-header" onclick="toggleCard(this)">
-            <div class="project-title">Google Scholar</div>
-            <span class="toggle-icon">▼</span>
-          </div>
-          <div class="card-content-inner collapsed">
-            <div class="project-meta">Publications & citation metrics</div>
-            <ul class="project-desc" style="list-style-type: disc; padding-left: 1.2rem; margin-bottom: 1.4rem;">
-              <li>Complete list of peer-reviewed publications including the 2022 TREE paper</li>
-              <li>PhD thesis on evolvability and organismal architecture</li>
-              <li>Articles on evolutionary plasticity, Dollo's law, and behavioral ecology</li>
-              <li>Citation metrics and research impact tracking</li>
-            </ul>
-            <a href="https://scholar.google.com/citations?user=s.tiso" target="_blank" style="display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 1rem; color: #b45f3b; text-decoration: none; font-weight: 500; border-bottom: 1px solid transparent; transition: 0.2s;" onmouseover="this.style.borderBottomColor='#b45f3b'" onmouseout="this.style.borderBottomColor='transparent'">
-              📚 View Google Scholar Profile →
-            </a>
-          </div>
-        </div>
-      </div>
     </div>
-  </section>
-
-  <!-- Practice & Teaching -->
-  <section id="practice">
-    <div class="container">
-      <h2 class="section-title">Practice</h2>
-      <div class="two-col">
-        <div class="practice-card" style="background: white; border-radius: 24px; padding: 1.8rem; box-shadow: 0 6px 12px -6px rgba(0,0,0,0.05);">
-          <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem;">🧩 Teaching (2020–2023)</h3>
-          <p style="color: #4f4a43;">Volunteer teacher — game programming for children. Weekly Unity/C# workshops for ages 6–12; progressive learning sequences combining craft, curiosity, and play.</p>
-        </div>
-        <div class="practice-card" style="background: white; border-radius: 24px; padding: 1.8rem; box-shadow: 0 6px 12px -6px rgba(0,0,0,0.05);">
-          <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem;">🎭 TTRPG & theatre (2009–present)</h3>
-          <p style="color: #4f4a43;">Campaign GMing and homebrew worlds; theatre writing, acting, and directing — including immersive one‑spectator performances.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Skills + Education -->
-  <section id="skills">
-    <div class="container">
-      <h2 class="section-title">Skills & education</h2>
-      <div class="two-col">
-        <div>
-          <table class="skill-table">
-            <tr><th>Narrative</th><td>Script editing, dialogue trees, interactive narrative design, worldbuilding, editorial leadership</td>
-            <tr><th>Technical</th><td>Unity (C#), Python, LangGraph, text-based scripting, multimodal (sound + image)</td>
-            <tr><th>Collaboration</th><td>Iteration, feedback loops, documentation, cross‑discipline communication</td>
-          </table>
-        </div>
-        <div>
-          <div class="education-item"><strong>PhD in Computational Biology</strong><br>University of Groningen (2019–2024)</div>
-          <div class="education-item"><strong>Erasmus Mundus Master's</strong><br>LMU Munich, Groningen, Montpellier (2016–2018)</div>
-          <div style="margin-top: 1rem; font-style: italic; color: #6b5a4b;">📄 References available upon request.</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Contact -->
-  <section id="contact">
-    <div class="container">
-      <h2 class="section-title">Contact</h2>
-      <div class="contact-links">
-        <a href="mailto:stefano.tiso.evo@gmail.com">📧 stefano.tiso.evo@gmail.com</a>
-        <a href="tel:+33763935724">📞 +33 7 63 93 57 24</a>
-        <a href="https://www.linkedin.com/in/stefano-tiso-evo-data" target="_blank">🔗 LinkedIn</a>
-        <a href="https://github.com/swom" target="_blank">🐙 GitHub</a>
-      </div>
-    </div>
-  </section>
+</section>
 </main>
 
 <footer>
-  <div class="container">
-    Stefano Tiso — Narrative design · playful learning
-  </div>
+    <div class="container">
+        Stefano Tiso — Narrative design · playful learning
+    </div>
 </footer>
 
+<!-- ──────────────────────────────────────── -->
+<!-- All JavaScript consolidated into one block -->
+<!-- ──────────────────────────────────────── -->
 <script>
-  // Simple fallback: if banner.jpg fails, show placeholder
-  const bannerImg = document.querySelector('.banner-image');
-  if (bannerImg && bannerImg.complete && bannerImg.naturalWidth === 0) {
-    bannerImg.style.display = 'none';
-    const placeholder = document.querySelector('.banner-placeholder');
-    if (placeholder) placeholder.style.display = 'flex';
-  } else if (bannerImg) {
-    bannerImg.onerror = function() {
-      this.style.display = 'none';
-      const placeholder = document.querySelector('.banner-placeholder');
-      if (placeholder) placeholder.style.display = 'flex';
-    };
-  }
-</script>
-<script>
-  // Toggle collapsible cards - closed by default
-  function toggleCard(header) {
-    const inner = header.nextElementSibling;
-    const icon = header.querySelector('.toggle-icon');
-    
-    if (inner.classList.contains('expanded')) {
-      inner.classList.remove('expanded');
-      inner.classList.add('collapsed');
-      icon.textContent = '▶';
-    } else {
-      inner.classList.remove('collapsed');
-      inner.classList.add('expanded');
-      icon.textContent = '▼';
-    }
-  }
-  
-  // Set all scientific cards to collapsed on page load
-  document.addEventListener('DOMContentLoaded', function() {
-    const allScientificCards = document.querySelectorAll('#scientific-work .card-content-inner');
-    allScientificCards.forEach(card => {
-      card.classList.remove('expanded');
-      card.classList.add('collapsed');
-      // Also update the toggle icon to ▶
-      const header = card.previousElementSibling;
-      if (header && header.classList.contains('card-header')) {
-        const icon = header.querySelector('.toggle-icon');
-        if (icon) icon.textContent = '▶';
-      }
-    });
-  });
-</script>
-<!-- ================================ -->
-<script>
-    // PDF.js viewer - works reliably on GitHub Pages
-  document.addEventListener('DOMContentLoaded', function() {
-    // Set the worker source (required for PDF.js)
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
-    
-    // Find all PDF embeds
-    const pdfEmbeds = document.querySelectorAll('.pdf-embed');
-    
-    pdfEmbeds.forEach((embed, index) => {
-      const iframe = embed.querySelector('iframe');
-      if (!iframe) return;
-      
-      let pdfSrc = iframe.src;
-      
-      // Skip if not a local PDF
-      if (!pdfSrc.endsWith('.pdf') && !pdfSrc.includes('.pdf')) return;
-      
-      // Get just the filename
-      let filename = pdfSrc.split('/').pop();
-      if (filename.includes('?')) filename = filename.split('?')[0];
-      
-      // Clear the iframe and create canvas container
-      const container = document.createElement('div');
-      container.style.width = '100%';
-      container.style.maxHeight = '400px';
-      container.style.overflow = 'auto';
-      container.style.background = '#faf8f4';
-      container.style.borderRadius = '16px';
-      container.style.padding = '10px';
-      
-      // Replace iframe with container
-      iframe.style.display = 'none';
-      embed.appendChild(container);
-      
-      // Load and render PDF
-      pdfjsLib.getDocument(filename).promise.then(function(pdf) {
-        // Show page count info
-        const info = document.createElement('div');
-        info.style.textAlign = 'center';
-        info.style.fontSize = '0.75rem';
-        info.style.color = '#8f7f6e';
-        info.style.marginBottom = '8px';
-        info.innerHTML = `📄 ${pdf.numPages} page${pdf.numPages > 1 ? 's' : ''} · <a href="${filename}" target="_blank" style="color:#b45f3b">Download PDF</a>`;
-        container.appendChild(info);
-        
-        // Render first 3 pages
-        const pagesToShow = Math.min(3, pdf.numPages);
-        
-        for (let i = 1; i <= pagesToShow; i++) {
-          pdf.getPage(i).then(function(page) {
-            const canvas = document.createElement('canvas');
-            const context = canvas.getContext('2d');
-            const scale = 1.2;
-            const viewport = page.getViewport({ scale: scale });
-            
-            canvas.width = viewport.width;
-            canvas.height = viewport.height;
-            canvas.style.width = '100%';
-            canvas.style.height = 'auto';
-            canvas.style.marginBottom = '8px';
-            canvas.style.borderRadius = '8px';
-            canvas.style.boxShadow = '0 1px 3px rgba(0,0,0,0.1)';
-            
-            container.appendChild(canvas);
-            
-            page.render({ canvasContext: context, viewport: viewport });
-          });
+    (function() {
+        /* ────────────────────────────────
+           Globals & shared state
+           ──────────────────────────────── */
+        const extensions = ['png', 'jpg', 'jpeg', 'gif', 'webp'];
+        const galleryState = {
+            bannerImages: [],
+            portraitImages: [],
+            currentImages: [],
+            currentIndex: 0,
+            type: ''
+        };
+
+        /* ────────────────────────────────
+           Utility: load numbered images
+           ──────────────────────────────── */
+        function loadNumberedImages(baseName, maxAttempts, callback) {
+            const found = [];
+            let completed = 0;
+            const total = maxAttempts * extensions.length;
+
+            for (let i = 1; i <= maxAttempts; i++) {
+                extensions.forEach(ext => {
+                    const path = `${baseName}${i}.${ext}`;
+                    const img = new Image();
+                    img.onload = () => {
+                        if (!found.includes(path)) found.push(path);
+                        completed++;
+                        if (completed === total) callback(found);
+                    };
+                    img.onerror = () => {
+                        completed++;
+                        if (completed === total) callback(found);
+                    };
+                    img.src = path;
+                });
+            }
         }
-      }).catch(function(error) {
-        console.error('PDF load error:', error);
-        container.innerHTML = `
-          <div style="padding: 2rem; text-align: center; background: #faf8f4; border-radius: 16px;">
-            <p style="color: #b87c54; margin-bottom: 0.5rem;">⚠️ PDF preview unavailable</p>
-            <p style="font-size: 0.85rem; color: #8f7f6e;">
-              <a href="${filename}" target="_blank" style="color: #b45f3b;">Click here to open PDF directly</a>
-            </p>
-          </div>
-        `;
-      });
-    });
-  });
-</script>
-<script>
-  // Toggle creative work cards (shows image + title when collapsed)
-  function toggleCreativeCard(header) {
-    const card = header.closest('.project-card');
-    const content = card.querySelector('.card-content-creative');
-    const icon = header.querySelector('.toggle-icon-creative');
-    
-    if (content.classList.contains('expanded')) {
-      content.classList.remove('expanded');
-      content.classList.add('collapsed');
-      if (icon) icon.textContent = '▶';
-    } else {
-      content.classList.remove('collapsed');
-      content.classList.add('expanded');
-      if (icon) icon.textContent = '▼';
-    }
-  }
-  
-  // Set creative cards to expanded by default (or change to 'collapsed' if you want them closed)
-  document.addEventListener('DOMContentLoaded', function() {
-    // For creative cards - change to 'collapsed' if you want them closed on load
-    const creativeContents = document.querySelectorAll('#work .card-content-creative');
-    creativeContents.forEach(content => {
-      content.classList.add('collapsed');  // Change to 'collapsed' if you want them closed
-      content.classList.remove('expanded');
-    });
-    
-    // Update icons to match
-    const creativeIcons = document.querySelectorAll('#work .toggle-icon-creative');
-    creativeIcons.forEach(icon => {
-      icon.textContent = '▶';  // Change to '▶' if you want them closed
-    });
-  });
-</script>
-<script>
-  // Expandable images - open in lightbox
-  function openLightbox(imgSrc) {
-    const lightbox = document.getElementById('lightbox');
-    const lightboxImg = document.getElementById('lightbox-img');
-    lightboxImg.src = imgSrc;
-    lightbox.classList.add('active');
-  }
-  
-  function closeLightbox() {
-    const lightbox = document.getElementById('lightbox');
-    lightbox.classList.remove('active');
-  }
-  
-  // Make all card images clickable
-  document.addEventListener('DOMContentLoaded', function() {
-    // Creative work images
-    const creativeImages = document.querySelectorAll('#work .image-placeholder img, #work .card-content img');
-    creativeImages.forEach(img => {
-      if (img.src && !img.src.includes('placehold')) {
-        img.classList.add('clickable-image');
-        img.onclick = function(e) {
-          e.stopPropagation();
-          openLightbox(this.src);
-        };
-      }
-    });
-    
-    // Scientific work images
-    const scientificImages = document.querySelectorAll('#scientific-work .image-placeholder img');
-    scientificImages.forEach(img => {
-      if (img.src && !img.src.includes('placehold')) {
-        img.classList.add('clickable-image');
-        img.onclick = function(e) {
-          e.stopPropagation();
-          openLightbox(this.src);
-        };
-      }
-    });
-    
-    // Close lightbox with Escape key
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') {
-        closeLightbox();
-      }
-    });
-  });
-</script>
-<script>
-   // Auto‑detect numbered images and slide one‑way only (no back‑and‑forth)
-document.addEventListener('DOMContentLoaded', function() {
 
-  // Helper: find all images matching pattern "name1.ext", "name2.ext", …
-  function loadNumberedImages(baseName, maxAttempts, extensions, callback) {
-    const images = [];
-    let totalChecks = maxAttempts * extensions.length;
-    let completed = 0;
+        /* ────────────────────────────────
+           Gallery lightbox
+           ──────────────────────────────── */
+        const galleryEl = document.getElementById('galleryLightbox');
+        const galleryImg = document.getElementById('galleryImg');
+        const galleryCounter = document.getElementById('galleryCounter');
+        const galleryCloseBtn = galleryEl.querySelector('.gallery-close');
+        const galleryPrevBtn = galleryEl.querySelector('.gallery-prev');
+        const galleryNextBtn = galleryEl.querySelector('.gallery-next');
 
-    for (let i = 1; i <= maxAttempts; i++) {
-      extensions.forEach(ext => {
-        const path = `${baseName}${i}.${ext}`;
-        const img = new Image();
-        img.onload = () => {
-          if (!images.includes(path)) images.push(path);
-          completed++;
-          if (completed === totalChecks) callback(images);
-        };
-        img.onerror = () => {
-          completed++;
-          if (completed === totalChecks) callback(images);
-        };
-        img.src = path;
-      });
-    }
-  }
-  // ------------------------------------------------------------------
-  // GALLERY for banner and portrait images (clickable, swipe left/right)
-  // ------------------------------------------------------------------
-  (function() {
-    // Store the image lists for each type
-    let currentGalleryImages = [];
-    let currentGalleryIndex = 0;
-    let galleryType = ''; // 'banner' or 'portrait'
+        function openGallery(images, startIndex, type) {
+            if (!images || images.length === 0) return;
+            galleryState.currentImages = images;
+            galleryState.currentIndex = startIndex;
+            galleryState.type = type;
+            updateGalleryImage();
+            galleryEl.classList.add('active');
+        }
 
-    const gallery = document.getElementById('galleryLightbox');
-    const galleryImg = document.getElementById('galleryImg');
-    const counter = document.getElementById('galleryCounter');
-    const closeBtn = document.querySelector('.gallery-close');
-    const prevBtn = document.querySelector('.gallery-prev');
-    const nextBtn = document.querySelector('.gallery-next');
+        function updateGalleryImage() {
+            const imgs = galleryState.currentImages;
+            const idx = galleryState.currentIndex;
+            if (imgs[idx]) {
+                galleryImg.src = imgs[idx];
+                galleryCounter.textContent = `${idx + 1} / ${imgs.length}`;
+            }
+        }
 
-    // Open gallery with a specific set of images and starting index
-    function openGallery(images, startIndex, type) {
-      if (!images || images.length === 0) return;
-      currentGalleryImages = images;
-      currentGalleryIndex = startIndex;
-      galleryType = type;
-      updateGalleryImage();
-      gallery.classList.add('active');
-    }
+        function galleryNext() {
+            const imgs = galleryState.currentImages;
+            if (imgs.length === 0) return;
+            galleryState.currentIndex = (galleryState.currentIndex + 1) % imgs.length;
+            updateGalleryImage();
+        }
 
-    function updateGalleryImage() {
-      if (currentGalleryImages[currentGalleryIndex]) {
-        galleryImg.src = currentGalleryImages[currentGalleryIndex];
-        counter.textContent = `${currentGalleryIndex + 1} / ${currentGalleryImages.length}`;
-      }
-    }
+        function galleryPrev() {
+            const imgs = galleryState.currentImages;
+            if (imgs.length === 0) return;
+            galleryState.currentIndex = (galleryState.currentIndex - 1 + imgs.length) % imgs.length;
+            updateGalleryImage();
+        }
 
-    function nextImage() {
-      if (currentGalleryImages.length === 0) return;
-      currentGalleryIndex = (currentGalleryIndex + 1) % currentGalleryImages.length;
-      updateGalleryImage();
-    }
+        function closeGallery() {
+            galleryEl.classList.remove('active');
+        }
 
-    function prevImage() {
-      if (currentGalleryImages.length === 0) return;
-      currentGalleryIndex = (currentGalleryIndex - 1 + currentGalleryImages.length) % currentGalleryImages.length;
-      updateGalleryImage();
-    }
-
-    function closeGallery() {
-      gallery.classList.remove('active');
-    }
-
-    // Event listeners for buttons
-    closeBtn.addEventListener('click', closeGallery);
-    prevBtn.addEventListener('click', prevImage);
-    nextBtn.addEventListener('click', nextImage);
-    gallery.addEventListener('click', (e) => {
-      if (e.target === gallery) closeGallery();
-    });
-
-    // Keyboard navigation
-    document.addEventListener('keydown', (e) => {
-      if (!gallery.classList.contains('active')) return;
-      if (e.key === 'ArrowLeft') prevImage();
-      if (e.key === 'ArrowRight') nextImage();
-      if (e.key === 'Escape') closeGallery();
-    });
-
-    // Touch/swipe support
-    let touchStartX = 0;
-    let touchEndX = 0;
-    galleryImg.addEventListener('touchstart', (e) => {
-      touchStartX = e.changedTouches[0].screenX;
-    });
-    galleryImg.addEventListener('touchend', (e) => {
-      touchEndX = e.changedTouches[0].screenX;
-      if (touchEndX < touchStartX - 50) nextImage();
-      if (touchEndX > touchStartX + 50) prevImage();
-    });
-
-    // Function to attach click handlers to banner images (the visible ones)
-    // Since slider replaces images, we use a mutation observer or event delegation.
-    // Simplest: add click listener on container, check if clicked element is an image.
-    const bannerContainer = document.querySelector('.banner-container');
-    const portraitContainer = document.querySelector('.hero-portrait');
-
-    // Helper to get the full list of banner images (from the slider's internal array)
-    // We'll reuse the same arrays that the slider uses.
-    // To avoid duplication, we'll expose the image lists globally or capture them.
-    // We'll store them when they are loaded.
-    let globalBannerList = [];
-    let globalPortraitList = [];
-
-    // Override the setup functions to also store the image lists globally and add click handlers
-    // But to keep code clean, we'll simply observe clicks on containers and use the pre-loaded lists.
-    // We need to know the image arrays after they are loaded by the slider.
-    // We'll add a small hook: after loadNumberedImages, we store the lists.
-    // Modify the existing slider init to also store the lists globally.
-    // Since we cannot modify the previous answer's code here, I'll provide a complementary script
-    // that reads the image sources from the DOM (the visible image src) and constructs the list from the known pattern.
-    // Simpler: when a banner image is clicked, we scan for all banner numbered files again and open gallery.
-    // But that would be inefficient. Better: the existing slider already has the full array (bannerImages). We'll capture it.
-
-    // We'll wrap the gallery attachment in a setTimeout to ensure slider arrays are populated.
-    setTimeout(() => {
-      // Retrieve the image lists that were built inside the slider functions.
-      // Since they are not globally exposed, we'll re‑fetch the image lists using the same loadNumberedImages.
-      // This is acceptable because the images are cached by the browser.
-      const extensions = ['png', 'jpg', 'jpeg', 'gif', 'webp'];
-      loadNumberedImages('banner', 20, extensions, (banners) => {
-        globalBannerList = banners.length ? banners : (() => {
-          const fallback = document.querySelector('.banner-image');
-          return fallback && fallback.src ? [fallback.src.split('/').pop()] : [];
-        })();
-        // Make banner images clickable – event delegation
-        bannerContainer?.addEventListener('click', (e) => {
-          let target = e.target;
-          if (target.tagName === 'IMG' && target.classList.contains('banner-image')) {
-            // Find which banner image index we are at by comparing src
-            const currentSrc = target.src.split('/').pop();
-            let startIdx = globalBannerList.findIndex(img => img === currentSrc);
-            if (startIdx === -1) startIdx = 0;
-            openGallery(globalBannerList, startIdx, 'banner');
-            e.stopPropagation();
-          }
+        galleryCloseBtn.addEventListener('click', closeGallery);
+        galleryPrevBtn.addEventListener('click', galleryPrev);
+        galleryNextBtn.addEventListener('click', galleryNext);
+        galleryEl.addEventListener('click', (e) => {
+            if (e.target === galleryEl) closeGallery();
         });
-      });
 
-      loadNumberedImages('portrait', 20, extensions, (portraits) => {
-        globalPortraitList = portraits.length ? portraits : (() => {
-          const fallback = document.querySelector('.portrait-img');
-          return fallback && fallback.src ? [fallback.src.split('/').pop()] : [];
-        })();
-        portraitContainer?.addEventListener('click', (e) => {
-          let target = e.target;
-          if (target.tagName === 'IMG' && target.classList.contains('portrait-img')) {
-            const currentSrc = target.src.split('/').pop();
-            let startIdx = globalPortraitList.findIndex(img => img === currentSrc);
-            if (startIdx === -1) startIdx = 0;
-            openGallery(globalPortraitList, startIdx, 'portrait');
-            e.stopPropagation();
-          }
+        document.addEventListener('keydown', (e) => {
+            if (!galleryEl.classList.contains('active')) return;
+            if (e.key === 'ArrowLeft') galleryPrev();
+            if (e.key === 'ArrowRight') galleryNext();
+            if (e.key === 'Escape') closeGallery();
         });
-      });
-    }, 500); // delay to ensure slider has already run
-  })();
 
-  const bannerContainer = document.querySelector('.banner-container');
-  const portraitContainer = document.querySelector('.hero-portrait');
-  const extensions = ['png', 'jpg', 'jpeg', 'gif', 'webp'];
-// ------------------------------------------------------------------
-// BANNER SLIDER – left‑to‑right (new from left, old exits right)
-// ------------------------------------------------------------------
-function setupBannerSlider(images) {
-  if (!bannerContainer || images.length < 2) return;
-  bannerContainer.innerHTML = '';
-  bannerContainer.style.position = 'relative';
-  bannerContainer.style.overflow = 'hidden';
+        // Touch/swipe
+        let touchStartX = 0;
+        galleryImg.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; });
+        galleryImg.addEventListener('touchend', (e) => {
+            const diff = touchStartX - e.changedTouches[0].screenX;
+            if (diff > 50) galleryNext();
+            if (diff < -50) galleryPrev();
+        });
 
-  let imgA = document.createElement('img');
-  let imgB = document.createElement('img');
-  imgA.src = images[0];
-  imgB.src = images[1];
-  imgA.className = imgB.className = 'banner-image';
+        /* ────────────────────────────────
+           Banner slider
+           ──────────────────────────────── */
+        function setupBannerSlider(images) {
+            const container = document.querySelector('.banner-container');
+            if (!container || images.length < 2) return;
 
-  const baseStyle = {
-    position: 'absolute',
-    top: '0',
-    width: '100%',
-    height: 'auto',
-    maxHeight: '33vh',
-    objectFit: 'contain',
-    display: 'block',
-    transition: 'transform 0.6s ease-in-out'
-  };
-  Object.assign(imgA.style, baseStyle);
-  Object.assign(imgB.style, baseStyle);
+            // Store for gallery
+            galleryState.bannerImages = images;
 
-  // ---- static positions (no movement) ----
-  imgA.style.left = '0';          // visible
-  imgB.style.left = '-100%';      // hidden off‑left
+            container.innerHTML = '';
+            container.style.position = 'relative';
+            container.style.overflow = 'hidden';
 
-  bannerContainer.append(imgA, imgB);
+            const imgA = document.createElement('img');
+            const imgB = document.createElement('img');
+            imgA.src = images[0];
+            imgB.src = images[1];
+            imgA.className = imgB.className = 'banner-image';
 
-  // Prevent container collapse
-  const setHeight = () => {
-    const h = imgA.offsetHeight || imgB.offsetHeight;
-    if (h) bannerContainer.style.height = h + 'px';
-  };
-  imgA.onload = setHeight;
-  imgB.onload = setHeight;
-  setHeight();
+            const baseStyle = {
+                position: 'absolute',
+                top: '0',
+                width: '100%',
+                height: 'auto',
+                maxHeight: '33vh',
+                objectFit: 'contain',
+                display: 'block',
+                transition: 'transform 0.5s ease-in-out'
+            };
+            Object.assign(imgA.style, baseStyle);
+            Object.assign(imgB.style, baseStyle);
+            imgA.style.left = '0';
+            imgB.style.left = '-100%';
 
-  let active = imgA;     // currently visible
-  let hidden = imgB;
-  let nextIdx = 1;
-  const total = images.length;
+            container.append(imgA, imgB);
 
-  setInterval(() => {
-    // ---- ANIMATION: only transforms ----
-    active.style.transform = 'translateX(100%)';   // old exits right
-    hidden.style.transform = 'translateX(100%)';   // new enters from left
+            const setHeight = () => {
+                const h = imgA.offsetHeight || imgB.offsetHeight;
+                if (h) container.style.height = h + 'px';
+            };
+            imgA.onload = setHeight;
+            imgB.onload = setHeight;
+            setHeight();
 
-    setTimeout(() => {
+            let active = imgA;
+            let hidden = imgB;
+            let nextIdx = 1;
+            const total = images.length;
 
-      // ---- RESET (static positions, no transforms) ----
-      // Disable transition temporarily for instant repositioning
-      active.style.transition = 'none';
-      hidden.style.transition = 'none';
-      
-      active.src = images[nextIdx];    // preload next image
-      nextIdx = (nextIdx + 1) % total;
+            setInterval(() => {
+                active.style.transform = 'translateX(100%)';
+                hidden.style.transform = 'translateX(100%)';
 
-      // Clear transforms
-      active.style.transform = '';
-      hidden.style.transform = '';
+                setTimeout(() => {
+                    active.style.transition = 'none';
+                    hidden.style.transition = 'none';
+                    active.src = images[nextIdx];
+                    nextIdx = (nextIdx + 1) % total;
+                    active.style.transform = '';
+                    hidden.style.transform = '';
+                    active.style.left = '-100%';
+                    hidden.style.left = '0';
+                    [active, hidden] = [hidden, active];
+                    hidden.src = images[nextIdx];
+                    setHeight();
+                    setTimeout(() => {
+                        active.style.transition = 'transform 0.5s ease-in-out';
+                        hidden.style.transition = 'transform 0.5s ease-in-out';
+                    }, 10);
+                }, 500);
+            }, 5000);
 
-      // Reset static left positions
-      active.style.left = '-100%';      // becomes the new hidden (off‑left)
-      hidden.style.left = '0';          // becomes the new visible (center)
+            // Click handler for gallery
+            container.addEventListener('click', (e) => {
+                const target = e.target;
+                if (target.tagName === 'IMG' && target.classList.contains('banner-image')) {
+                    const currentSrc = target.src.split('/').pop();
+                    let startIdx = galleryState.bannerImages.findIndex(img => img === currentSrc);
+                    if (startIdx === -1) startIdx = 0;
+                    openGallery(galleryState.bannerImages, startIdx, 'banner');
+                    e.stopPropagation();
+                }
+            });
+        }
 
-      // Swap roles
-      [active, hidden] = [hidden, active];
-      hidden.src = images[nextIdx];
-      setHeight();
-      
-      // Re-enable smooth transition for next animation cycle
-      setTimeout(() => {
-        active.style.transition = 'transform 0.5s ease-in-out';
-        hidden.style.transition = 'transform 0.5s ease-in-out';
-      }, 10);
-    }, 500);
-  }, 5000);
-}
+        /* ────────────────────────────────
+           Portrait slider
+           ──────────────────────────────── */
+        function setupPortraitSlider(images) {
+            const container = document.querySelector('.hero-portrait');
+            if (!container || images.length < 2) return;
 
-// ------------------------------------------------------------------
-// PORTRAIT SLIDER – right‑to‑left (new from right, exits left)
-// ------------------------------------------------------------------
-function setupPortraitSlider(images) {
-  if (!portraitContainer || images.length < 2) return;
-  portraitContainer.innerHTML = '';
-  portraitContainer.style.position = 'relative';
-  portraitContainer.style.overflow = 'hidden';
-  portraitContainer.style.display = 'flex';
-  portraitContainer.style.justifyContent = 'center';
-  portraitContainer.style.minWidth = '150px';
+            // Store for gallery
+            galleryState.portraitImages = images;
 
-  let imgA = document.createElement('img');
-  let imgB = document.createElement('img');
-  imgA.src = images[0];
-  imgB.src = images[1];
-  imgA.className = imgB.className = 'portrait-img';
+            container.innerHTML = '';
+            container.style.position = 'relative';
+            container.style.overflow = 'hidden';
+            container.style.display = 'flex';
+            container.style.justifyContent = 'center';
+            container.style.minWidth = '150px';
 
-  const baseStyle = {
-    position: 'absolute',
-    top: '0',
-    width: '100%',
-    maxWidth: '220px',
-    borderRadius: '50%',
-    aspectRatio: '1/1',
-    objectFit: 'cover',
-    display: 'block',
-    // transition: 'transform 0.6s ease-in-out'
-  };
-  Object.assign(imgA.style, baseStyle);
-  Object.assign(imgB.style, baseStyle);
+            const imgA = document.createElement('img');
+            const imgB = document.createElement('img');
+            imgA.src = images[0];
+            imgB.src = images[1];
+            imgA.className = imgB.className = 'portrait-img';
 
-  // Center an absolute element using left:0 / right:0 + margin:auto
-  const centerStyle = { left: '0', right: '0', margin: '0 auto' };
-  Object.assign(imgA.style, centerStyle);
-  // Hidden image: push it off‑right (left:100%, right:auto)
-  imgB.style.left = '100%';
-  imgB.style.right = 'auto';
+            const baseStyle = {
+                position: 'absolute',
+                top: '0',
+                width: '100%',
+                maxWidth: '220px',
+                borderRadius: '50%',
+                aspectRatio: '1/1',
+                objectFit: 'cover',
+                display: 'block',
+                transition: 'transform 0.5s ease-in-out'
+            };
+            Object.assign(imgA.style, baseStyle);
+            Object.assign(imgB.style, baseStyle);
+            imgA.style.left = '0';
+            imgA.style.right = '0';
+            imgA.style.margin = '0 auto';
+            imgB.style.left = '100%';
+            imgB.style.right = 'auto';
 
-  portraitContainer.append(imgA, imgB);
+            container.append(imgA, imgB);
 
-  const setHeight = () => {
-    const h = imgA.offsetHeight || imgB.offsetHeight;
-    if (h) portraitContainer.style.height = h + 'px';
-  };
-  imgA.onload = setHeight;
-  imgB.onload = setHeight;
-  setHeight();
+            const setHeight = () => {
+                const h = imgA.offsetHeight || imgB.offsetHeight;
+                if (h) container.style.height = h + 'px';
+            };
+            imgA.onload = setHeight;
+            imgB.onload = setHeight;
+            setHeight();
 
-  let active = imgA;
-  let hidden = imgB;
-  let nextIdx = 1;
-  const total = images.length;
+            let active = imgA;
+            let hidden = imgB;
+            let nextIdx = 1;
+            const total = images.length;
 
-  setInterval(() => {
-    // ---- ANIMATION: only transforms ----
-    active.style.transform = 'translateX(-100%)';   // old exits left
-    hidden.style.transform = 'translateX(-100%)';   // new enters from right
+            setInterval(() => {
+                active.style.transform = 'translateX(-100%)';
+                hidden.style.transform = 'translateX(-100%)';
 
-    setTimeout(() => {
-      // ---- RESET (static positions, no transforms) ----
-      // Disable transition temporarily for instant repositioning
-      active.style.transition = 'none';
-      hidden.style.transition = 'none';
-      
-      active.src = images[nextIdx];
-      nextIdx = (nextIdx + 1) % total;
-      
-      active.style.transform = '';
-      hidden.style.transform = '';
-      
-      // Reset static left/right
-      active.style.left = '100%';      // becomes the new hidden (off‑right)
-      active.style.right = 'auto';
-      Object.assign(hidden.style, centerStyle); // becomes the new visible (centered)
-      
-      [active, hidden] = [hidden, active];
-      hidden.src = images[nextIdx];
+                setTimeout(() => {
+                    active.style.transition = 'none';
+                    hidden.style.transition = 'none';
+                    active.src = images[nextIdx];
+                    nextIdx = (nextIdx + 1) % total;
+                    active.style.transform = '';
+                    hidden.style.transform = '';
+                    active.style.left = '100%';
+                    active.style.right = 'auto';
+                    hidden.style.left = '0';
+                    hidden.style.right = '0';
+                    hidden.style.margin = '0 auto';
+                    [active, hidden] = [hidden, active];
+                    hidden.src = images[nextIdx];
+                    setHeight();
+                    setTimeout(() => {
+                        active.style.transition = 'transform 0.5s ease-in-out';
+                        hidden.style.transition = 'transform 0.5s ease-in-out';
+                    }, 10);
+                }, 500);
+            }, 5000);
 
-      setHeight();
-      
-      // Re-enable smooth transition for next animation cycle
-      setTimeout(() => {
-        active.style.transition = 'transform 0.5s ease-in-out';
-        hidden.style.transition = 'transform 0.5s ease-in-out';
-      }, 10);
-    }, 500);
-  }, 5000);
-}
+            // Click handler for gallery
+            container.addEventListener('click', (e) => {
+                const target = e.target;
+                if (target.tagName === 'IMG' && target.classList.contains('portrait-img')) {
+                    const currentSrc = target.src.split('/').pop();
+                    let startIdx = galleryState.portraitImages.findIndex(img => img === currentSrc);
+                    if (startIdx === -1) startIdx = 0;
+                    openGallery(galleryState.portraitImages, startIdx, 'portrait');
+                    e.stopPropagation();
+                }
+            });
+        }
 
-  // Auto‑detect banners (banner1.*, banner2.*, ...)
-  loadNumberedImages('banner', 20, extensions, (banners) => {
-    if (banners.length === 0) {
-      const existing = document.querySelector('.banner-image');
-      if (existing && existing.src) banners = [existing.src.split('/').pop()];
-    }
-    if (banners.length > 0) setupBannerSlider(banners);
-  });
+        /* ────────────────────────────────
+           Collapsible cards – scientific
+           ──────────────────────────────── */
+        window.toggleCard = function(header) {
+            const inner = header.nextElementSibling;
+            const icon = header.querySelector('.toggle-icon');
+            if (inner.classList.contains('expanded')) {
+                inner.classList.remove('expanded');
+                inner.classList.add('collapsed');
+                icon.textContent = '▶';
+            } else {
+                inner.classList.remove('collapsed');
+                inner.classList.add('expanded');
+                icon.textContent = '▼';
+            }
+        };
 
-  // Auto‑detect portraits (portrait1.*, portrait2.*, ...)
-  loadNumberedImages('portrait', 20, extensions, (portraits) => {
-    if (portraits.length === 0) {
-      const existing = document.querySelector('.portrait-img');
-      if (existing && existing.src) portraits = [existing.src.split('/').pop()];
-    }
-    if (portraits.length > 0) setupPortraitSlider(portraits);
-  });
+        /* ────────────────────────────────
+           Collapsible cards – creative
+           ──────────────────────────────── */
+        window.toggleCreativeCard = function(header) {
+            const card = header.closest('.project-card');
+            const content = card.querySelector('.card-content-creative');
+            const icon = header.querySelector('.toggle-icon-creative');
+            if (content.classList.contains('expanded')) {
+                content.classList.remove('expanded');
+                content.classList.add('collapsed');
+                if (icon) icon.textContent = '▶';
+            } else {
+                content.classList.remove('collapsed');
+                content.classList.add('expanded');
+                if (icon) icon.textContent = '▼';
+            }
+        };
 
-});
+        /* ────────────────────────────────
+           Lightbox for card images
+           ──────────────────────────────── */
+        window.openLightbox = function(imgSrc) {
+            const lb = document.getElementById('lightbox');
+            const lbImg = document.getElementById('lightbox-img');
+            lbImg.src = imgSrc;
+            lb.classList.add('active');
+        };
+
+        window.closeLightbox = function() {
+            document.getElementById('lightbox').classList.remove('active');
+        };
+
+        /* ────────────────────────────────
+           PDF.js – render local PDFs as canvas
+           ──────────────────────────────── */
+        function initPdfPreviews() {
+            if (typeof pdfjsLib === 'undefined') return;
+            pdfjsLib.GlobalWorkerOptions.workerSrc =
+                'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+
+            document.querySelectorAll('.pdf-embed').forEach(embed => {
+                const iframe = embed.querySelector('iframe');
+                if (!iframe) return;
+                const pdfSrc = iframe.src;
+                if (!pdfSrc.endsWith('.pdf') && !pdfSrc.includes('.pdf')) return;
+                let filename = pdfSrc.split('/').pop();
+                if (filename.includes('?')) filename = filename.split('?')[0];
+
+                const container = document.createElement('div');
+                container.style.cssText =
+                    'width:100%; max-height:400px; overflow:auto; background:#faf8f4; border-radius:16px; padding:10px;';
+                iframe.style.display = 'none';
+                embed.appendChild(container);
+
+                pdfjsLib.getDocument(filename).promise.then(pdf => {
+                    const info = document.createElement('div');
+                    info.style.cssText = 'text-align:center; font-size:0.75rem; color:#8f7f6e; margin-bottom:8px;';
+                    info.innerHTML =
+                        `📄 ${pdf.numPages} page${pdf.numPages > 1 ? 's' : ''} · <a href="${filename}" target="_blank" style="color:#b45f3b">Download PDF</a>`;
+                    container.appendChild(info);
+
+                    const pagesToShow = Math.min(3, pdf.numPages);
+                    for (let i = 1; i <= pagesToShow; i++) {
+                        pdf.getPage(i).then(page => {
+                            const canvas = document.createElement('canvas');
+                            const ctx = canvas.getContext('2d');
+                            const scale = 1.2;
+                            const viewport = page.getViewport({ scale });
+                            canvas.width = viewport.width;
+                            canvas.height = viewport.height;
+                            canvas.style.cssText =
+                                'width:100%; height:auto; margin-bottom:8px; border-radius:8px; box-shadow:0 1px 3px rgba(0,0,0,0.1);';
+                            container.appendChild(canvas);
+                            page.render({ canvasContext: ctx, viewport });
+                        });
+                    }
+                }).catch(() => {
+                    container.innerHTML = `
+                <div style="padding:2rem; text-align:center; background:#faf8f4; border-radius:16px;">
+                  <p style="color:#b87c54; margin-bottom:0.5rem;">⚠️ PDF preview unavailable</p>
+                  <p style="font-size:0.85rem; color:#8f7f6e;">
+                    <a href="${filename}" target="_blank" style="color:#b45f3b;">Click here to open PDF directly</a>
+                  </p>
+                </div>`;
+                });
+            });
+        }
+
+        /* ────────────────────────────────
+           Attach clickable-image handlers
+           ──────────────────────────────── */
+        function attachClickableImages() {
+            document.querySelectorAll('#work .image-placeholder img, #work .card-content img, #scientific-work .image-placeholder img')
+                .forEach(img => {
+                    if (img.src && !img.src.includes('placehold')) {
+                        img.classList.add('clickable-image');
+                        img.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                            openLightbox(this.src);
+                        });
+                    }
+                });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') closeLightbox();
+            });
+        }
+
+        /* ────────────────────────────────
+           Initialization on DOM ready
+           ──────────────────────────────── */
+        function init() {
+            // Set all scientific cards to collapsed
+            document.querySelectorAll('#scientific-work .card-content-inner').forEach(card => {
+                card.classList.remove('expanded');
+                card.classList.add('collapsed');
+                const header = card.previousElementSibling;
+                if (header && header.classList.contains('card-header')) {
+                    const icon = header.querySelector('.toggle-icon');
+                    if (icon) icon.textContent = '▶';
+                }
+            });
+
+            // Set creative cards to collapsed
+            document.querySelectorAll('#work .card-content-creative').forEach(content => {
+                content.classList.add('collapsed');
+                content.classList.remove('expanded');
+            });
+            document.querySelectorAll('#work .toggle-icon-creative').forEach(icon => {
+                icon.textContent = '▶';
+            });
+
+            // Banner fallback
+            const bannerImg = document.querySelector('.banner-image');
+            if (bannerImg) {
+                if (bannerImg.complete && bannerImg.naturalWidth === 0) {
+                    bannerImg.style.display = 'none';
+                    const placeholder = bannerImg.nextElementSibling;
+                    if (placeholder && placeholder.classList.contains('banner-placeholder')) {
+                        placeholder.style.display = 'flex';
+                    }
+                }
+                bannerImg.addEventListener('error', function() {
+                    this.style.display = 'none';
+                    const placeholder = this.nextElementSibling;
+                    if (placeholder && placeholder.classList.contains('banner-placeholder')) {
+                        placeholder.style.display = 'flex';
+                    }
+                });
+            }
+
+            // Portrait fallback
+            const portraitImg = document.querySelector('.portrait-img');
+            if (portraitImg) {
+                portraitImg.addEventListener('error', function() {
+                    this.style.display = 'none';
+                    const placeholder = this.nextElementSibling;
+                    if (placeholder && placeholder.classList.contains('portrait-placeholder')) {
+                        placeholder.style.display = 'flex';
+                    }
+                });
+            }
+
+            // Load numbered images & start sliders
+            loadNumberedImages('banner', 20, (banners) => {
+                if (banners.length === 0) {
+                    const existing = document.querySelector('.banner-image');
+                    if (existing && existing.src) banners = [existing.src.split('/').pop()];
+                }
+                if (banners.length > 0) setupBannerSlider(banners);
+            });
+
+            loadNumberedImages('portrait', 20, (portraits) => {
+                if (portraits.length === 0) {
+                    const existing = document.querySelector('.portrait-img');
+                    if (existing && existing.src) portraits = [existing.src.split('/').pop()];
+                }
+                if (portraits.length > 0) setupPortraitSlider(portraits);
+            });
+
+            attachClickableImages();
+            initPdfPreviews();
+        }
+
+        // Run on DOMContentLoaded
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    })();
 </script>
 </body>
 </html>
