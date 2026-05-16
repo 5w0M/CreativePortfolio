@@ -123,19 +123,6 @@
             90%{opacity:0; transform:translate(0,-100px) scale(0.6);}
         }
 
-        .compass-rose {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            z-index: 60;
-            pointer-events: none;
-            opacity: 0.5;
-            font-size: 2.5rem;
-            color: #8b7355;
-            animation: compassSpin 120s linear infinite;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
-        }
-        @keyframes compassSpin { from{transform:rotate(0deg);} to{transform:rotate(360deg);} }
 
         /* Header & nav */
         header {
@@ -196,19 +183,6 @@
             border-bottom: none;
             position: relative;
         }
-        .hero::after {
-            content: '🗺️ You are here';
-            position: absolute;
-            top: 10px;
-            right: 20px;
-            font-size: 0.7rem;
-            color: #8b7355;
-            opacity: 0.6;
-            letter-spacing: 0.05em;
-            pointer-events: none;
-            animation: youAreHerePulse 3s ease-in-out infinite;
-        }
-        @keyframes youAreHerePulse { 0%,100%{opacity:0.4;} 50%{opacity:0.9;} }
 
         .banner-container {
             margin: 0 0 1rem 0;
@@ -252,6 +226,14 @@
             margin-top: 2rem;
         }
         .hero-content { flex: 2; min-width: 250px; }
+        .hero-portrait {
+            position: relative;
+            height: 220px;
+            width: 220px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+        }
         .hero-portrait { background: transparent; cursor: pointer; transition: transform 0.3s; }
         .hero-portrait:hover { transform: scale(1.03); }
         .portrait-img {
@@ -972,47 +954,7 @@
     </div>
 
     <script>
-        // Banner & portrait: show placeholder while loading and attempt fallback images
         document.addEventListener('DOMContentLoaded', function(){
-            const banner = document.querySelector('.banner-image');
-            const bannerPlaceholder = document.querySelector('.banner-placeholder');
-            if(banner && bannerPlaceholder){
-                // show placeholder until image loads successfully
-                bannerPlaceholder.style.display = 'flex';
-                banner.addEventListener('load', function(){
-                    banner.style.display = 'block';
-                    bannerPlaceholder.style.display = 'none';
-                });
-                banner.addEventListener('error', function(){
-                    // try a sane default once (avoid infinite loops)
-                    if(!this.dataset.triedDefault){
-                        this.dataset.triedDefault = '1';
-                        this.src = 'banner1.png';
-                    } else {
-                        this.style.display = 'none';
-                        bannerPlaceholder.style.display = 'flex';
-                    }
-                });
-            }
-
-            const portrait = document.querySelector('.portrait-img');
-            const portraitPlaceholder = document.querySelector('.portrait-placeholder');
-            if(portrait && portraitPlaceholder){
-                portraitPlaceholder.style.display = 'flex';
-                portrait.addEventListener('load', function(){
-                    portrait.style.display = 'block';
-                    portraitPlaceholder.style.display = 'none';
-                });
-                portrait.addEventListener('error', function(){
-                    if(!this.dataset.triedDefault){
-                        this.dataset.triedDefault = '1';
-                        this.src = 'portrait-default.png';
-                    } else {
-                        this.style.display = 'none';
-                        portraitPlaceholder.style.display = 'flex';
-                    }
-                });
-            }
 
             // ORIGAMI: quarter fold -> small center square -> open overlay
             const origami = document.getElementById('origami-grid');
@@ -1270,18 +1212,7 @@
                     }
                 });
             }
-
-            /* ── OVERLAY LOGIC (origami unfold) ── */
-            const overlay = document.getElementById('section-overlay');
-            const overlayContent = overlay.querySelector('.overlay-content');
-            const sections = {
-                creative: document.getElementById('creative-section'),
-                scientific: document.getElementById('scientific-section'),
-                practice: document.getElementById('practice-section'),
-                skills: document.getElementById('skills-section')
-            };
-            let currentSection = null;
-
+ 
             window.openQuarter = function(sectionId) {
                 if (currentSection === sectionId) return;
                 const grid = document.getElementById('origami-grid');
