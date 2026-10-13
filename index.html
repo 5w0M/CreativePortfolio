@@ -530,6 +530,14 @@
         .project-card:hover { transform: translateY(-6px); box-shadow: 0 28px 48px -12px rgba(0,0,0,0.14); }
         .card-content { padding: 1.8rem; flex: 1; }
         .project-title { font-size: 1.6rem; font-weight: 600; margin-bottom: 0.5rem; }
+        .timeline-section { padding: 0 0 1.5rem 0; }
+        .timeline-box { background: white; border-radius: 24px; padding: 1rem 1.8rem; box-shadow: 0 6px 12px -6px rgba(0,0,0,0.05); }
+        .timeline-box summary { cursor: pointer; font-weight: 600; color: #b45f3b; font-size: 1.05rem; }
+        .timeline-list { list-style: none; margin: 1rem 0 0.4rem 0; padding: 0; }
+        .timeline-list li { display: flex; gap: 1rem; padding: 0.45rem 0; border-top: 1px solid #f0eae2; }
+        .timeline-list .tl-date { flex: 0 0 7.5rem; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; color: #b87c54; font-weight: 600; padding-top: 0.15rem; }
+        .timeline-list .tl-what { color: #4f4a43; }
+        @media (max-width: 600px) { .timeline-list li { flex-direction: column; gap: 0.1rem; } .timeline-list .tl-date { flex: none; } }
         .project-meta { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; color: #b87c54; font-weight: 600; margin-bottom: 1rem; }
         .project-desc { color: #3b3a37; margin-bottom: 1.4rem; font-size: 0.95rem; }
         .image-placeholder { background: #f3efe9; min-height: 180px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
@@ -683,6 +691,26 @@
             </div>
         </section>
 
+        <!-- ═══ TIMELINE (dates at a glance) ═══ -->
+        <section class="timeline-section">
+            <div class="container">
+                <details class="timeline-box">
+                    <summary>📅 Timeline: what I did, when</summary>
+                    <ol class="timeline-list">
+                        <li><span class="tl-date">Jul 2026</span><span class="tl-what"><strong>Count Goes Down and Out</strong>, game made for the GMTK Game Jam 2026 (Godot)</span></li>
+                        <li><span class="tl-date">2026–present</span><span class="tl-what"><strong>Passage technique</strong>, narrative video game</span></li>
+                        <li><span class="tl-date">2025–present</span><span class="tl-what"><strong>Sognetti</strong>, literary anthology (editor and main author)</span></li>
+                        <li><span class="tl-date">2024–2025</span><span class="tl-what"><strong>AI Research Scientist</strong>, AnotherBrain, Paris</span></li>
+                        <li><span class="tl-date">2024</span><span class="tl-what"><strong>PhD in Computational Biology</strong>, University of Groningen</span></li>
+                        <li><span class="tl-date">2023</span><span class="tl-what"><strong>GECCO 2023</strong> paper, first author</span></li>
+                        <li><span class="tl-date">2022</span><span class="tl-what"><strong>Trends in Ecology &amp; Evolution</strong> paper, co-author</span></li>
+                        <li><span class="tl-date">2021–2023</span><span class="tl-what"><strong>Volunteer teacher</strong>, game programming for children aged 6–12</span></li>
+                        <li><span class="tl-date">2009–present</span><span class="tl-what"><strong>Tabletop role-play and theatre</strong></span></li>
+                    </ol>
+                </details>
+            </div>
+        </section>
+
         <!-- ═══ ORIGAMI 2x2 GRID ═══ -->
         <div class="origami-stage">
             <div id="origami-grid">
@@ -796,6 +824,26 @@
                                         <img src="Animation.gif" alt="game animation" style="max-width:100%; border-radius:16px; margin-top:0.5rem; border:1px solid #f0eae2;" onerror="this.style.display='none'">
                                         <img src="Animation1.gif" alt="game animation" style="max-width:100%; border-radius:16px; margin-top:0.5rem; border:1px solid #f0eae2;" onerror="this.style.display='none'">
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Count Goes Down and Out (GMTK Game Jam 2026) -->
+                        <div class="project-card">
+                            <div class="card-header-creative" onclick="toggleCreativeCard(event, this)">
+                                <div style="display:flex; justify-content:space-between; align-items:center; padding:1.4rem 1.8rem 1rem 1.8rem;">
+                                    <div class="project-title">Count Goes Down and Out</div>
+                                    <span class="toggle-icon-creative">▼</span>
+                                </div>
+                            </div>
+                            <div class="card-content-creative expanded">
+                                <div class="card-content" style="padding:0 1.8rem 1.8rem 1.8rem;">
+                                    <div class="project-meta">July 2026 · GMTK Game Jam 2026 · Designer &amp; developer</div>
+                                    <ul class="project-desc" style="list-style-type:disc; padding-left:1.2rem; margin-bottom:1.4rem;">
+                                        <li>WarioWare-style collection of 5 minigames, built in Godot</li>
+                                        <li>Count Dracula must descend his manor, room by room, before the sun rises</li>
+                                        <li>Theme pun: Count, Counter, Countdown, Down</li>
+                                    </ul>
+                                    <p style="font-size:0.85rem;"><a href="https://swommy.itch.io/count-goes-down-and-out" target="_blank" rel="noopener" style="color:#b45f3b;">Play the jam build on itch.io →</a> <span style="color:#8f7f6e;">(work in progress)</span></p>
                                 </div>
                             </div>
                         </div>
@@ -915,7 +963,7 @@
                     <h2 class="section-title">Practice</h2>
                     <div class="two-col">
                         <div class="practice-card" style="background:white; border-radius:24px; padding:1.8rem; box-shadow:0 6px 12px -6px rgba(0,0,0,0.05);">
-                            <h3 style="font-size:1.5rem; margin-bottom:0.5rem;">🧩 Teaching (2020–2023)</h3>
+                            <h3 style="font-size:1.5rem; margin-bottom:0.5rem;">🧩 Teaching (2021–2023)</h3>
                             <p style="color:#4f4a43;">Volunteer teacher — game programming for children. Weekly Unity/C# workshops for ages 6–12; progressive learning sequences combining craft, curiosity, and play.</p>
                         </div>
                         <div class="practice-card" style="background:white; border-radius:24px; padding:1.8rem; box-shadow:0 6px 12px -6px rgba(0,0,0,0.05);">
