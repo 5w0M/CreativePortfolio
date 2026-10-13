@@ -6,6 +6,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Stefano Tiso · Narrative Design Portfolio</title>
+    <meta name="description" content="Stefano Tiso: AI research scientist with a PhD in computational biology, and the author of games, books and lessons. Based in Paris.">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Stefano Tiso · Portfolio">
+    <meta property="og:description" content="AI research, narrative games, the Sognetti anthology, and teaching.">
+    <meta property="og:image" content="https://5w0m.github.io/CreativePortfolio/web/banner1.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -42,7 +49,6 @@
             position: relative;
             overflow-x: hidden;
             cursor: default;
-            user-select: none;
         }
 
         /* ── Map grid background ── */
@@ -363,6 +369,8 @@
             transition: background 0.3s;
         }
         .quarter:hover .quarter-label { background: rgba(255,255,255,0.9); }
+        .quarter:focus-visible { outline: 3px solid var(--accent-warm); outline-offset: -6px; }
+        .quarter:focus-visible .quarter-label { background: rgba(255,255,255,0.95); }
         /* Allow triangles to escape the diamond */
         .quarter.unfold-active {
             pointer-events: none;
@@ -411,6 +419,7 @@
         }
         /* Optional wrapper (if you don't already have one) */
         /* wrapper to give breathing room */
+        .origami-stage, .tl-panel { user-select: none; -webkit-user-select: none; }
         .origami-stage {
             display: flex;
             justify-content: center;
@@ -658,10 +667,10 @@
             <nav>
                 <div class="logo"><h1>Stefano Tiso</h1></div>
                 <ul class="nav-links">
-                    <li><a href="#" onclick="openQuarter('creative')">Work</a></li>
-                    <li><a href="#" onclick="openQuarter('practice')">Practice</a></li>
-                    <li><a href="#" onclick="openQuarter('skills')">Skills</a></li>
-                    <li><a href="#" onclick="openQuarter('skills')">Contact</a></li>
+                    <li><a href="#work" onclick="openQuarter('creative'); return false;">Work</a></li>
+                    <li><a href="#research" onclick="openQuarter('scientific'); return false;">Research</a></li>
+                    <li><a href="#practice" onclick="openQuarter('practice'); return false;">Practice</a></li>
+                    <li><a href="#contact" onclick="openQuarter('skills'); return false;">Contact</a></li>
                 </ul>
             </nav>
         </div>
@@ -685,8 +694,9 @@
                             <span class="pill">🇮🇹 Italian (native)</span>
                             <span class="pill">🇫🇷 French (fluent)</span>
                             <span class="pill">🇬🇧 English (fluent)</span>
-                            <span class="pill">Python · Jax · C++</span>
-                            <span class="pill">Unity · C#</span>
+                            <span class="pill">Python · JAX · C++</span>
+                            <span class="pill">Unity · Godot · C#</span>
+                            <span class="pill">LangGraph · LLM agents</span>
                             <span class="pill">Dialogue trees</span>
                         </div>
                     </div>
@@ -729,7 +739,7 @@
         <div class="origami-stage">
             <div id="origami-grid">
                 <div class="origami-mask" aria-hidden="true"></div>
-                <div class="quarter q1" data-section="scientific" onclick="openQuarter('scientific', this)">
+                <div class="quarter q1" data-section="scientific" role="button" tabindex="0" aria-label="Open Scientific work" onclick="openQuarter('scientific', this)">
                     <span class="jaffee" style="--bg:transparent;">
                         <span class="a"></span>
                         <span class="bc">
@@ -739,7 +749,7 @@
                     </span>
                     <span class="quarter-label">🔬 Scientific Work</span>
                 </div>
-                <div class="quarter q2" data-section="creative" onclick="openQuarter('creative', this)">
+                <div class="quarter q2" data-section="creative" role="button" tabindex="0" aria-label="Open Creative work" onclick="openQuarter('creative', this)">
                     <span class="jaffee" style="--bg:transparent;">
                         <span class="a"></span>
                         <span class="bc">
@@ -749,7 +759,7 @@
                     </span>
                     <span class="quarter-label">🎨 Creative Work</span>
                 </div>
-                <div class="quarter q3" data-section="practice" onclick="openQuarter('practice', this)">
+                <div class="quarter q3" data-section="practice" role="button" tabindex="0" aria-label="Open Practice" onclick="openQuarter('practice', this)">
                     <span class="jaffee" style="--bg:transparent;">
                         <span class="a"></span>
                         <span class="bc">
@@ -759,7 +769,7 @@
                     </span>
                     <span class="quarter-label">🎭 Practice</span>
                 </div>
-                <div class="quarter q4" data-section="skills" onclick="openQuarter('skills', this)">
+                <div class="quarter q4" data-section="skills" role="button" tabindex="0" aria-label="Open Skills and contact" onclick="openQuarter('skills', this)">
                     <span class="jaffee" style="--bg:transparent;">
                         <span class="a"></span>
                         <span class="bc">
@@ -989,7 +999,7 @@
                                     <li>Complete list of peer-reviewed publications including the 2022 TREE paper</li>
                                     <li>PhD thesis on evolvability and organismal architecture</li>
                                 </ul>
-                                <a href="https://scholar.google.com/citations?user=s.tiso" target="_blank" style="display:inline-flex; align-items:center; gap:0.5rem; margin-top:1rem; color:#b45f3b; text-decoration:none; font-weight:500;">📚 View Google Scholar Profile →</a>
+                                <a href="https://scholar.google.com/scholar?q=%22Stefano+Tiso%22" target="_blank" style="display:inline-flex; align-items:center; gap:0.5rem; margin-top:1rem; color:#b45f3b; text-decoration:none; font-weight:500;">📚 Find my papers on Google Scholar →</a>
                             </div>
                         </div>
                     </div>
@@ -1750,5 +1760,13 @@
             else init();
         })();
     </script>
+<script>
+    // Let keyboard users open the origami quarters with Enter or Space
+    document.querySelectorAll('.quarter[role="button"]').forEach(function(q){
+        q.addEventListener('keydown', function(e){
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); q.click(); }
+        });
+    });
+</script>
 </body>
 </html>
