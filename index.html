@@ -8,7 +8,7 @@
     <title>Stefano Tiso · Narrative Design Portfolio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root {
             --parchment: #fefcf8;
@@ -86,44 +86,6 @@
             z-index: 2;
         }
 
-        /* Floating sparkles */
-        .sparkle {
-            position: fixed;
-            pointer-events: none;
-            z-index: 50;
-            width: 4px;
-            height: 4px;
-            background: #d4a853;
-            border-radius: 50%;
-            box-shadow: 0 0 6px 2px rgba(212, 168, 83, 0.6), 0 0 12px 4px rgba(212, 168, 83, 0.3);
-            animation: sparkleFloat 8s ease-in-out infinite;
-            opacity: 0;
-        }
-        .sparkle:nth-child(1){animation-delay:0s; animation-duration:7s;}
-        .sparkle:nth-child(2){animation-delay:2s; animation-duration:9s;}
-        .sparkle:nth-child(3){animation-delay:4s; animation-duration:6.5s;}
-        .sparkle:nth-child(4){animation-delay:1s; animation-duration:8.5s;}
-        .sparkle:nth-child(5){animation-delay:3s; animation-duration:7.5s;}
-        .sparkle:nth-child(6){animation-delay:5s; animation-duration:10s;}
-        .sparkle:nth-child(7){animation-delay:0.5s; animation-duration:6s;}
-        .sparkle:nth-child(8){animation-delay:6s; animation-duration:8s;}
-
-        @keyframes sparkleFloat {
-            0%,100%{opacity:0; transform:translate(0,0) scale(0.5);}
-            10%{opacity:0.8;}
-            20%{opacity:0;}
-            25%{opacity:0; transform:translate(40px,-60px) scale(1.2);}
-            30%{opacity:0.9;}
-            40%{opacity:0; transform:translate(80px,-120px) scale(0.3);}
-            50%{opacity:0; transform:translate(30px,-30px) scale(0.8);}
-            55%{opacity:0.7;}
-            65%{opacity:0; transform:translate(-20px,-90px) scale(1);}
-            75%{opacity:0; transform:translate(-60px,-50px) scale(0.4);}
-            80%{opacity:0.6;}
-            90%{opacity:0; transform:translate(0,-100px) scale(0.6);}
-        }
-
-
         /* Header & nav */
         header {
             background: rgba(254,252,248,0.85);
@@ -179,7 +141,7 @@
         /* Hero (always visible) */
         .hero {
             padding: 0 0 2rem;
-            background: linear-gradient(145deg, #fffbf5 0%, #faf6ef 100%);
+            background: transparent;
             border-bottom: none;
             position: relative;
         }
@@ -462,7 +424,10 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: var(--parchment);
+            background-color: var(--parchment);
+            background-image:
+                repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(139, 115, 85, 0.035) 39px, rgba(139, 115, 85, 0.035) 40px),
+                repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(139, 115, 85, 0.035) 39px, rgba(139, 115, 85, 0.035) 40px);
             z-index: 500;
             overflow-y: auto;
             opacity: 0;
@@ -512,7 +477,7 @@
         /* Card styles (identical to before, just kept for overlay) */
         .projects-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(min(340px, 100%), 1fr));
             gap: 2rem;
             margin-top: 1rem;
             align-items: start;
@@ -530,14 +495,66 @@
         .project-card:hover { transform: translateY(-6px); box-shadow: 0 28px 48px -12px rgba(0,0,0,0.14); }
         .card-content { padding: 1.8rem; flex: 1; }
         .project-title { font-size: 1.6rem; font-weight: 600; margin-bottom: 0.5rem; }
-        .timeline-section { padding: 0 0 1.5rem 0; }
-        .timeline-box { background: white; border-radius: 24px; padding: 1rem 1.8rem; box-shadow: 0 6px 12px -6px rgba(0,0,0,0.05); }
-        .timeline-box summary { cursor: pointer; font-weight: 600; color: #b45f3b; font-size: 1.05rem; }
-        .timeline-list { list-style: none; margin: 1rem 0 0.4rem 0; padding: 0; }
-        .timeline-list li { display: flex; gap: 1rem; padding: 0.45rem 0; border-top: 1px solid #f0eae2; }
-        .timeline-list .tl-date { flex: 0 0 7.5rem; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; color: #b87c54; font-weight: 600; padding-top: 0.15rem; }
-        .timeline-list .tl-what { color: #4f4a43; }
-        @media (max-width: 600px) { .timeline-list li { flex-direction: column; gap: 0.1rem; } .timeline-list .tl-date { flex: none; } }
+        /* ── Timeline: heading-tape dial ── */
+        .timeline-section { padding: 0 0 1.5rem 0; position: relative; z-index: 2; }
+        .tl-box { background: white; border-radius: 24px; padding: 1.2rem 1.4rem 1.4rem; box-shadow: 0 6px 12px -6px rgba(0,0,0,0.05); }
+        .tl-head { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; padding: 0 0.4rem 0.9rem; }
+        .tl-head h3 { font-weight: 600; color: var(--accent-warm); font-size: 1.05rem; }
+        .tl-controls { display: flex; gap: 0.5rem; align-items: center; }
+        .tl-hint { font-size: 0.8rem; color: #8a8178; margin-right: 0.4rem; }
+        .tl-btn { width: 44px; height: 44px; border-radius: 50%; border: 1px solid #e2dbd1; background: #fffdf9; color: #6b4e3a; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .tl-btn:hover { border-color: #c9b896; color: var(--accent-warm); }
+        .tl-panel { position: relative; height: 230px; background: #f4ecdf; border: 1px solid #e2d3bc; border-radius: 22px; overflow: hidden; box-shadow: inset 0 2px 10px rgba(107,78,58,0.12); touch-action: pan-y; cursor: grab; }
+        .tl-panel:active { cursor: grabbing; }
+        .tl-panel:focus-visible { outline: 3px solid var(--accent-warm); outline-offset: 3px; }
+        .tl-mask { position: absolute; inset: 0; -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 18%, #000 82%, transparent 100%); mask-image: linear-gradient(90deg, transparent 0, #000 18%, #000 82%, transparent 100%); }
+        .tl-axis { position: absolute; left: 0; right: 0; bottom: 58px; height: 1px; background: #c9b391; }
+        .tl-strip { position: absolute; left: 50%; top: 0; bottom: 0; width: 0; will-change: transform; }
+        .tl-tick { position: absolute; bottom: 58px; width: 2px; background: #b9a383; height: 13px; }
+        .tl-tick.major { background: #6b4e3a; height: 30px; }
+        .tl-tick.future { background: #ddd0bc; }
+        .tl-year { position: absolute; bottom: 26px; transform: translateX(-50%); font-family: 'JetBrains Mono', monospace; font-size: 15px; color: #6b4e3a; letter-spacing: 0.04em; }
+        .tl-year.future { color: #a99a86; }
+        .tl-event { position: absolute; bottom: 104px; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 6px; }
+        .tl-event b { font-size: 11px; font-weight: 600; white-space: nowrap; letter-spacing: 0.04em; }
+        .tl-event i { width: 10px; height: 10px; transform: rotate(45deg); display: block; }
+        .tl-readout { position: absolute; left: 50%; top: 12px; transform: translateX(-50%); min-width: 100px; padding: 3px 10px; border: 1px solid var(--accent-warm); border-radius: 6px; background: var(--parchment); text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 14px; color: var(--accent-warm); letter-spacing: 0.06em; }
+        .tl-pointer { position: absolute; left: calc(50% - 10px); top: 40px; width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 14px solid var(--accent-warm); }
+        .tl-needle { position: absolute; left: calc(50% - 1px); top: 52px; bottom: 50px; width: 2px; background: var(--accent-warm); }
+        .tl-card { margin: 16px auto 0; width: 480px; max-width: 100%; background: white; border: 1px solid #efe6db; border-radius: 16px; padding: 14px 18px; box-shadow: 0 10px 24px -14px rgba(0,0,0,0.25); display: flex; gap: 16px; align-items: baseline; }
+        .tl-card .d { font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 600; color: #9a5f38; white-space: nowrap; }
+        .tl-card .k { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+        .tl-card .t { font-weight: 600; color: #2b2a27; }
+        .tl-card .s { font-size: 14px; color: #5a544c; }
+        @media (max-width: 600px) { .tl-hint { display: none; } .tl-card { flex-direction: column; gap: 4px; } }
+
+        /* ── Sognetti flipbook ── */
+        .sg-card { grid-column: 1 / -1; }
+        .sg-layout { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(280px, 1fr); }
+        .sg-stage { background: #efe9df; background-image: radial-gradient(circle at 50% 45%, rgba(255,255,255,0.55), transparent 70%); padding: 2rem 1.5rem 1.4rem; display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+        .sg-book { display: flex; justify-content: center; align-items: center; min-height: 470px; filter: drop-shadow(0 18px 22px rgba(70,45,20,.20)) drop-shadow(0 2px 3px rgba(70,45,20,.15)); }
+        .sg-book { width: 100%; }
+        .sg-book img { width: 50%; max-width: 330px; height: auto; display: block; background: #fbfaf6; cursor: zoom-in; }
+        .sg-book img.single { width: auto; max-width: 100%; max-height: 460px; border-radius: 4px; }
+        .sg-book img.left { border-right: 1px solid #e4dccf; }
+        .sg-nav { display: flex; align-items: center; gap: 14px; }
+        .sg-nav span { font-size: 0.82rem; color: #6f6458; min-width: 160px; text-align: center; }
+        .sg-btn { width: 44px; height: 44px; border-radius: 50%; border: 1px solid #d9cdbb; background: #fffdf9; color: #5a4636; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .sg-btn:hover { border-color: var(--accent-warm); color: var(--accent-warm); }
+        .sg-btn[disabled] { opacity: .35; cursor: default; }
+        .sg-text { padding: 1.4rem 0 0 0; }
+        .sg-ex { margin-top: 1.2rem; border-top: 1px solid #ece3da; padding-top: 0.9rem; }
+        .sg-ex summary { cursor: pointer; font-size: 0.85rem; color: #8a6a50; font-weight: 500; }
+        .sg-ex figure { margin: 0.9rem 0 0 0; }
+        .sg-ex blockquote { font-family: Georgia, 'Times New Roman', serif; font-size: 0.95rem; line-height: 1.45; color: #2b2a27; }
+        .sg-ex figcaption { margin-top: 0.3rem; font-size: 0.78rem; color: #6f6458; }
+        .pt-gallery { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.6rem; margin-top: 0.8rem; }
+        .pt-gallery img { width: 100%; height: 150px; object-fit: cover; border-radius: 14px; border: 1px solid #f0eae2; display: block; }
+        .pt-gallery img.wide { grid-column: 1 / -1; height: 210px; }
+        @media (max-width: 760px) {
+            .sg-layout { grid-template-columns: 1fr; }
+            .sg-book { min-height: 0; }
+        }
         .project-meta { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; color: #b87c54; font-weight: 600; margin-bottom: 1rem; }
         .project-desc { color: #3b3a37; margin-bottom: 1.4rem; font-size: 0.95rem; }
         .image-placeholder { background: #f3efe9; min-height: 180px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
@@ -619,15 +636,6 @@
     </style>
 </head>
 <body>
-    <!-- Sparkles & compass -->
-    <div class="sparkle" style="top:12%;left:8%;"></div>
-    <div class="sparkle" style="top:25%;left:72%;"></div>
-    <div class="sparkle" style="top:55%;left:15%;"></div>
-    <div class="sparkle" style="top:70%;left:80%;"></div>
-    <div class="sparkle" style="top:35%;left:45%;"></div>
-    <div class="sparkle" style="top:80%;left:30%;"></div>
-    <div class="sparkle" style="top:15%;left:55%;"></div>
-    <div class="sparkle" style="top:60%;left:60%;"></div>
     <canvas id="cursorTrailCanvas"></canvas>
 
     <!-- Lightboxes -->
@@ -664,7 +672,7 @@
         <section class="hero">
             <div class="container">
                 <div class="banner-container">
-                    <img src="banner1.png" alt="banner" class="banner-image"
+                    <img src="web/banner1.jpg" alt="Illustration by Stefano Tiso" class="banner-image"
                          onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                     <div class="banner-placeholder" style="display:none;">📖 narrative design · interactive storytelling · playful learning</div>
                 </div>
@@ -683,7 +691,7 @@
                         </div>
                     </div>
                     <div class="hero-portrait">
-                        <img src="portrait1.png" alt="Stefano Tiso" class="portrait-img"
+                        <img src="web/portrait1.jpg" alt="Stefano Tiso" class="portrait-img"
                              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                         <div class="portrait-placeholder" style="display:none;">📷</div>
                     </div>
@@ -691,23 +699,29 @@
             </div>
         </section>
 
-        <!-- ═══ TIMELINE (dates at a glance) ═══ -->
+        <!-- ═══ TIMELINE (heading-tape dial) ═══ -->
         <section class="timeline-section">
             <div class="container">
-                <details class="timeline-box">
-                    <summary>📅 Timeline: what I did, when</summary>
-                    <ol class="timeline-list">
-                        <li><span class="tl-date">Jul 2026</span><span class="tl-what"><strong>Count Goes Down and Out</strong>, game made for the GMTK Game Jam 2026 (Godot)</span></li>
-                        <li><span class="tl-date">2026–present</span><span class="tl-what"><strong>Passage technique</strong>, narrative video game</span></li>
-                        <li><span class="tl-date">2025–present</span><span class="tl-what"><strong>Sognetti</strong>, literary anthology (editor and main author)</span></li>
-                        <li><span class="tl-date">2024–2025</span><span class="tl-what"><strong>AI Research Scientist</strong>, AnotherBrain, Paris</span></li>
-                        <li><span class="tl-date">2024</span><span class="tl-what"><strong>PhD in Computational Biology</strong>, University of Groningen</span></li>
-                        <li><span class="tl-date">2023</span><span class="tl-what"><strong>GECCO 2023</strong> paper, first author</span></li>
-                        <li><span class="tl-date">2022</span><span class="tl-what"><strong>Trends in Ecology &amp; Evolution</strong> paper, co-author</span></li>
-                        <li><span class="tl-date">2021–2023</span><span class="tl-what"><strong>Volunteer teacher</strong>, game programming for children aged 6–12</span></li>
-                        <li><span class="tl-date">2009–present</span><span class="tl-what"><strong>Tabletop role-play and theatre</strong></span></li>
-                    </ol>
-                </details>
+                <div class="tl-box">
+                    <div class="tl-head">
+                        <h3>Timeline: what I did, when</h3>
+                        <div class="tl-controls">
+                            <span class="tl-hint">Scroll, drag or use the arrows</span>
+                            <button type="button" class="tl-btn" id="tlPrev" aria-label="Earlier"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button>
+                            <button type="button" class="tl-btn" id="tlNext" aria-label="Later"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg></button>
+                        </div>
+                    </div>
+                    <div class="tl-panel" id="tlPanel" tabindex="0" role="slider" aria-label="Timeline" aria-valuemin="2015" aria-valuemax="2027">
+                        <div class="tl-mask" aria-hidden="true">
+                            <div class="tl-axis"></div>
+                            <div class="tl-strip" id="tlStrip"></div>
+                        </div>
+                        <div class="tl-readout" id="tlReadout" aria-hidden="true"></div>
+                        <div class="tl-pointer" id="tlPointer" aria-hidden="true"></div>
+                        <div class="tl-needle" aria-hidden="true"></div>
+                    </div>
+                    <div class="tl-card" id="tlCard" aria-live="polite"></div>
+                </div>
             </div>
         </section>
 
@@ -769,31 +783,48 @@
                     <h2 class="section-title">Creative work</h2>
                     <div class="projects-grid">
                         <!-- Sognetti -->
-                        <div class="project-card">
-                            <div class="card-header-creative" onclick="toggleCreativeCard(event, this)">
-                                <div class="image-placeholder">
-                                    <img src="sognetti.png" alt="Sognetti book cover" class="clickable-image"
-                                         onerror="this.src='https://placehold.co/600x300/f3efe9/8f7a67?text=Sognetti+Cover'">
+                        <div class="project-card sg-card">
+                            <div class="sg-layout">
+                                <div class="sg-stage">
+                                    <div class="sg-book" id="sgBook"></div>
+                                    <div class="sg-nav">
+                                        <button type="button" class="sg-btn" id="sgPrev" aria-label="Previous pages"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button>
+                                        <span id="sgLabel"></span>
+                                        <button type="button" class="sg-btn" id="sgNext" aria-label="Next pages"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg></button>
+                                    </div>
                                 </div>
-                                <div style="display:flex; justify-content:space-between; align-items:center; padding:0.5rem 1.8rem 1rem 1.8rem;">
-                                    <div class="project-title">Sognetti</div>
-                                    <span class="toggle-icon-creative">▼</span>
-                                </div>
-                            </div>
-                            <div class="card-content-creative expanded">
-                                <div class="card-content" style="padding:0 1.8rem 1.8rem 1.8rem;">
-                                    <div class="project-meta">2025–present · Author, Editor, Art director</div>
-                                    <ul class="project-desc" style="list-style-type:disc; padding-left:1.2rem; margin-bottom:1.4rem;">
-                                        <li>Collective literary anthology</li>
-                                        <li>Curated texts from multiple writers; wrote majority of stories</li>
-                                        <li>Handled editing and typography</li>
-                                        <li>Book project bringing diverse voices into a shared narrative universe</li>
-                                    </ul>
-                                    <div class="pdf-embed" style="background:#faf8f4; border-radius:20px; padding:1rem; text-align:center; border:1px solid #ece3da;">
-                                        <iframe src="260513_SOGNO.pdf" title="Sognetti excerpt" loading="lazy" style="width:100%; height:350px; border:none; display:block;"
-                                                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"></iframe>
-                                        <div style="display:none; padding:2rem; text-align:center;">
-                                            <p>📄 <a href="260513_SOGNO.pdf" target="_blank" style="color:#b45f3b;">Click here to view PDF</a></p>
+                                <div style="padding:1.6rem 1.8rem 1.8rem;">
+                                    <div class="card-header-creative" onclick="toggleCreativeCard(event, this)">
+                                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                                            <div class="project-title">Sognetti</div>
+                                            <span class="toggle-icon-creative">▼</span>
+                                        </div>
+                                    </div>
+                                    <div class="card-content-creative expanded">
+                                        <div class="sg-text">
+                                            <div class="project-meta">2025–present · Author, Editor, Art director</div>
+                                            <ul class="project-desc" style="list-style-type:disc; padding-left:1.2rem; margin-bottom:1.4rem;">
+                                                <li>Collective literary anthology</li>
+                                                <li>Curated texts from multiple writers; wrote majority of stories</li>
+                                                <li>Handled editing and typography</li>
+                                                <li>Book project bringing diverse voices into a shared narrative universe</li>
+                                            </ul>
+                                            <a href="media/sognetti/Sognetti-excerpt.pdf" target="_blank" rel="noopener" style="color:#b45f3b; font-weight:600; font-size:0.9rem;">Open the PDF excerpt (22 pages) →</a>
+                                            <details class="sg-ex">
+                                                <summary>Three lines from the book, translated</summary>
+                                                <figure>
+                                                    <blockquote lang="it">“Il sogno è la coerenza della mente a discapito del mondo, la veglia è la coerenza del mondo a discapito della mente.”</blockquote>
+                                                    <figcaption><em>The dream is the mind’s coherence at the world’s expense; waking is the world’s coherence at the mind’s expense.</em> · Foreword</figcaption>
+                                                </figure>
+                                                <figure>
+                                                    <blockquote lang="it">“Ho visto la morte in sogno. […] La guardo levarsi, come una vela, come un’ala, sopra il bordo del precipizio, oltre la scogliera.”</blockquote>
+                                                    <figcaption><em>I saw death in a dream […] I watch her rise, like a sail, like a wing, over the edge of the cliff.</em> · Dream, February 2025</figcaption>
+                                                </figure>
+                                                <figure>
+                                                    <blockquote lang="it">“Le statue rappresentano bestie apocalittiche: tori alati con musi canini.”</blockquote>
+                                                    <figcaption><em>The statues show apocalyptic beasts: winged bulls with dogs’ muzzles.</em> · Dream, 16 November 2024</figcaption>
+                                                </figure>
+                                            </details>
                                         </div>
                                     </div>
                                 </div>
@@ -819,10 +850,15 @@
                                         <li>Interactive map with moving characters and dialogue-driven choices</li>
                                         <li>Hand‑crafted dialogue trees and narrative coherence</li>
                                         <li>Authentic cultural elements</li>
+                                        <li>New in 2026: a fog-of-war map that lifts as the dialogue unfolds, 155 inked trails and 161 settlements, radio dialogue on a walkie-talkie, and a cold-open scene in the fog</li>
                                     </ul>
-                                    <div style="margin-top:0.8rem;">
-                                        <img src="Animation.gif" alt="game animation" style="max-width:100%; border-radius:16px; margin-top:0.5rem; border:1px solid #f0eae2;" onerror="this.style.display='none'">
-                                        <img src="Animation1.gif" alt="game animation" style="max-width:100%; border-radius:16px; margin-top:0.5rem; border:1px solid #f0eae2;" onerror="this.style.display='none'">
+                                    <div class="pt-gallery">
+                                        <img class="wide" src="media/passage/08_character_walks_trail.gif" alt="The Arpenteur walking an inked trail across the watercolour mountains" loading="lazy">
+                                        <img src="media/passage/03_dialogue_choice_radio.jpg" alt="Radio dialogue: the Arpenteur asks what to do, with three choices" loading="lazy">
+                                        <img src="media/passage/05_coldstart_breathing_choice.jpg" alt="Cold open in the fog: Breathe. You are breathing." loading="lazy">
+                                        <img src="media/passage/10_coldstart_golem_choice.jpg" alt="Cold open dialogue with a mud creature" loading="lazy">
+                                        <img src="media/passage/01_full_map_overview.jpg" alt="The full map: trails and settlements across the valleys, edged in fog" loading="lazy">
+                                        <img class="wide" src="Animation.gif" alt="Characters moving on the map" loading="lazy" onerror="this.style.display='none'">
                                     </div>
                                 </div>
                             </div>
@@ -830,7 +866,10 @@
                         <!-- Count Goes Down and Out (GMTK Game Jam 2026) -->
                         <div class="project-card">
                             <div class="card-header-creative" onclick="toggleCreativeCard(event, this)">
-                                <div style="display:flex; justify-content:space-between; align-items:center; padding:1.4rem 1.8rem 1rem 1.8rem;">
+                                <div class="image-placeholder" style="background:#0c0c0c;">
+                                    <img src="media/count-goes-down-title.png" alt="Count Goes Down and Out title screen: the manor's arched windows and the Descend button" style="image-rendering:pixelated;" loading="lazy">
+                                </div>
+                                <div style="display:flex; justify-content:space-between; align-items:center; padding:0.5rem 1.8rem 1rem 1.8rem;">
                                     <div class="project-title">Count Goes Down and Out</div>
                                     <span class="toggle-icon-creative">▼</span>
                                 </div>
@@ -1230,7 +1269,7 @@
                 },5000);
                 c.addEventListener('click', e => {
                     const t = e.target; if (t.tagName==='IMG' && t.classList.contains('banner-image')) {
-                        const cur = t.src.split('/').pop(); let idx = galleryState.bannerImages.findIndex(i=>i===cur); if(idx<0) idx=0;
+                        let idx = galleryState.bannerImages.findIndex(i=>t.src.endsWith(i)); if(idx<0) idx=0;
                         openGallery(galleryState.bannerImages, idx, 'banner'); e.stopPropagation();
                     }
                 });
@@ -1325,7 +1364,7 @@
                 c.addEventListener('click', (e) => {
                     const t = e.target;
                     if (t.tagName === 'IMG' && t.classList.contains('portrait-img')) {
-                        let idx = galleryState.portraitImages.findIndex(img => img === t.src);
+                        let idx = galleryState.portraitImages.findIndex(img => t.src.endsWith(img));
                         if (idx < 0) idx = 0;
                         openGallery(galleryState.portraitImages, idx, 'portrait');
                         e.stopPropagation();
@@ -1541,20 +1580,159 @@
                 el.addEventListener('animationend', () => el.remove());
             }
 
+            /* ── TIMELINE: heading-tape dial with inertia and notches ── */
+            function initTimeline() {
+                const panel = document.getElementById('tlPanel'), strip = document.getElementById('tlStrip');
+                if (!panel || !strip) return;
+                const ITEMS = [
+                    { y: 2016.0, date: '2016–2018', kind: 'Education', cat: 'research', short: 'MASTER', title: 'Erasmus Mundus Master’s', sub: 'LMU Munich, Groningen, Montpellier' },
+                    { y: 2019.0, date: '2019–2024', kind: 'Research', cat: 'research', short: 'PHD', title: 'PhD in Computational Biology', sub: 'University of Groningen' },
+                    { y: 2021.0, date: '2021–2023', kind: 'Teaching', cat: 'teaching', short: 'TEACHING', title: 'Volunteer teacher', sub: 'Game programming for children aged 6–12' },
+                    { y: 2022.0, date: '2022', kind: 'Research', cat: 'research', short: 'TREE PAPER', title: 'Trends in Ecology & Evolution', sub: 'Paper, co-author' },
+                    { y: 2023.0, date: '2023', kind: 'Research', cat: 'research', short: 'GECCO', title: 'GECCO 2023', sub: 'Paper, first author' },
+                    { y: 2024.4, date: '2024–2025', kind: 'Work', cat: 'work', short: 'ANOTHERBRAIN', title: 'AI Research Scientist', sub: 'AnotherBrain, Paris' },
+                    { y: 2025.0, date: '2025–NOW', kind: 'Creative', cat: 'creative', short: 'SOGNETTI', title: 'Sognetti', sub: 'Literary anthology (editor and main author)' },
+                    { y: 2026.0, date: '2026–NOW', kind: 'Creative', cat: 'creative', short: 'PASSAGE', title: 'Passage technique', sub: 'Narrative video game' },
+                    { y: 2026.55, date: 'JUL 2026', kind: 'Creative', cat: 'creative', short: 'GAME JAM', title: 'Count Goes Down and Out', sub: 'GMTK Game Jam 2026 game (Godot)' },
+                    { y: 2027.4, date: '2027 → ?', kind: 'Next', cat: 'next', short: '?', title: 'What comes next?', sub: 'Open to new roles, projects and collaborations' }
+                ];
+                const INK = { creative: '#a8532f', research: '#3f6a80', work: '#6b4e3a', teaching: '#6d6326', next: '#8a8178' };
+                const MIN = 2015, MAX = 2027.6, PPY = panel.clientWidth < 600 ? 120 : 150;
+                const now = new Date(); const NOW = now.getFullYear() + now.getMonth() / 12;
+                const X = y => Math.round((y - MIN) * PPY);
+                // build the strip once; only its offset moves
+                for (let q = MIN * 4; q <= Math.ceil(MAX * 4); q++) {
+                    const t = document.createElement('div');
+                    t.className = 'tl-tick' + (q % 4 === 0 ? ' major' : '') + (q / 4 > NOW ? ' future' : '');
+                    t.style.left = X(q / 4) + 'px'; strip.appendChild(t);
+                    if (q % 4 === 0) {
+                        const y = document.createElement('div'); const yr = q / 4;
+                        y.className = 'tl-year' + (yr > NOW ? ' future' : ''); y.textContent = yr > NOW ? yr + '?' : yr;
+                        y.style.left = X(yr) + 'px'; strip.appendChild(y);
+                    }
+                }
+                const evs = ITEMS.map(it => {
+                    const e = document.createElement('div'); e.className = 'tl-event'; e.style.left = X(it.y) + 'px';
+                    e.innerHTML = `<b style="color:${INK[it.cat]}">${it.short}</b><i style="background:${INK[it.cat]}"></i>`;
+                    strip.appendChild(e); return e;
+                });
+                const readout = document.getElementById('tlReadout'), pointer = document.getElementById('tlPointer'), card = document.getElementById('tlCard');
+                const nearest = y => ITEMS.reduce((b, it) => Math.abs(it.y - y) < Math.abs(b.y - y) ? it : b, ITEMS[0]);
+                let pos = 2026.55, vel = 0, target = null, dragging = false, dragX = 0, lastV = 0, lastNotch = Math.round(pos * 4), bump = 0, shown = null;
+                const clamp = v => Math.max(MIN, Math.min(MAX, v));
+                function render() {
+                    strip.style.transform = `translateX(${-X(pos)}px)`;
+                    ITEMS.forEach((it, i) => {
+                        const near = Math.max(0, 1 - Math.abs(it.y - pos) * 3);
+                        evs[i].style.opacity = (0.55 + near * 0.45).toFixed(2);
+                        evs[i].lastChild.style.transform = `rotate(45deg) scale(${(1 + near * 0.6).toFixed(2)})`;
+                    });
+                    readout.textContent = pos.toFixed(2);
+                    pointer.style.transform = `translateY(${bump.toFixed(2)}px)`;
+                    const cur = nearest(pos);
+                    if (cur !== shown) {
+                        shown = cur;
+                        card.innerHTML = `<div class="d">${cur.date}</div><div><div class="k" style="color:${INK[cur.cat]}">${cur.kind}</div><div class="t">${cur.title}</div><div class="s">${cur.sub}</div></div>`;
+                        panel.setAttribute('aria-valuenow', Math.round(pos));
+                        panel.setAttribute('aria-valuetext', `${cur.date}: ${cur.title}`);
+                    }
+                }
+                function tick() {
+                    if (!dragging) {
+                        if (target === null && Math.abs(vel) < 0.004) target = nearest(pos + vel * 20).y;
+                        if (target !== null && Math.abs(vel) < 0.02) {
+                            vel += (target - pos) * 0.035; vel *= 0.84;
+                            if (Math.abs(target - pos) < 0.0005 && Math.abs(vel) < 0.0005) { pos = target; vel = 0; }
+                        }
+                        pos = clamp(pos + vel); vel *= 0.955;
+                    }
+                    const notch = Math.round(pos * 4);
+                    bump *= 0.7; if (notch !== lastNotch) { bump = 3; lastNotch = notch; }
+                    render();
+                    requestAnimationFrame(tick);
+                }
+                function go(dir) {
+                    const i = ITEMS.indexOf(nearest(target !== null ? target : pos));
+                    target = ITEMS[Math.max(0, Math.min(ITEMS.length - 1, i + dir))].y; vel = 0;
+                }
+                panel.addEventListener('wheel', e => {
+                    e.preventDefault();
+                    const d = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+                    vel += d * 0.0006; target = null;
+                }, { passive: false });
+                panel.addEventListener('pointerdown', e => { dragging = true; dragX = e.clientX; lastV = 0; target = null; panel.setPointerCapture(e.pointerId); });
+                panel.addEventListener('pointermove', e => {
+                    if (!dragging) return;
+                    const dy = -(e.clientX - dragX) / PPY; dragX = e.clientX;
+                    pos = clamp(pos + dy); lastV = dy;
+                });
+                const up = () => { if (!dragging) return; dragging = false; vel = lastV || 0; };
+                panel.addEventListener('pointerup', up); panel.addEventListener('pointercancel', up);
+                panel.addEventListener('keydown', e => {
+                    if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+                    if (e.key === 'ArrowRight') { e.preventDefault(); go(1); }
+                });
+                document.getElementById('tlPrev').addEventListener('click', () => go(-1));
+                document.getElementById('tlNext').addEventListener('click', () => go(1));
+                render(); requestAnimationFrame(tick);
+            }
+
+            /* ── SOGNETTI: flipbook of book pages ── */
+            function initSognetti() {
+                const book = document.getElementById('sgBook'); if (!book) return;
+                const P = n => `media/sognetti/sg-${String(n).padStart(3, '0')}.jpg`;
+                const spreads = [
+                    { label: 'Cover', pages: [1] },
+                    { label: 'Prefazione', pages: [8, 9] },
+                    { label: 'The sognetteurs', pages: [12, 13] },
+                    { label: 'The sognetteurs', pages: [14, 15] },
+                    { label: 'Opening a section', pages: [16, 19] },
+                    { label: 'Dreams and drawings', pages: [34, 50] },
+                    { label: 'Dreams and drawings', pages: [58, 75] },
+                    { label: 'Dreams and drawings', pages: [91, 103] },
+                    { label: 'Dreams and drawings', pages: [123, 136] },
+                    { label: 'Back page', pages: [145] }
+                ];
+                const label = document.getElementById('sgLabel'), prev = document.getElementById('sgPrev'), next = document.getElementById('sgNext');
+                let i = 0;
+                function show() {
+                    const sp = spreads[i];
+                    book.innerHTML = '';
+                    sp.pages.forEach((n, k) => {
+                        const img = document.createElement('img');
+                        img.src = P(n); img.alt = `Sognetti, page ${n}`;
+                        img.className = sp.pages.length === 1 ? 'single' : (k === 0 ? 'left' : 'right');
+                        img.addEventListener('click', e => { e.stopPropagation(); openLightbox(img.src); });
+                        book.appendChild(img);
+                    });
+                    label.textContent = `${sp.label} · ${i + 1} of ${spreads.length}`;
+                    prev.disabled = i === 0; next.disabled = i === spreads.length - 1;
+                    // warm the next spread
+                    (spreads[i + 1] || { pages: [] }).pages.forEach(n => { const im = new Image(); im.src = P(n); });
+                }
+                prev.addEventListener('click', e => { e.stopPropagation(); if (i > 0) { i--; show(); } });
+                next.addEventListener('click', e => { e.stopPropagation(); if (i < spreads.length - 1) { i++; show(); } });
+                show();
+            }
+
             /* ── INIT ── */
             function init() {
                 // Scientific cards collapsed
                 document.querySelectorAll('#scientific-section .card-content-inner').forEach(c => { c.classList.add('collapsed'); c.classList.remove('expanded'); });
                 document.querySelectorAll('#scientific-section .toggle-icon').forEach(i => i.textContent='▶');
                 // Creative cards collapsed
-                document.querySelectorAll('.card-content-creative').forEach(c => { c.classList.add('collapsed'); c.classList.remove('expanded'); });
-                document.querySelectorAll('.toggle-icon-creative').forEach(i => i.textContent='▶');
+                document.querySelectorAll('.project-card:not(.sg-card) .card-content-creative').forEach(c => { c.classList.add('collapsed'); c.classList.remove('expanded'); });
+                document.querySelectorAll('.project-card:not(.sg-card) .toggle-icon-creative').forEach(i => i.textContent='▶');
                 // Fallbacks
                 document.querySelector('.banner-image')?.addEventListener('error', function(){ this.style.display='none'; this.nextElementSibling.style.display='flex'; });
                 document.querySelector('.portrait-img')?.addEventListener('error', function(){ this.style.display='none'; this.nextElementSibling.style.display='flex'; });
                 // Sliders
-                loadNumberedImages('banner',20, imgs => { if (!imgs.length) { const e=document.querySelector('.banner-image'); if(e?.src) imgs=[e.src.split('/').pop()]; } if(imgs.length) setupBannerSlider(imgs); });
-                loadNumberedImages('portrait',20, imgs => { if (!imgs.length) { const e=document.querySelector('.portrait-img'); if(e?.src) imgs=[e.src.split('/').pop()]; } if(imgs.length) setupPortraitSlider(imgs); });
+                // Web-sized copies live in web/ (make them from the big PNGs when adding a new one)
+                const range = (n, base) => Array.from({length:n}, (_, i) => `web/${base}${i+1}.jpg`);
+                setupBannerSlider(range(19, 'banner'));
+                setupPortraitSlider(range(18, 'portrait'));
+                initTimeline();
+                initSognetti();
                 initCursorTrail();
                 attachClickableImages();
                 initPdfPreviews();
