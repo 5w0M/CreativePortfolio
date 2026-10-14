@@ -1626,7 +1626,7 @@
                     const a = i * 5 * RAD, inner = i === 0 ? 58 : i % 6 === 0 ? 62 : 66;
                     face += `<line x1="${(70 * Math.sin(a)).toFixed(1)}" y1="${(-70 * Math.cos(a)).toFixed(1)}" x2="${(inner * Math.sin(a)).toFixed(1)}" y2="${(-inner * Math.cos(a)).toFixed(1)}" stroke="#6b4e3a" stroke-width="${i === 0 ? 1.6 : 1}"/>`;
                 }
-                face += '<text x="0" y="-49" text-anchor="middle" font-family="EB Garamond, Georgia, serif" font-size="15" fill="#a8532f">N</text></svg>';
+                face += '</svg>';
                 rose.innerHTML = face; compass.appendChild(rose);
                 const needle = document.createElement('div'); needle.style.cssText = 'position:absolute;left:-80px;top:-80px;';
                 needle.innerHTML = '<svg width="160" height="160" viewBox="-80 -80 160 160"><polygon points="0,40 6,0 0,-4 -6,0" fill="#b45f3b"/><polygon points="0,-40 6,0 0,4 -6,0" fill="#3d3a35"/><circle r="4" fill="#fbf6ee" stroke="#3d3a35" stroke-width="1.5"/></svg>';
@@ -1780,7 +1780,9 @@
                 modeBtn.addEventListener('click', () => { mode = mode === 'arc' ? 'disc' : 'arc'; applyMode(); });
                 // leaving with the mouse settles the dial back to the flat parchment, even from the 3D view
                 panel.addEventListener('mouseenter', () => { hover = true; lightUp(); });
-                panel.addEventListener('mouseleave', () => { hover = false; if (dragging) return; if (mode !== 'arc') { mode = 'arc'; applyMode(); } else lightUp(); });
+                panel.addEventListener('mouseleave', () => { hover = false; lightUp(); });
+                // the 3D disc stays open until the next click outside the timeline, then settles back to the flat parchment
+                document.addEventListener('pointerdown', e => { if (mode !== 'arc' && !panel.closest('.tl-box').contains(e.target)) { mode = 'arc'; applyMode(); } });
                 panel.addEventListener('pointerdown', e => { if (e.pointerType === 'mouse') return; touchLit = true; lightUp(); clearTimeout(touchT); touchT = setTimeout(() => { touchLit = false; lightUp(); }, 4000); });
                 window.addEventListener('resize', layout);
                 applyMode(); render(); requestAnimationFrame(tick);
