@@ -508,7 +508,7 @@
         .tl-fx { position: absolute; inset: 0; }
         .tl-sky:active { cursor: grabbing; }
         .tl-sky:focus-visible { outline: 3px solid #e8956b; outline-offset: 3px; }
-        .tl-fit { position: absolute; left: 50%; top: 0; width: 1100px; height: 600px; transform-origin: 50% 0; perspective: 1300px; }
+        .tl-fit { position: absolute; left: 50%; top: 0; width: 1100px; height: 600px; transform-origin: 50% 0; perspective: 1300px; transition: transform .6s cubic-bezier(.3,.8,.25,1); }
         .tl-stage { position: absolute; inset: 0; transform-style: preserve-3d; transition: transform .9s cubic-bezier(.3,.8,.25,1); }
         .tl-stage > div, .tl-layer > div { position: absolute; }
         .tl-layer { position: absolute; left: 0; top: 0; width: 0; height: 0; }
@@ -1791,6 +1791,8 @@
                 const lightUp = () => {
                     const on = lit || mode === 'disc';
                     panel.classList.toggle('lit', on);
+                    // the flat dial leans in a little while it is in use
+                    if (typeof fit !== 'undefined' && mode === 'arc') layout();
                     if (on && wasNight === null) { wasNight = document.body.classList.contains('night'); window.setNight && window.setNight(true); }
                     else if (!on && wasNight !== null) { window.setNight && window.setNight(wasNight); wasNight = null; }
                 };
@@ -1808,7 +1810,7 @@
                 function layout() {
                     const G = GEOM[mode], W = panel.clientWidth;
                     // the flat dial keeps its size and shows the middle on small screens; the disc shrinks to fit
-                    scale = mode === 'arc' ? Math.max(0.72, Math.min(1, W / 1100)) : Math.min(1, W / 640);
+                    scale = mode === 'arc' ? Math.max(0.72, Math.min(1, W / 1100)) * (lit ? 1.18 : 1) : Math.min(1, W / 640);
                     fit.style.transform = `translateX(-50%) scale(${scale})`;
                     panel.style.height = Math.round(G.ph * scale) + 'px';
                 }
