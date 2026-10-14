@@ -1782,7 +1782,14 @@
 
                 // the night sky comes up while you use the timeline and goes back to paper on the next click outside it
                 let lit = false;
-                const lightUp = () => panel.classList.toggle('lit', lit || mode === 'disc');
+                // the whole page follows the sky: night while it is lit, back to how it was once it settles
+                let wasNight = null;
+                const lightUp = () => {
+                    const on = lit || mode === 'disc';
+                    panel.classList.toggle('lit', on);
+                    if (on && wasNight === null) { wasNight = document.body.classList.contains('night'); window.setNight && window.setNight(true); }
+                    else if (!on && wasNight !== null) { window.setNight && window.setNight(wasNight); wasNight = null; }
+                };
                 const wake = () => { if (!lit) { lit = true; lightUp(); } };
                 // where each kind of entry leads when its card is clicked
                 const DEST = { research: ['scientific', 'Scientific work'], work: ['scientific', 'Scientific work'], creative: ['creative', 'Creative work'], teaching: ['practice', 'Practice'], next: ['skills', 'Get in touch'] };
@@ -2077,11 +2084,12 @@
                     home();
                 });
                 const sky = document.getElementById('skySwitch');
-                sky.addEventListener('click', () => {
-                    const night = document.body.classList.toggle('night');
+                window.setNight = night => {
+                    document.body.classList.toggle('night', night);
                     sky.setAttribute('aria-checked', night ? 'true' : 'false');
                     sky.setAttribute('aria-label', night ? 'Switch to the daylight palette' : 'Switch to the night sky palette');
-                });
+                };
+                sky.addEventListener('click', () => setNight(!document.body.classList.contains('night')));
             }
 
             function attachClickableImages() {
