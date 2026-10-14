@@ -610,6 +610,8 @@
         .sg-card.is-open .sg-open { display: flex; }
         .sg-book { display: flex; justify-content: center; align-items: center; width: 100%; min-height: 300px; filter: drop-shadow(0 14px 18px rgba(70,45,20,.20)) drop-shadow(0 2px 3px rgba(70,45,20,.15)); }
         .sg-book img { width: 50%; max-width: 200px; height: auto; display: block; background: #fbfaf6; cursor: zoom-in; }
+        .sg-book.sg-slide img { animation: sgIn .55s cubic-bezier(.25,.8,.25,1); }
+        @keyframes sgIn { from { opacity: 0; transform: translateX(28px); } to { opacity: 1; transform: none; } }
         .sg-book img.single { width: auto; max-width: 100%; max-height: 300px; border-radius: 4px; }
         .sg-book img.left { box-shadow: inset -18px 0 22px -14px rgba(60,40,20,.28); border-right: 1px solid #e4dccf; }
         .sg-nav { display: flex; align-items: center; gap: 12px; }
@@ -623,6 +625,9 @@
         .sg-ex blockquote { font-family: Georgia, 'Times New Roman', serif; font-size: 0.95rem; line-height: 1.45; color: #2b2a27; }
         .sg-ex figcaption { margin-top: 0.3rem; font-size: 0.78rem; color: #6f6458; }
         /* ── Passage technique: one large frame and six thumbnails ── */
+        .hd-anim { display: none; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; background: #1d2026; }
+        .project-card.is-open .hd-anim { display: block; }
+        .project-card.is-open .hd-still { display: none; }
         .pt-main { border-radius: 14px; overflow: hidden; background: #1d2026; aspect-ratio: 16 / 9; border: 1px solid #f0eae2; }
         .pt-main video, .pt-main img { width: 100%; height: 100%; object-fit: contain; display: block; }
         .pt-cap { font-size: 0.8rem; color: #6f6458; margin: 0.45rem 0 0.5rem; min-height: 1.2em; }
@@ -879,8 +884,8 @@
                                                     <figcaption><em>I saw death in a dream […] I watch her rise, like a sail, like a wing, over the edge of the cliff.</em> · Dream, February 2025</figcaption>
                                                 </figure>
                                                 <figure>
-                                                    <blockquote lang="it">“Le statue rappresentano bestie apocalittiche: tori alati con musi canini.”</blockquote>
-                                                    <figcaption><em>The statues show apocalyptic beasts: winged bulls with dogs’ muzzles.</em> · Dream, 16 November 2024</figcaption>
+                                                    <blockquote lang="it">“Le statue rappresentano bestie apocalittiche: tori alati con musi canini. Non sono inquietanti, né imponenti (spesso non più grandi di un bambino), sono semplicemente le bestie che appaiono durante l’apocalisse.”</blockquote>
+                                                    <figcaption><em>The statues show apocalyptic beasts: winged bulls with dogs’ muzzles. They are neither unsettling nor imposing (often no bigger than a child); they are simply the beasts that appear during the apocalypse.</em> · Dream, 16 November 2024</figcaption>
                                                 </figure>
                                             </details>
                                 </div>
@@ -890,8 +895,9 @@
                         <div class="project-card" id="card-passage">
                             <div class="card-header-creative" onclick="toggleCreativeCard(event, this)">
                                 <div class="image-placeholder">
-                                    <img src="GRANDE_CARTE_FINALE_1.png" alt="Passage technique map preview" class="clickable-image"
+                                    <img src="GRANDE_CARTE_FINALE_1.png" alt="Passage technique map preview" class="clickable-image hd-still"
                                          onerror="this.src='https://placehold.co/600x300/f3efe9/8f7a67?text=map+preview'">
+                                    <video class="hd-anim" data-src="media/passage/passage-header.mp4" muted loop playsinline preload="none" aria-label="The fog lifts while the radio dialogue runs, then the Arpenteur walks an inked trail"></video>
                                 </div>
                                 <div style="display:flex; justify-content:space-between; align-items:center; padding:0.5rem 1.8rem 1rem 1.8rem;">
                                     <div class="project-title">Passage technique</div>
@@ -920,7 +926,8 @@
                         <div class="project-card" id="card-count">
                             <div class="card-header-creative" onclick="toggleCreativeCard(event, this)">
                                 <div class="image-placeholder" style="background:#0c0c0c;">
-                                    <img src="media/count-goes-down-title.png" alt="Count Goes Down and Out title screen: the manor's arched windows and the Descend button" style="image-rendering:pixelated;" loading="lazy">
+                                    <img src="media/count-goes-down-title.png" alt="Count Goes Down and Out title screen: the manor's arched windows and the Descend button" class="hd-still" style="image-rendering:pixelated;" loading="lazy">
+                                    <video class="hd-anim" data-src="media/count-minigames.mp4" muted loop playsinline preload="none" style="image-rendering:pixelated;" aria-label="The minigames: climbing down, deflecting, counting bullets, scrounging and the number pad"></video>
                                 </div>
                                 <div style="display:flex; justify-content:space-between; align-items:center; padding:0.5rem 1.8rem 1rem 1.8rem;">
                                     <div class="project-title">Count Goes Down and Out</div>
@@ -1453,6 +1460,10 @@
                 } else {
                     content.classList.remove('collapsed'); content.classList.add('expanded'); icon.textContent='▼';
                 }
+                // open cards play their loop in place of the still
+                card.querySelectorAll('video.hd-anim').forEach(v => {
+                    if (card.classList.contains('is-open')) { if (!v.getAttribute('src')) v.src = v.dataset.src; v.play().catch(() => {}); } else v.pause();
+                });
             };
 
             /* ── LIGHTBOX ── */
@@ -1845,10 +1856,11 @@
                     { label: 'Back page', pages: [145] }
                 ];
                 const label = document.getElementById('sgLabel'), prev = document.getElementById('sgPrev'), next = document.getElementById('sgNext');
-                let i = 0;
-                function show() {
+                let i = 0, touched = false;
+                function show(slide) {
                     const sp = spreads[i];
                     book.innerHTML = '';
+                    book.classList.remove('sg-slide'); if (slide) { void book.offsetWidth; book.classList.add('sg-slide'); }
                     sp.pages.forEach((n, k) => {
                         const img = document.createElement('img');
                         img.src = P(n); img.alt = `Sognetti, page ${n}`;
@@ -1861,8 +1873,14 @@
                     // warm the next spread
                     (spreads[i + 1] || { pages: [] }).pages.forEach(n => { const im = new Image(); im.src = P(n); });
                 }
-                prev.addEventListener('click', e => { e.stopPropagation(); if (i > 0) { i--; show(); } });
-                next.addEventListener('click', e => { e.stopPropagation(); if (i < spreads.length - 1) { i++; show(); } });
+                prev.addEventListener('click', e => { e.stopPropagation(); touched = true; if (i > 0) { i--; show(true); } });
+                next.addEventListener('click', e => { e.stopPropagation(); touched = true; if (i < spreads.length - 1) { i++; show(true); } });
+                // once the card is open the pages turn on their own, until someone uses the arrows
+                const card = book.closest('.sg-card');
+                setInterval(() => {
+                    if (touched || document.hidden || !card.classList.contains('is-open') || !card.closest('section').classList.contains('active-section')) return;
+                    i = (i + 1) % spreads.length; show(true);
+                }, 3500);
                 show();
             }
 
