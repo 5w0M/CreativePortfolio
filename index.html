@@ -8,7 +8,7 @@
     <title>Stefano Tiso · Narrative Design Portfolio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=JetBrains+Mono:wght@400;600&family=EB+Garamond:ital,wght@1,500&display=swap" rel="stylesheet">
     <style>
         :root {
             --parchment: #fefcf8;
@@ -521,6 +521,7 @@
         .tl-lbl { transform: translate(-50%, -50%); font-family: 'JetBrains Mono', monospace; font-size: 13px; }
         .tl-ev { width: 12px; height: 12px; margin: -6px 0 0 -6px; border: 2px solid #fefcf8; box-sizing: border-box; }
         .tl-nm { transform: translate(-50%, -50%); font-size: 11px; font-weight: 600; letter-spacing: 0.05em; white-space: nowrap; }
+        .tl-nm.sky { color: #efe3cc !important; font-family: 'EB Garamond', Georgia, serif; font-style: italic; font-weight: 500; font-size: 14px; letter-spacing: 0.18em; text-shadow: 0 0 8px rgba(240,180,143,.55); }
         .tl-line { left: 549px; width: 2px; height: 60px; background: var(--ptr); transition: background .6s ease; }
         .tl-tri { left: 540px; width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; transition: border-color .6s ease; }
         .tl-readout { position: absolute; right: 18px; top: 14px; padding: 3px 10px; border: 1px solid #e8956b; border-radius: 6px; background: rgba(16,20,31,0.7); font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #f0b48f; letter-spacing: 0.06em; }
@@ -1702,8 +1703,16 @@
                         events[i].style.left = f(p.x) + 'px'; events[i].style.top = f(p.y) + 'px';
                         events[i].style.transform = `rotate(45deg) scale(${(1 + near * 0.6).toFixed(2)})`;
                         const d = Math.abs(it.y - pos);
-                        names[i].style.display = d < 1.6 ? '' : 'none';
-                        if (d < 1.6) { const n = pt(it.y, R - (it.nr || 70)); names[i].style.left = f(n.x) + 'px'; names[i].style.top = f(n.y) + 'px'; names[i].style.opacity = (1 - d / 1.6).toFixed(2); }
+                        if (mode === 'disc') {
+                            // in 3D the names hang in the sky past the rim, like constellation names
+                            const n = pt(it.y, R + 118 + (i % 2) * 24);
+                            names[i].style.display = ''; names[i].classList.add('sky');
+                            names[i].style.left = f(n.x) + 'px'; names[i].style.top = f(n.y) + 'px'; names[i].style.opacity = Math.max(0.45, 1 - d / 3).toFixed(2);
+                        } else {
+                            names[i].classList.remove('sky');
+                            names[i].style.display = d < 1.6 ? '' : 'none';
+                            if (d < 1.6) { const n = pt(it.y, R - (it.nr || 70)); names[i].style.left = f(n.x) + 'px'; names[i].style.top = f(n.y) + 'px'; names[i].style.opacity = (1 - d / 1.6).toFixed(2); }
+                        }
                     });
                     // light trails for things that lasted, with a white dot where each one ends
                     const arcPath = (y1, y2, r) => {
