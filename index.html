@@ -8,7 +8,7 @@
     <title>Stefano Tiso · Narrative Design Portfolio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=JetBrains+Mono:wght@400;600&family=EB+Garamond:ital,wght@1,500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=JetBrains+Mono:wght@400;600&family=EB+Garamond:ital,wght@1,500&family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700&display=swap" rel="stylesheet">
     <style>
         :root {
             --parchment: #fefcf8;
@@ -721,6 +721,148 @@
             #origami-grid { max-width:90vw; }
             .quarter .quarter-label { font-size:0.7rem; padding:0.3rem 0.7rem; }
         }
+
+        /* ══════════ Home page from Magic Patterns: storybook type, two-page spread, day / night sky ══════════ */
+        :root { --hp-bg: #fefcf8; --hp-ink: #1f1e1c; --hp-head: #3b3027; --hp-muted: #4a453e; --hp-accent: #b45f3b; --hp-accent-ink: #ffffff; --hp-surface: #fffdf9; --hp-card: #ffffff; --hp-panel: #fbf6ee; --hp-line: #e2dbd1; --hp-chip: rgba(255,255,255,0.7); --hp-grid: rgba(139,115,85,0.05); --q0: #faf7f2; }
+        body.night { --hp-bg: #0f1530; --hp-ink: #e9e4d6; --hp-head: #f3e6c4; --hp-muted: #b4b8cf; --hp-accent: #e8b86b; --hp-accent-ink: #16193a; --hp-surface: #1a2147; --hp-card: #161d40; --hp-panel: #121834; --hp-line: #33407a; --hp-chip: rgba(15,21,48,0.78); --hp-grid: rgba(180,190,235,0.05); --q0: #141b3d; --q1: #1b2350; --q2: #232c63; --q3: #2c3776; --q4: #364288; }
+        body { font-family: 'Nunito Sans', 'Inter', sans-serif; background: var(--hp-bg); color: var(--hp-ink); transition: background-color .25s ease-out, color .25s ease-out; }
+        body::before { background: repeating-linear-gradient(90deg, transparent, transparent 39px, var(--hp-grid) 39px, var(--hp-grid) 40px), repeating-linear-gradient(0deg, transparent, transparent 39px, var(--hp-grid) 39px, var(--hp-grid) 40px); opacity: 1; }
+        body.night::after { background: radial-gradient(ellipse at center, transparent 60%, rgba(5,8,20,0.35) 100%); }
+        .th-head { font-family: 'Fraunces', Georgia, serif; font-weight: 600; color: var(--hp-head); }
+        #section-overlay { color: #1f1e1c; font-family: 'Inter', sans-serif; }
+
+        /* the thin bar on top: name, the sections, and the two switches */
+        .site-hdr { position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--hp-line); background: color-mix(in srgb, var(--hp-bg) 90%, transparent); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); padding: 0; transition: background-color .2s ease-out, border-color .2s ease-out; }
+        .hdr-in { max-width: 1280px; margin: 0 auto; padding: .5rem 2.5rem; display: flex; align-items: center; gap: .25rem 1.5rem; }
+        .hdr-name { font-size: 1.15rem; text-decoration: none; white-space: nowrap; }
+        .hdr-nav { flex: 1; min-width: 0; overflow-x: auto; scrollbar-width: none; margin: 0 -.25rem; }
+        .hdr-nav ul { display: flex; gap: .25rem; margin: 0; padding: 0; list-style: none; }
+        .hdr-nav a { display: block; text-decoration: none; white-space: nowrap; font-size: .9rem; font-weight: 600; padding: .375rem .625rem; border-radius: 999px; color: var(--hp-ink); transition: color .15s ease-out, background-color .15s ease-out; }
+        .hdr-nav a:hover { color: var(--hp-accent); background: color-mix(in srgb, var(--hp-accent) 10%, transparent); }
+        .hdr-nav a:focus-visible, .hdr-name:focus-visible, .hdr-icon:focus-visible, .sky-switch:focus-visible, .hp-btn:focus-visible { outline: 3px solid var(--hp-accent); outline-offset: 3px; }
+        .hdr-tools { display: flex; align-items: center; gap: .25rem; flex: none; }
+        .hdr-icon { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: transparent; border: 0; border-radius: 999px; cursor: pointer; color: var(--hp-muted); transition: color .15s ease-out; }
+        .hdr-icon:hover, .sky-switch:hover { color: var(--hp-accent); }
+        .hdr-icon .ic-cols, body.stacked .hdr-icon .ic-rows { display: none; }
+        body.stacked .hdr-icon .ic-cols { display: block; }
+        /* sun waxing to a crescent moon, with a hairline switch */
+        .sky-switch { display: flex; align-items: center; gap: .5rem; background: transparent; border: 0; padding: .25rem; margin-right: -.25rem; cursor: pointer; color: var(--hp-muted); transition: color .15s ease-out; }
+        .sk-track { position: relative; display: block; width: 30px; height: 16px; border-radius: 999px; border: 1px solid currentColor; box-sizing: border-box; }
+        .sk-knob { position: absolute; top: 2px; left: 2px; width: 10px; height: 10px; border-radius: 50%; background: currentColor; transition: transform .26s cubic-bezier(.23,1,.32,1); }
+        .sk-glyph { display: block; overflow: visible; }
+        .sk-rays line { stroke: currentColor; stroke-width: 1.1; stroke-linecap: round; transition: opacity .26s cubic-bezier(.23,1,.32,1); }
+        .sk-bite { transition: transform .26s cubic-bezier(.23,1,.32,1); }
+        .sk-body { transition: transform .26s cubic-bezier(.23,1,.32,1); }
+        .sk-fill { opacity: 0; transition: opacity .26s cubic-bezier(.23,1,.32,1); }
+        body.night .sk-knob { transform: translateX(14px); }
+        body.night .sk-rays line { opacity: 0; }
+        body.night .sk-bite { transform: translate(-10.4px, 7.4px); }
+        body.night .sk-body { transform: rotate(-20deg); }
+        body.night .sk-fill { opacity: .9; }
+
+        /* two-page spread: who I am on the left, the work on the right */
+        html { scroll-padding-top: calc(var(--header-h, 56px) + 16px); }
+        .hp-grid { position: relative; z-index: 2; overflow-x: clip; max-width: 1280px; margin: 0 auto; display: grid; grid-template-columns: 380px minmax(0, 1fr); }
+        .hp-side { border-right: 1px solid var(--hp-line); padding: 2.5rem 2.5rem 4rem; }
+        .hp-side-in { position: sticky; top: calc(var(--header-h, 56px) + 2.5rem); display: flex; flex-direction: column; }
+        body.stacked .hp-grid { grid-template-columns: minmax(0, 1fr); }
+        body.stacked .hp-side { border-right: 0; border-bottom: 1px solid var(--hp-line); padding: 2.5rem 2.5rem; }
+        body.stacked .hp-side-in { position: static; max-width: 720px; width: 100%; margin: 0 auto; }
+        .hp-side .hero-portrait { width: 150px; height: 150px; margin: 0; flex: none; cursor: zoom-in; }
+        .hp-side .portrait-img { max-width: none; width: 150px; height: 150px; border: 3px solid #fff; background: #fff; box-shadow: 0 12px 24px -12px rgba(0,0,0,0.2); }
+        .hp-side .portrait-placeholder { max-width: 150px; }
+        .hp-name { font-size: 2.4rem; line-height: 1.05; letter-spacing: -0.01em; margin: 1.5rem 0 1.25rem; }
+        .hp-role { font-size: 1.7rem; line-height: 1.15; letter-spacing: -0.015em; margin: 0 0 1.25rem; }
+        .hp-blurb { font-size: 1rem; color: var(--hp-muted); margin: 0 0 1.5rem; }
+        .hp-side .pill-list { gap: .5rem; margin: 0; }
+        .pill { background: var(--hp-surface); border-color: var(--hp-line); color: var(--hp-ink); white-space: nowrap; font-family: inherit; }
+        .pill:hover { background: var(--hp-surface); border-color: var(--hp-accent); }
+        .hp-ctas { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 2rem; }
+        .hp-btn { display: inline-flex; align-items: center; padding: .7rem 1.4rem; border-radius: 60px; border: 1px solid var(--hp-accent); background: var(--hp-accent); color: var(--hp-accent-ink); font-weight: 700; font-size: .95rem; text-decoration: none; white-space: nowrap; cursor: pointer; transition: transform .15s cubic-bezier(.23,1,.32,1), background-color .25s ease-out, color .25s ease-out; }
+        .hp-btn:active { transform: scale(.97); }
+        .hp-btn.ghost { background: transparent; color: var(--hp-ink); border-color: var(--hp-line); }
+        .hp-btn.ghost:hover { border-color: var(--hp-accent); color: var(--hp-accent); }
+        .hp-work { min-width: 0; padding: 1.5rem 0 6rem; }
+        .hp-work .hero { padding: 0 1.5rem; }
+        .hp-work .timeline-section { padding: 2rem 1.5rem 1.5rem; }
+        .hp-work .ft-section { padding: 3rem 1.5rem 2rem; }
+        .hero, .timeline-section, .ft-section { scroll-snap-align: start; scroll-snap-stop: normal; }
+        .dr-nav, .tl-btn, .ft-btn { background: var(--hp-surface); border-color: var(--hp-line); color: var(--hp-ink); }
+        .dr-nav:hover, .tl-btn:hover, .ft-btn:hover { border-color: var(--hp-accent); color: var(--hp-accent); }
+        .dr-count { color: var(--hp-muted); }
+
+        /* timeline, re-inked for the night palette; the card leads to that part of the site */
+        .tl-box { background: var(--hp-card); transition: background-color .25s ease-out; }
+        .tl-head h3 { font-size: 1.3rem; font-weight: 600; color: var(--hp-accent); }
+        .tl-hint { color: var(--hp-muted); }
+        .tl-sky { transition: height .7s cubic-bezier(.3,.8,.25,1), background-color .25s ease-out; }
+        .tl-skybg, .tl-fx, .tl-readout { transition: opacity .3s cubic-bezier(.23,1,.32,1); }
+        body.night .tl-sky { background: var(--hp-panel); box-shadow: inset 0 0 0 1px var(--hp-line); }
+        .tl-card { width: 600px; background: var(--hp-card); color: inherit; text-decoration: none; cursor: pointer; transition: transform .16s cubic-bezier(.23,1,.32,1), border-color .16s ease-out, box-shadow .16s ease-out; }
+        .tl-card:hover { transform: translateY(-2px); border-color: #d9c3a5; box-shadow: 0 14px 28px -14px rgba(0,0,0,0.3); }
+        .tl-card:active { transform: none; }
+        .tl-card:focus-visible { outline: 3px solid var(--hp-accent); outline-offset: 3px; }
+        .tl-card .m { flex: 1; min-width: 0; }
+        .tl-card .go { flex: none; display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: #9a5f38; white-space: nowrap; }
+        .tl-card .go svg { transition: transform .16s cubic-bezier(.23,1,.32,1); }
+        .tl-card:hover .go svg { transform: translateX(3px); }
+        body.night .tl-card { border-color: var(--hp-line); }
+        body.night .tl-card:hover { border-color: var(--hp-accent); }
+        body.night .tl-card .p { border-color: var(--hp-line); }
+        body.night .tl-card .t { color: var(--hp-ink); }
+        body.night .tl-card .s { color: var(--hp-muted); }
+        body.night .tl-card .d, body.night .tl-card .go { color: var(--hp-accent); }
+        @media (max-width: 600px) { .tl-card { flex-wrap: wrap; flex-direction: row; } .tl-card .p { width: 100%; height: 140px; } .tl-card .go { width: 100%; } }
+
+        /* the origami: click a corner, it flip-flops open, the other three follow clockwise, the paper spreads into the page */
+        .ft-section { display: block; }
+        .ft-sheet { width: 100%; max-width: 560px; margin: 0 auto; aspect-ratio: 1 / 1; perspective: 1800px; }
+        .ft-inside { background-color: var(--q0); }
+        .ft-flap { transition: transform .95s cubic-bezier(.25,.1,.15,1); cursor: pointer; }
+        .ft-face { cursor: pointer; }
+        .ft-face:focus-visible { outline: none; filter: brightness(1.06); }
+        .ft-flap:has(.ft-front:focus-visible) .ft-label { outline: 2px solid var(--hp-accent); outline-offset: 2px; }
+        .ft-label { display: inline-flex; align-items: center; gap: .5rem; background: var(--hp-chip); color: var(--hp-ink); padding: .5rem 1rem; font-size: .9rem; font-family: 'Nunito Sans', sans-serif; transition: background-color .16s ease-out, color .16s ease-out; }
+        .ft-flap.ft-idle:hover .ft-label, .ft-flap.ft-idle:has(.ft-front:focus-visible) .ft-label { background: var(--hp-accent); color: var(--hp-accent-ink); }
+        .ft-says { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0 5rem; text-align: center; opacity: 0; transition: opacity .2s ease-out; pointer-events: none; }
+        .ft-says.on { opacity: 1; }
+        .ft-says .h { font-size: 2.4rem; line-height: 1.05; }
+        .ft-says .t { margin-top: .5rem; font-size: .95rem; color: var(--hp-muted); }
+        @media (prefers-reduced-motion: reduce) { .ft-flap { transition: none; } .ft-label { transition: none; } }
+
+        /* the opened page: a quiet bar on top with the way back */
+        .ov-bar { position: sticky; top: -2rem; z-index: 5; align-self: stretch; margin: -2rem -2rem 0; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .75rem 2rem; border-bottom: 1px solid #e2dbd1; background: #fefcf8; font-family: 'Nunito Sans', sans-serif; }
+        .ov-crumb { font-size: .9rem; font-weight: 600; color: #4a453e; }
+        .ov-back { height: 44px; padding: 0 16px; border-radius: 22px; border: 1px solid #e2dbd1; background: #fffdf9; color: #1f1e1c; display: flex; align-items: center; gap: 8px; cursor: pointer; font: inherit; font-size: 14px; }
+        .ov-back:hover { border-color: #b45f3b; color: #b45f3b; }
+        .overlay-content { margin-top: 1.5rem; }
+
+        /* below the lg breakpoint: one column, no layout switch */
+        @media (max-width: 1023px) {
+            .hp-grid, body.stacked .hp-grid { grid-template-columns: minmax(0, 1fr); }
+            .hp-side, body.stacked .hp-side { border-right: 0; border-bottom: 1px solid var(--hp-line); padding: 2.5rem 2.5rem 2.5rem; }
+            .hp-side-in { position: static; max-width: 720px; width: 100%; margin: 0 auto; }
+            #layoutBtn { display: none; }
+            .hdr-in { flex-wrap: wrap; padding: .5rem 2rem; }
+            .hdr-name { margin-right: auto; }
+            .hdr-nav { order: 3; flex: 1 0 100%; }
+        }
+        @media (max-width: 640px) {
+            .hdr-in { padding: .5rem 1rem; }
+            .hp-side, body.stacked .hp-side { padding: 1.5rem 1.25rem 2rem; }
+            .hp-side .hero-portrait, .hp-side .portrait-img { width: 112px; height: 112px; }
+            .hp-name { font-size: 2rem; }
+            .hp-role { font-size: 1.45rem; }
+            .hp-ctas { margin-top: 1.75rem; }
+            .hp-work { padding-bottom: 4rem; }
+            .hp-work .hero { padding: 0 .5rem; }
+            .hp-work .timeline-section { padding: 2rem .5rem 1.5rem; }
+            .hp-work .ft-section { padding: 2.5rem 1rem 1rem; }
+            .ft-says { padding: 0 2rem; } .ft-says .h { font-size: 1.7rem; }
+            .ov-bar { padding: .75rem 1rem; }
+        }
+        @media (max-width: 480px) { .ft-label { font-size: .78rem; padding: .4rem .75rem; gap: .35rem; } .ft-label svg { width: 14px; height: 14px; } }
+        @media (prefers-reduced-motion: reduce) { body, .hp-btn, .tl-card, .tl-card .go svg { transition: none; } }
     </style>
 </head>
 <body>
@@ -741,60 +883,80 @@
         <div class="gallery-counter" id="galleryCounter"></div>
     </div>
 
-    <header>
-        <div class="container">
-            <nav>
-                <div class="logo"><h1>Stefano Tiso</h1></div>
-                <ul class="nav-links">
-                    <li><a href="#" onclick="openQuarter('creative')">Work</a></li>
-                    <li><a href="#" onclick="openQuarter('practice')">Practice</a></li>
-                    <li><a href="#" onclick="openQuarter('skills')">Skills</a></li>
-                    <li><a href="#" onclick="openQuarter('skills')">Contact</a></li>
+    <header class="site-hdr">
+        <div class="hdr-in">
+            <a href="#top" class="hdr-name th-head" id="hdrHome">Stefano Tiso</a>
+            <nav aria-label="Sections" class="hdr-nav">
+                <ul>
+                    <li><a href="#gallery" data-go="gallery">Gallery</a></li>
+                    <li><a href="#timeline" data-go="timeline">Timeline</a></li>
+                    <li><a href="#science" data-side="scientific">Science</a></li>
+                    <li><a href="#creative" data-side="creative">Creative</a></li>
+                    <li><a href="#practice" data-side="practice">Practice</a></li>
+                    <li><a href="#contact" data-side="skills">Contact</a></li>
                 </ul>
             </nav>
+            <div class="hdr-tools">
+                <button type="button" class="hdr-icon" id="layoutBtn" aria-label="Switch to the single-column layout" title="Single column">
+                    <svg class="ic-rows" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 12h18"/></svg>
+                    <svg class="ic-cols" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M12 3v18"/></svg>
+                </button>
+                <button type="button" class="sky-switch" id="skySwitch" role="switch" aria-checked="false" aria-label="Switch to the night sky palette">
+                    <span class="sk-track" aria-hidden="true"><span class="sk-knob"></span></span>
+                    <svg width="26" height="26" viewBox="-13 -13 26 26" aria-hidden="true" class="sk-glyph">
+                        <defs><mask id="skyCrescent"><rect x="-13" y="-13" width="26" height="26" fill="#fff"/><circle class="sk-bite" cx="14" cy="-10" r="6.5" fill="#000"/></mask></defs>
+                        <g class="sk-rays"><line x1="0" y1="-9" x2="0" y2="-11.5"/><line x1="0" y1="-9" x2="0" y2="-11.5" transform="rotate(45)"/><line x1="0" y1="-9" x2="0" y2="-11.5" transform="rotate(90)"/><line x1="0" y1="-9" x2="0" y2="-11.5" transform="rotate(135)"/><line x1="0" y1="-9" x2="0" y2="-11.5" transform="rotate(180)"/><line x1="0" y1="-9" x2="0" y2="-11.5" transform="rotate(225)"/><line x1="0" y1="-9" x2="0" y2="-11.5" transform="rotate(270)"/><line x1="0" y1="-9" x2="0" y2="-11.5" transform="rotate(315)"/></g>
+                        <g class="sk-body"><circle r="6" fill="none" stroke="currentColor" stroke-width="1.2" mask="url(#skyCrescent)"/><circle class="sk-fill" r="6" fill="currentColor" mask="url(#skyCrescent)"/></g>
+                    </svg>
+                </button>
+            </div>
         </div>
     </header>
 
-    <main>
-        <!-- Hero -->
-        <section class="hero">
-            <div class="container">
+    <main class="hp-grid" id="top">
+        <!-- left page of the spread: who I am -->
+        <aside class="hp-side">
+            <div class="hp-side-in">
+                <div class="hero-portrait" id="heroPortrait" role="button" tabindex="0" aria-label="Open the portraits">
+                    <img src="web/portrait1.jpg" alt="Portrait sketch of Stefano Tiso" class="portrait-img"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="portrait-placeholder" style="display:none;">📷</div>
+                </div>
+                <h1 class="th-head hp-name">Stefano Tiso</h1>
+                <h2 class="th-head hp-role">Narrative design &amp; playful learning</h2>
+                <p class="hp-blurb">I'm a narrative designer and interactive storyteller creating joyful, playful learning experiences for children. I also volunteer-teach game programming (ages 6–12) and work comfortably across writing, design, and implementation.</p>
+                <div class="pill-list">
+                    <span class="pill">🇮🇹 Italian (native)</span>
+                    <span class="pill">🇫🇷 French (fluent)</span>
+                    <span class="pill">🇬🇧 English (fluent)</span>
+                    <span class="pill">Python · Jax · C++</span>
+                    <span class="pill">Unity · C#</span>
+                    <span class="pill">Dialogue trees</span>
+                </div>
+                <div class="hp-ctas">
+                    <a href="#areas" class="hp-btn" id="ctaWork">See the work</a>
+                    <a href="#contact" class="hp-btn ghost" id="ctaContact">Get in touch</a>
+                </div>
+            </div>
+        </aside>
+
+        <!-- right page of the spread: the work -->
+        <div class="hp-work">
+            <section class="hero" id="gallery" aria-label="Drawings">
                 <div class="dr-drum" id="drDrum" aria-roledescription="carousel" aria-label="Drawings"></div>
                 <div class="dr-bar">
                     <button type="button" class="dr-nav" id="drPrev" aria-label="Previous drawing"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button>
                     <span class="dr-count" id="drCount"></span>
                     <button type="button" class="dr-nav" id="drNext" aria-label="Next drawing"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg></button>
                 </div>
-                <div class="hero-grid">
-                    <div class="hero-content">
-                        <div class="hero-tag">Stefano Tiso</div>
-                        <h2>Narrative design & playful learning</h2>
-                        <p>I'm a narrative designer and interactive storyteller creating joyful, playful learning experiences for children.<br>I also volunteer-teach game programming (ages 6–12) and work comfortably across writing, design, and implementation.</p>
-                        <div class="pill-list">
-                            <span class="pill">🇮🇹 Italian (native)</span>
-                            <span class="pill">🇫🇷 French (fluent)</span>
-                            <span class="pill">🇬🇧 English (fluent)</span>
-                            <span class="pill">Python · Jax · C++</span>
-                            <span class="pill">Unity · C#</span>
-                            <span class="pill">Dialogue trees</span>
-                        </div>
-                    </div>
-                    <div class="hero-portrait" id="heroPortrait" role="button" tabindex="0" aria-label="Open the portraits">
-                        <img src="web/portrait1.jpg" alt="Portrait sketch of Stefano Tiso" class="portrait-img"
-                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        <div class="portrait-placeholder" style="display:none;">📷</div>
-                    </div>
-                </div>
-            </div>
-        </section>
+            </section>
 
-        <!-- ═══ TIMELINE (flat dial under the night sky) ═══ -->
-        <section class="timeline-section">
-            <div class="container">
+            <!-- ═══ TIMELINE (flat paper dial; a click lights the night sky) ═══ -->
+            <section class="timeline-section" id="timeline">
                 <div class="tl-box">
                     <div class="tl-head">
-                        <h3>Timeline: what I did, when</h3>
-                        <span class="tl-hint">Hover to light up the sky · scroll, drag or use the arrows</span>
+                        <h3 class="th-head">Timeline</h3>
+                        <span class="tl-hint">Scroll or drag to move through the years</span>
                     </div>
                     <div class="tl-sky" id="tlPanel" tabindex="0" role="slider" aria-label="Timeline" aria-valuemin="2015" aria-valuemax="2027">
                         <div class="tl-skybg" aria-hidden="true"></div>
@@ -803,25 +965,18 @@
                     </div>
                     <div class="tl-controls">
                         <button type="button" class="tl-btn" id="tlPrev" aria-label="Earlier"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button>
-                        <button type="button" class="tl-btn" id="tlMode" aria-pressed="false">Open the full dial (3D)</button>
+                        <button type="button" class="tl-btn" id="tlMode" aria-pressed="false">3D view</button>
                         <button type="button" class="tl-btn" id="tlNext" aria-label="Later"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg></button>
                     </div>
-                    <div class="tl-card" id="tlCard" aria-live="polite"></div>
+                    <a class="tl-card" id="tlCard" href="#" aria-live="polite"></a>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <!-- ═══ FORTUNE TELLER (pick a flap, then a pocket) ═══ -->
-        <section class="ft-section" aria-label="Sections">
-            <div class="ft-wrap">
-                <div class="ft-step" id="ftStep">1 · Pick a flap</div>
-                <div class="ft-letters" id="ftLetters" aria-hidden="true"></div>
-                <div class="ft-zoomwrap" id="ftZoom">
-                    <div class="ft-sheet" id="ftSheet"></div>
-                </div>
-                <button type="button" class="ft-btn" id="ftReset" hidden>Fold it back</button>
-            </div>
-        </section>
+            <!-- ═══ FORTUNE TELLER (click a corner: it flips open, the others follow, the page spreads out) ═══ -->
+            <section class="ft-section" id="areas" aria-label="Sections">
+                <div class="ft-sheet" id="ftSheet"></div>
+            </section>
+        </div>
     </main>
 
     <!-- Focus view for drawings and portraits -->
@@ -837,7 +992,7 @@
 
     <!-- ═══ SECTION OVERLAY (hidden until unfolded) ═══ -->
     <div id="section-overlay">
-        <span class="overlay-close" onclick="closeOverlay()">&times;</span>
+        <div class="ov-bar"><span class="ov-crumb" id="ovCrumb">Home</span><button type="button" class="ov-back" onclick="closeOverlay()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>Fold back</button></div>
         <div class="overlay-content">
             <!-- Creative Work -->
             <section id="creative-section">
@@ -1220,10 +1375,11 @@
                 const count = document.getElementById('drCount');
                 const cards = buildCards(host, banners, 'Drawing');
                 let bi = 0, touched = false;
-                const small = () => host.clientWidth < 600;
                 function show() {
-                    const k = small() ? 0.8 : 1;
-                    placeDrum(cards, bi, sizesFor('Drawing', banners.length, 300 * k, Math.min(520 * k, host.clientWidth * 0.8)), (card, ad) => card.setAttribute('aria-label', ad === 0 ? 'Open this drawing' : 'Show this drawing'));
+                    // the drum takes its size from the column it sits in
+                    const W = host.clientWidth, H = Math.min(300, Math.max(200, W * 0.7));
+                    host.style.height = (H + 40) + 'px';
+                    placeDrum(cards, bi, sizesFor('Drawing', banners.length, H, Math.min(520, W - 48)), (card, ad) => card.setAttribute('aria-label', ad === 0 ? 'Open this drawing' : 'Show this drawing'));
                     count.textContent = `${bi + 1} / ${banners.length}`;
                 }
                 const move = d => { touched = true; bi = (bi + d + banners.length) % banners.length; show(); };
@@ -1303,6 +1459,7 @@
                 }
                 document.querySelectorAll('.overlay-content section').forEach(s => s.classList.remove('active-section'));
                 target.classList.add('active-section');
+                const crumb = document.getElementById('ovCrumb'); if (crumb) crumb.textContent = 'Home / ' + ((SECTIONS[sectionId] || {}).label || '');
                 overlay.classList.add('active'); overlay.style.clipPath = 'inset(0px 0px 0px 0px round 0px)';
                 overlay.scrollTop = 0; document.body.style.overflow = 'hidden';
                 const pick = opts.pick && document.getElementById(opts.pick);
@@ -1328,113 +1485,83 @@
                 overlayTimer = setTimeout(() => {
                     document.querySelectorAll('.overlay-content section').forEach(s => s.classList.remove('active-section'));
                     if (window.resetFortune) window.resetFortune();
-                }, 700);
+                }, 600);
             };
             document.addEventListener('keydown', e => { if (e.key === 'Escape' && overlay.classList.contains('active')) closeOverlay(); });
 
-            /* ── FORTUNE TELLER: pick a flap, it spells the word, pick a pocket, it unfolds and zooms into the page ── */
+            /* ── FORTUNE TELLER: click a corner, it flip-flops open, the other three follow clockwise, the paper spreads into the page.
+                  Closing mirrors it: the page folds back into the square, the three tuck in, and the chosen corner closes last. ── */
+            const IC = {
+                flask: '<path d="M14 2v6a2 2 0 0 0 .245.96l5.51 10.08A2 2 0 0 1 18 22H6a2 2 0 0 1-1.755-2.96l5.51-10.08A2 2 0 0 0 10 8V2"/><path d="M6.453 15h11.094"/><path d="M8.5 2h7"/>',
+                palette: '<path d="M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z"/><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/>',
+                drama: '<path d="M10 11h.01"/><path d="M14 6h.01"/><path d="M18 6h.01"/><path d="M6.5 13.1h.01"/><path d="M22 5c0 9-4 12-6 12s-6-3-6-12c0-2 2-3 6-3s6 1 6 3"/><path d="M17.4 9.9c-.8.8-2 .8-2.8 0"/><path d="M10.1 7.1C9 7.2 7.7 7.7 6 8.6c-3.5 2-4.7 3.9-3.7 5.6 4.5 7.8 9.5 8.4 11.2 7.4.9-.5 1.9-2.1 1.9-4.7"/><path d="M9.1 16.5c.3-1.1 1.4-1.7 2.4-1.4"/>',
+                list: '<rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/>'
+            };
+            const icon = n => `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IC[n]}</svg>`;
+            const SECTIONS = {
+                scientific: { k: 'L', label: 'Scientific Work', icon: 'flask', tease: 'Computational biology, evolutionary algorithms, papers.', base: 'var(--q1)', lx: '25%', ly: '50%' },
+                creative: { k: 'T', label: 'Creative Work', icon: 'palette', tease: 'Games, the Sognetti anthology, Passage technique.', base: 'var(--q2)', lx: '50%', ly: '25%' },
+                practice: { k: 'R', label: 'Practice', icon: 'drama', tease: 'Role-play campaigns, theatre, teaching.', base: 'var(--q3)', lx: '75%', ly: '50%' },
+                skills: { k: 'B', label: 'Skills & Contact', icon: 'list', tease: 'Tools, languages, and how to reach me.', base: 'var(--q4)', lx: '50%', ly: '75%' }
+            };
             function initFortune() {
                 const sheet = document.getElementById('ftSheet'); if (!sheet) return;
-                const D = [
-                    { k: 'L', word: 'Science', label: '🔬 Scientific Work', section: 'scientific', base: '#e5d8c4', dark: '#d6c5aa', lx: '25%', ly: '50%',
-                      items: [['PhD thesis', 'card-thesis'], ['Grammar mutations', 'card-gecco'], ['Evolvability', 'card-tree'], ['All papers', 'card-scholar']] },
-                    { k: 'T', word: 'Creative', label: '🎨 Creative Work', section: 'creative', base: '#dcccb3', dark: '#cdb995', lx: '50%', ly: '25%',
-                      items: [['Sognetti', 'card-sognetti'], ['Passage technique', 'card-passage'], ['Count Goes Down', 'card-count'], ['All creative work', null]] },
-                    { k: 'R', word: 'Practice', label: '🎭 Practice', section: 'practice', base: '#d3c0a2', dark: '#c3ac88', lx: '75%', ly: '50%',
-                      items: [['Teaching', 'card-teaching'], ['Tabletop RPGs', 'card-ttrpg'], ['Theatre', 'card-ttrpg'], ['All practice', null]] },
-                    { k: 'B', word: 'Skills', label: '📋 Skills & Contact', section: 'skills', base: '#cab491', dark: '#b9a17a', lx: '50%', ly: '75%',
-                      items: [['Narrative', 'skills-table'], ['Technical', 'skills-table'], ['Education', 'skills-edu'], ['Contact', 'contact']] }
-                ];
-                // pockets: top/bottom hold items 0 and 1, left/right hold items 2 and 3
-                const SLOT = { T: 0, B: 1, L: 2, R: 3 };
-                const POS = { T: ['50%', '33%'], B: ['50%', '67%'], L: ['33%', '50%'], R: ['67%', '50%'] };
-                const stepEl = document.getElementById('ftStep'), lettersEl = document.getElementById('ftLetters'), zoom = document.getElementById('ftZoom'), resetBtn = document.getElementById('ftReset');
-                let st = { sec: null, phase: 'closed', n: 0, pumping: false, picked: null, stage: null }, timers = [];
-                const set = patch => { st = Object.assign({}, st, patch); render(); };
-                const stop = () => { timers.forEach(clearTimeout); timers = []; };
-                sheet.innerHTML = '<div class="ft-inside"></div>';
-                const pockets = ['L', 'T', 'R', 'B'].map(k => {
-                    const w = document.createElement('div'); w.className = 'ft-pocket';
-                    const b = document.createElement('button'); b.type = 'button'; b.className = 'ft-in ft-in-' + k; b.tabIndex = -1;
-                    const l = document.createElement('div'); l.className = 'ft-in-label'; l.style.left = POS[k][0]; l.style.top = POS[k][1];
-                    w.append(b, l); sheet.appendChild(w);
-                    b.addEventListener('click', () => pickPocket(k));
-                    return { k, b, l };
-                });
-                const crease = document.createElement('div'); crease.className = 'ft-crease'; sheet.appendChild(crease);
-                const shade = (side, base, dark) => `linear-gradient(${{ L: '90deg', R: '270deg', T: '180deg', B: '0deg' }[side]}, ${base} 0%, ${base} 30%, ${dark} 50%, rgba(0,0,0,0) 50.1%), repeating-linear-gradient(37deg, rgba(255,255,255,0.05) 0 2px, transparent 2px 5px), ${base}`;
-                const flaps = D.map((d, idx) => {
-                    const flap = document.createElement('div'); flap.className = 'ft-flap ft-' + d.k;
+                const FLIP = 950, FOLLOW_START = 380, FOLLOW_STEP = 140, ORDER = ['L', 'T', 'R', 'B'];
+                const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                const D = Object.keys(SECTIONS).map(id => Object.assign({ id }, SECTIONS[id]));
+                let chosen = null, phase = 'idle', timer = null;
+                sheet.innerHTML = '<div class="ft-inside"></div><div class="ft-crease"></div><div class="ft-says" aria-hidden="true"><div class="h th-head"></div><div class="t"></div></div>';
+                const says = sheet.querySelector('.ft-says');
+                const shade = (side, base) => { const dark = `color-mix(in srgb, ${base} 90%, #000)`; return `linear-gradient(${{ L: '90deg', R: '270deg', T: '180deg', B: '0deg' }[side]}, ${base} 0%, ${base} 30%, ${dark} 50%, rgba(0,0,0,0) 50.1%), repeating-linear-gradient(37deg, rgba(255,255,255,0.05) 0 2px, transparent 2px 5px), ${base}`; };
+                const flaps = D.map(d => {
+                    const flap = document.createElement('div'); flap.className = 'ft-flap ft-' + d.k + ' ft-idle';
                     const front = document.createElement('div'); front.className = 'ft-face ft-front'; front.setAttribute('role', 'button'); front.tabIndex = 0;
-                    front.setAttribute('aria-label', 'Pick ' + d.label.replace(/^\S+\s/, '')); front.style.background = shade(d.k, d.base, d.dark);
-                    front.innerHTML = `<span class="ft-label" style="left:${d.lx};top:${d.ly}">${d.label.replace('&', '&amp;')}</span>`;
-                    const back = document.createElement('div'); back.className = 'ft-face ft-back'; back.style.background = `linear-gradient(rgba(255,255,255,0.18), rgba(0,0,0,0.04)), ${d.dark}`;
+                    front.setAttribute('aria-label', 'Open ' + d.label); front.style.background = shade(d.k, d.base);
+                    front.innerHTML = `<span class="ft-label" style="left:${d.lx};top:${d.ly}">${icon(d.icon)}${d.label.replace('&', '&amp;')}</span>`;
+                    const back = document.createElement('div'); back.className = 'ft-face ft-back';
+                    back.style.background = `linear-gradient(rgba(255,255,255,0.18), rgba(0,0,0,0.04)), color-mix(in srgb, ${d.base} 90%, #000)`;
                     flap.append(front, back); sheet.appendChild(flap);
-                    const pick = () => { if (st.sec === null) spell(idx); };
-                    front.addEventListener('click', pick);
-                    front.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); } });
-                    return { d, flap };
+                    front.addEventListener('click', () => pick(d.id));
+                    front.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(d.id); } });
+                    return { d, flap, front };
                 });
-                const lifted = k => (st.phase === 'ns' && (k === 'T' || k === 'B')) || (st.phase === 'ew' && (k === 'L' || k === 'R'));
-                function spell(idx, onDone) {
-                    stop();
-                    const word = D[idx].word, step = 210;
-                    set({ sec: idx, n: 0, pumping: true, picked: null, phase: 'closed', stage: null });
-                    for (let i = 0; i < word.length; i++) {
-                        const axis = i % 2 === 0 ? 'ns' : 'ew';
-                        timers.push(setTimeout(() => set({ phase: axis, n: i + 1 }), i * step + 40));
-                        if (i < word.length - 1) timers.push(setTimeout(() => set({ phase: 'closed' }), i * step + 150));
-                    }
-                    timers.push(setTimeout(() => { set({ pumping: false }); if (onDone) timers.push(setTimeout(onDone, 350)); }, word.length * step));
-                }
-                function pickPocket(k, auto) {
-                    const ready = st.sec !== null && !st.pumping && st.phase !== 'closed';
-                    if (!(ready && lifted(k))) return;
-                    stop();
-                    // 1 the chosen flap unfolds, 2 the whole sheet opens flat, 3 it zooms in and the page fills the window
-                    set({ picked: k, stage: 'open' });
-                    timers.push(setTimeout(() => set({ stage: 'unwrap' }), 450));
-                    timers.push(setTimeout(() => {
-                        const d = D[st.sec], item = d.items[SLOT[k]];
-                        openSection(d.section, { from: sheet, pick: auto ? null : item[1] });
-                        set({ stage: 'zoom' });
-                    }, 900));
-                }
-                // the menu links scroll down to the paper and play it for that section, then open the page
-                window.playFortune = function (section) {
-                    const idx = D.findIndex(d => d.section === section); if (idx < 0) { openSection(section, {}); return; }
-                    reset();
-                    sheet.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    timers.push(setTimeout(() => spell(idx, () => {
-                        const k = ['T', 'B', 'L', 'R'].find(lifted);
-                        if (k) pickPocket(k, true); else openSection(section, { from: sheet });
-                    }), 650));
-                };
-                function reset() { stop(); set({ sec: null, phase: 'closed', n: 0, pumping: false, picked: null, stage: null }); }
-                window.resetFortune = reset;
-                resetBtn.addEventListener('click', reset);
+                const followers = k => { const i = ORDER.indexOf(k); return [1, 2, 3].map(n => ORDER[(i + n) % 4]); };
                 function render() {
-                    const cur = st.sec === null ? null : D[st.sec], idle = st.sec === null;
-                    const ready = !idle && !st.pumping && st.phase !== 'closed';
-                    const all = st.stage === 'unwrap' || st.stage === 'zoom';
-                    sheet.classList.toggle('ft-pump', st.pumping);
-                    flaps.forEach(({ d, flap }) => {
-                        const open = st.picked === d.k || all, lift = !open && lifted(d.k);
-                        flap.className = `ft-flap ft-${d.k} ${open ? 'ft-open' : lift ? 'ft-lift' : idle ? 'ft-idle' : ''} ${idle ? '' : 'ft-off'}`;
-                        flap.style.zIndex = open ? 5 : lift ? 4 : 2;
+                    const ch = chosen && SECTIONS[chosen], open = phase === 'opening' || phase === 'page';
+                    const fol = ch ? followers(ch.k) : [];
+                    flaps.forEach(({ d, flap, front }) => {
+                        let delay = 0;
+                        if (ch && !reduce) delay = phase === 'closing' ? (d.k === ch.k ? FOLLOW_STEP * 3 : FOLLOW_STEP * (2 - fol.indexOf(d.k))) : (d.k === ch.k ? 0 : FOLLOW_START + FOLLOW_STEP * fol.indexOf(d.k));
+                        flap.className = `ft-flap ft-${d.k} ${ch && open ? 'ft-open' : ch ? '' : 'ft-idle'}`;
+                        flap.style.zIndex = ch && d.k === ch.k ? 5 : 2;
+                        flap.style.transitionDelay = delay + 'ms';
+                        front.tabIndex = ch ? -1 : 0;
                     });
-                    pockets.forEach(p => {
-                        const it = cur ? cur.items[SLOT[p.k]] : null, visible = ready && (lifted(p.k) || st.picked === p.k);
-                        p.l.textContent = it ? it[0] : ''; p.l.style.opacity = visible ? 1 : 0;
-                        p.b.tabIndex = visible && st.picked === null ? 0 : -1;
-                        p.b.setAttribute('aria-label', it ? 'Open the pocket: ' + it[0] : '');
-                    });
-                    lettersEl.innerHTML = cur ? cur.word.toUpperCase().split('').map((ch, i) => `<span class="ft-letter${i < st.n ? ' on' : ''}">${ch}</span>`).join('') : '';
-                    stepEl.textContent = idle ? '1 · Pick a flap' : st.pumping ? 'Spelling it out…' : st.picked === null ? '2 · Pick one of the open pockets' : '3 · Unfolding…';
-                    const z = st.stage === 'zoom';
-                    zoom.style.transform = z ? 'scale(4.2)' : 'none'; zoom.style.opacity = z ? '0' : '1';
-                    resetBtn.hidden = idle || st.pumping;
+                    // written on the inside: what the opened square is about to become
+                    if (ch) { says.querySelector('.h').textContent = ch.label; says.querySelector('.t').textContent = ch.tease; }
+                    says.style.transitionDelay = phase === 'opening' && !reduce ? FOLLOW_START + 'ms' : '0ms';
+                    says.classList.toggle('on', open);
                 }
+                function pick(id) {
+                    if (chosen) return;
+                    clearTimeout(timer);
+                    chosen = id; phase = 'opening'; render();
+                    // the page starts spreading just as the last corner lands
+                    timer = setTimeout(() => { phase = 'page'; render(); openSection(id, { from: sheet }); }, reduce ? 0 : FOLLOW_START + FOLLOW_STEP * 2 + FLIP - 120);
+                }
+                // the menu links scroll down to the paper, then open that corner
+                window.playFortune = function (id) {
+                    if (!SECTIONS[id]) { openSection(id, {}); return; }
+                    if (chosen) { openSection(id, {}); return; }
+                    sheet.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
+                    clearTimeout(timer); timer = setTimeout(() => pick(id), reduce ? 0 : 450);
+                };
+                window.resetFortune = function () {
+                    if (!chosen) return;
+                    clearTimeout(timer);
+                    phase = 'closing'; render();
+                    timer = setTimeout(() => { chosen = null; phase = 'idle'; render(); }, reduce ? 0 : FOLLOW_STEP * 3 + FLIP);
+                };
                 render();
             }
 
@@ -1573,7 +1700,7 @@
                 const panel = document.getElementById('tlPanel'), fit = document.getElementById('tlFit'), stage = document.getElementById('tlStage');
                 if (!panel || !fit || !stage) return;
                 const ITEMS = [
-                    { y: 2016.0, date: '2016–2018', kind: 'Education', cat: 'research', short: 'MASTER', title: 'Erasmus Mundus Master’s', sub: 'LMU Munich, Groningen, Montpellier', s: 2016.0, e: 2018.5, lane: 0 },
+                    { y: 2016.0, date: '2016–2018', kind: 'Education', cat: 'research', short: 'MASTER', title: 'Erasmus Mundus Master’s', sub: 'MEME, LMU Munich, Groningen, Montpellier', s: 2016.0, e: 2018.5, lane: 0, link: { href: 'https://www.evobio.eu/', label: 'MEME programme' } },
                     { y: 2019.0, date: '2019–2024', kind: 'Research', cat: 'research', short: 'PHD', title: 'PhD in Computational Biology', sub: 'University of Groningen', s: 2019.0, e: 2024.0, lane: 0 },
                     { y: 2021.0, date: '2021–2023', kind: 'Teaching', cat: 'teaching', short: 'TEACHING', title: 'Volunteer teacher', sub: 'Game programming for children aged 6–12', s: 2021.0, e: 2023.5, lane: 1 },
                     { y: 2022.0, date: '2022', kind: 'Research', cat: 'research', short: 'TREE PAPER', title: 'Trends in Ecology & Evolution', sub: 'Paper, co-author' },
@@ -1590,6 +1717,7 @@
                 const MIN = 2015, MAX = 2027.6, RAD = Math.PI / 180;
                 // the same pictures as on the section pages
                 const PIC = {
+                    MASTER: ['https://www.evobio.eu/evobio/wp-content/uploads/2010/11/meme-logo.jpg', '#fff', 'contain'],
                     PHD: ['media/science/thesis-cover.jpg', '#fff', 'cover'], 'PHD DEFENCE': ['media/science/thesis-cover.jpg', '#fff', 'cover'],
                     'TREE PAPER': ['media/science/evolvability-cake.jpg', '#fff', 'contain'], GECCO: ['media/science/gecco-facilitated-mutation.jpg', '#fff', 'contain'],
                     SOGNETTI: ['media/sognetti/sg-001.jpg', '#efe9df', 'contain'], PASSAGE: ['GRANDE_CARTE_FINALE_1.png', '#f3efe9', 'cover'],
@@ -1652,8 +1780,14 @@
                 const line = el('tl-line'), tri = el('tl-tri');
                 const readout = document.getElementById('tlReadout'), card = document.getElementById('tlCard'), modeBtn = document.getElementById('tlMode');
 
-                let hover = false, touchLit = false, touchT = null;
-                const lightUp = () => panel.classList.toggle('lit', hover || touchLit || mode === 'disc');
+                // the night sky comes up while you use the timeline and goes back to paper on the next click outside it
+                let lit = false;
+                const lightUp = () => panel.classList.toggle('lit', lit || mode === 'disc');
+                const wake = () => { if (!lit) { lit = true; lightUp(); } };
+                // where each kind of entry leads when its card is clicked
+                const DEST = { research: ['scientific', 'Scientific work'], work: ['scientific', 'Scientific work'], creative: ['creative', 'Creative work'], teaching: ['practice', 'Practice'], next: ['skills', 'Get in touch'] };
+                const ARROW = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>';
+                const ARROW_OUT = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>';
                 let mode = 'arc', pos = 2026.55, vel = 0, target = null, dragging = false, dragX = 0, lastV = 0;
                 let lastNotch = Math.round(pos * 4), bump = 0, shown = null, scale = 1, drawn = null;
                 const clamp = v => Math.max(MIN, Math.min(MAX, v));
@@ -1683,7 +1817,7 @@
                         s.dataset.off = ''; s.style.width = s.style.height = st.d.toFixed(1) + 'px'; s.style.opacity = st.o.toFixed(2);
                     });
                     lightUp();
-                    modeBtn.textContent = mode === 'disc' ? 'Back to the flat dial' : 'Open the full dial (3D)';
+                    modeBtn.textContent = mode === 'disc' ? '2D view' : '3D view';
                     modeBtn.setAttribute('aria-pressed', mode === 'disc' ? 'true' : 'false');
                     layout(); drawn = null;
                 }
@@ -1754,7 +1888,12 @@
                     if (cur !== shown) {
                         shown = cur;
                         const pic = PIC[cur.short];
-                        card.innerHTML = (pic ? `<div class="p" style="background:${pic[1]}"><img src="${pic[0]}" alt="" style="object-fit:${pic[2]}"></div>` : '') + `<div class="d">${cur.date}</div><div><div class="k" style="color:${INK[cur.cat]}">${cur.kind}</div><div class="t">${cur.title}</div><div class="s">${cur.sub}</div></div>`;
+                        const dest = cur.link ? null : DEST[cur.cat], label = cur.link ? cur.link.label : dest[1];
+                        card.innerHTML = (pic ? `<div class="p" style="background:${pic[1]}"><img src="${pic[0]}" alt="" style="object-fit:${pic[2]}"></div>` : '') + `<div class="d">${cur.date}</div><div class="m"><div class="k" style="color:${INK[cur.cat]}">${cur.kind}</div><div class="t">${cur.title}</div><div class="s">${cur.sub}</div></div><span class="go">${label}${cur.link ? ARROW_OUT : ARROW}</span>`;
+                        card.href = cur.link ? cur.link.href : '#' + dest[0];
+                        if (cur.link) { card.target = '_blank'; card.rel = 'noopener noreferrer'; } else { card.removeAttribute('target'); card.removeAttribute('rel'); }
+                        card.setAttribute('aria-label', `${cur.title}: open ${label}${cur.link ? ' (opens in a new tab)' : ''}`);
+                        card.dataset.section = cur.link ? '' : dest[0];
                         panel.setAttribute('aria-valuenow', Math.round(pos));
                         panel.setAttribute('aria-valuetext', `${cur.date}: ${cur.title}`);
                     }
@@ -1795,15 +1934,19 @@
                     if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
                     if (e.key === 'ArrowRight') { e.preventDefault(); go(1); }
                 });
-                document.getElementById('tlPrev').addEventListener('click', () => go(-1));
-                document.getElementById('tlNext').addEventListener('click', () => go(1));
+                document.getElementById('tlPrev').addEventListener('click', () => { wake(); go(-1); });
+                document.getElementById('tlNext').addEventListener('click', () => { wake(); go(1); });
+                card.addEventListener('click', e => { if (!card.dataset.section) return; e.preventDefault(); openSection(card.dataset.section, { from: card }); });
                 modeBtn.addEventListener('click', () => { mode = mode === 'arc' ? 'disc' : 'arc'; applyMode(); });
-                // leaving with the mouse settles the dial back to the flat parchment, even from the 3D view
-                panel.addEventListener('mouseenter', () => { hover = true; lightUp(); });
-                panel.addEventListener('mouseleave', () => { hover = false; lightUp(); });
-                // the 3D disc stays open until the next click outside the timeline, then settles back to the flat parchment
-                document.addEventListener('pointerdown', e => { if (mode !== 'arc' && !panel.closest('.tl-box').contains(e.target)) { mode = 'arc'; applyMode(); } });
-                panel.addEventListener('pointerdown', e => { if (e.pointerType === 'mouse') return; touchLit = true; lightUp(); clearTimeout(touchT); touchT = setTimeout(() => { touchLit = false; lightUp(); }, 4000); });
+                // a click, a drag or the keyboard lights the sky; scrolling only turns the dial.
+                // The sky and the 3D disc stay until the next click outside the timeline, then it settles back to flat paper.
+                panel.addEventListener('pointerdown', wake);
+                panel.addEventListener('focus', wake);
+                document.addEventListener('pointerdown', e => {
+                    if (panel.closest('.tl-box').contains(e.target)) return;
+                    lit = false;
+                    if (mode !== 'arc') { mode = 'arc'; applyMode(); } else lightUp();
+                });
                 window.addEventListener('resize', layout);
                 applyMode(); render(); requestAnimationFrame(tick);
             }
@@ -1904,11 +2047,41 @@
                 initDrawings(range(19, 'banner'), range(18, 'portrait'));
                 initTimeline();
                 initFortune();
+                initHome();
                 initPassage();
                 initSognetti();
                 initCursorTrail();
                 attachClickableImages();
                 initPdfPreviews();
+            }
+
+            /* ── HOME: the header's section links, the spread / single-column switch and the day / night sky ── */
+            function initHome() {
+                const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches, behavior = reduce ? 'auto' : 'smooth';
+                const home = () => window.scrollTo({ top: 0, behavior });
+                document.getElementById('hdrHome').addEventListener('click', e => { e.preventDefault(); home(); });
+                document.querySelectorAll('.hdr-nav a').forEach(a => a.addEventListener('click', e => {
+                    e.preventDefault();
+                    if (a.dataset.side) { openQuarter(a.dataset.side); return; }
+                    document.getElementById(a.dataset.go).scrollIntoView({ behavior, block: 'start' });
+                }));
+                document.getElementById('ctaWork').addEventListener('click', e => { e.preventDefault(); document.getElementById('ftSheet').scrollIntoView({ behavior, block: 'center' }); });
+                document.getElementById('ctaContact').addEventListener('click', e => { e.preventDefault(); openQuarter('skills'); });
+                // after a layout switch everything has moved, so go back to the top to get your bearings
+                const lay = document.getElementById('layoutBtn');
+                lay.addEventListener('click', () => {
+                    const stacked = document.body.classList.toggle('stacked');
+                    lay.setAttribute('aria-label', stacked ? 'Switch to the two-page spread layout' : 'Switch to the single-column layout');
+                    lay.title = stacked ? 'Two-page spread' : 'Single column';
+                    window.dispatchEvent(new Event('resize'));
+                    home();
+                });
+                const sky = document.getElementById('skySwitch');
+                sky.addEventListener('click', () => {
+                    const night = document.body.classList.toggle('night');
+                    sky.setAttribute('aria-checked', night ? 'true' : 'false');
+                    sky.setAttribute('aria-label', night ? 'Switch to the daylight palette' : 'Switch to the night sky palette');
+                });
             }
 
             function attachClickableImages() {
