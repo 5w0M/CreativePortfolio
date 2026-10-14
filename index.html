@@ -548,10 +548,10 @@
         .dr-count { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #8a8178; min-width: 64px; text-align: center; }
         .fv { position: fixed; inset: 0; z-index: 1500; background: rgba(31,30,28,.86); display: none; }
         .fv.active { display: block; }
-        .fv-stage { position: absolute; left: 0; right: 0; perspective: 1100px; overflow: hidden; touch-action: pan-y; }
-        .fv .dr-card { overflow: visible; border-radius: 0; box-shadow: none; background: transparent; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .fv-stage { position: absolute; left: 0; right: 0; perspective: 1400px; overflow: hidden; touch-action: pan-y; }
+        .fv .dr-card { cursor: pointer; box-shadow: 0 30px 50px -20px rgba(0,0,0,.6); }
         .fv .dr-card.on { cursor: default; }
-        .fv .dr-card img { width: auto; height: auto; max-width: 100%; max-height: 100%; border-radius: 14px; box-shadow: 0 30px 50px -20px rgba(0,0,0,.6); }
+        .fv .dr-card img { object-fit: contain; }
         .fv-bar { position: absolute; left: 0; right: 0; display: flex; justify-content: center; align-items: center; gap: 14px; }
         .fv-bar .dr-count { color: #e9dcc6; font-size: 13px; min-width: 70px; }
         .fv-close { position: absolute; top: 18px; right: 24px; width: 48px; height: 48px; border: 0; background: none; color: #fefcf8; font-size: 2.6rem; line-height: 1; cursor: pointer; z-index: 2; }
@@ -1152,12 +1152,30 @@
 
             /* ── DRAWINGS: sliding-card drum, plus a focus view with the same drum ── */
             // The card facing you is full size; the others turn away and fade, wrapping round
-            function placeDrum(cards, c, step, onEach) {
-                const N = cards.length;
+            // each card takes its drawing's own shape (no cropping); side cards sit just past the centre card's edge
+            const AR = {
+                Drawing: [0.698, 0.698, 0.698, 0.698, 0.698, 0.698, 0.698, 2.391, 0.698, 1.432, 0.698, 0.698, 0.698, 0.698, 0.698, 1.000, 0.707, 1.000, 1.414],
+                Portrait: [0.881, 0.698, 0.698, 1.000, 0.698, 0.698, 0.698, 0.940, 0.698, 0.819, 0.804, 0.698, 0.698, 0.698, 0.706, 0.698, 0.698, 0.706]
+            };
+            const SC = [1, 0.86, 0.74, 0.64];
+            function sizesFor(kind, n, H, MW) {
+                return Array.from({ length: n }, (_, i) => { const ar = (AR[kind] || [])[i] || 0.8; let h = H, w = h * ar; if (w > MW) { w = MW; h = w / ar; } return { w, h }; });
+            }
+            function placeDrum(cards, c, sz, onEach) {
+                const N = cards.length, off = { 0: 0 };
+                [1, -1].forEach(sg => {
+                    let x = sz[c].w / 2, prevW = 0;
+                    for (let j = 1; j <= 3; j++) {
+                        const w = sz[((c + sg * j) % N + N) % N].w * SC[j];
+                        x += j === 1 ? w * 0.44 : (prevW + w) * 0.36;
+                        off[sg * j] = sg * x; prevW = w;
+                    }
+                });
                 cards.forEach((card, i) => {
                     let d = ((i - c) % N + N) % N; if (d > N / 2) d -= N;
-                    const ad = Math.abs(d), k = Math.min(ad, 3);
-                    card.style.transform = `translateX(${Math.sign(d) * step[k]}px) rotateY(${-d * 32}deg) scale(${[1, 0.86, 0.74, 0.64][k]})`;
+                    const ad = Math.abs(d), k = Math.min(ad, 3), { w, h } = sz[i];
+                    card.style.width = w + 'px'; card.style.height = h + 'px'; card.style.margin = `${-h / 2}px 0 0 ${-w / 2}px`;
+                    card.style.transform = `translateX(${off[Math.sign(d) * k]}px) rotateY(${-d * 32}deg) scale(${SC[k]})`;
                     card.style.opacity = ad > 3 ? 0 : [1, 0.85, 0.55, 0.25][k];
                     card.style.zIndex = 10 - k;
                     card.style.pointerEvents = ad > 3 ? 'none' : 'auto';
@@ -1197,8 +1215,7 @@
                 const small = () => host.clientWidth < 600;
                 function show() {
                     const k = small() ? 0.8 : 1;
-                    cards.forEach(c => { c.style.width = 240 * k + 'px'; c.style.height = 300 * k + 'px'; c.style.margin = `${-150 * k}px 0 0 ${-120 * k}px`; });
-                    placeDrum(cards, bi, [0, 210, 360, 450].map(s => s * k), (card, ad) => card.setAttribute('aria-label', ad === 0 ? 'Open this drawing' : 'Show this drawing'));
+                    placeDrum(cards, bi, sizesFor('Drawing', banners.length, 300 * k, Math.min(520 * k, host.clientWidth * 0.8)), (card, ad) => card.setAttribute('aria-label', ad === 0 ? 'Open this drawing' : 'Show this drawing'));
                     count.textContent = `${bi + 1} / ${banners.length}`;
                 }
                 const move = d => { touched = true; bi = (bi + d + banners.length) % banners.length; show(); };
@@ -1226,15 +1243,11 @@
                 function show() {
                     // fit the big cards to the window, keeping C's proportions
                     const vw = window.innerWidth, vh = window.innerHeight;
-                    const ratio = kind === 'Portrait' ? 440 / 600 : 480 / 600;
-                    let h = Math.min(600, vh - 190), w = h * ratio;
-                    if (w > vw * 0.8) { w = vw * 0.8; h = w / ratio; }
-                    const k = w / (kind === 'Portrait' ? 440 : 480);
-                    const top = Math.max(70, (vh - h - 80) / 2);
+                    const h = Math.min(720, vh - 150);
+                    const top = Math.max(60, (vh - h - 70) / 2);
                     stage.style.top = top + 'px'; stage.style.height = h + 'px';
-                    bar.style.top = (top + h + 20) + 'px';
-                    cards.forEach(c => { c.style.width = w + 'px'; c.style.height = h + 'px'; c.style.margin = `${-h / 2}px 0 0 ${-w / 2}px`; });
-                    placeDrum(cards, fi, [0, 330, 560, 720].map(s => s * k));
+                    bar.style.top = (top + h + 16) + 'px';
+                    placeDrum(cards, fi, sizesFor(kind, list.length, h, Math.min(1100, vw * 0.86)));
                     cnt.textContent = `${fi + 1} / ${list.length}`;
                 }
                 const move = d => { fi = (fi + d + list.length) % list.length; show(); };
