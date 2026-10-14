@@ -439,19 +439,14 @@
             justify-content: flex-start;
             padding: 2rem;
             box-sizing: border-box;
-            transition: transform 0.5s cubic-bezier(0.25, 0.1, 0.15, 1),
-                        opacity 0.35s ease,
-                        visibility 0s 0.5s;   /* delay hiding until after transition */
-            transform: scale(0.8) rotate(-90deg);
+            clip-path: inset(35% 35% 35% 35% round 24px);
+            transition: clip-path 1s cubic-bezier(.55,0,.2,1), opacity .45s ease .35s, visibility 0s 1s;
         }
         #section-overlay.active {
             opacity: 1;
             visibility: visible;
             pointer-events: auto;
-            transform: scale(1) rotate(0deg);
-            transition: transform 0.5s cubic-bezier(0.25, 0.1, 0.15, 1),
-                        opacity 0.35s ease,
-                        visibility 0s 0s;      /* show immediately */
+            transition: clip-path 1.1s cubic-bezier(.55,0,.2,1), opacity .3s ease, visibility 0s 0s;
         }
         @keyframes overlayFadeIn { from{opacity:0; transform: scale(0.95);} to{opacity:1; transform: scale(1);} }
         .overlay-close {
@@ -495,66 +490,142 @@
         .project-card:hover { transform: translateY(-6px); box-shadow: 0 28px 48px -12px rgba(0,0,0,0.14); }
         .card-content { padding: 1.8rem; flex: 1; }
         .project-title { font-size: 1.6rem; font-weight: 600; margin-bottom: 0.5rem; }
-        /* ── Timeline: heading-tape dial ── */
+        /* ── Timeline: flat dial under the night sky, opens into a 3D disc ── */
         .timeline-section { padding: 0 0 1.5rem 0; position: relative; z-index: 2; }
         .tl-box { background: white; border-radius: 24px; padding: 1.2rem 1.4rem 1.4rem; box-shadow: 0 6px 12px -6px rgba(0,0,0,0.05); }
         .tl-head { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; padding: 0 0.4rem 0.9rem; }
         .tl-head h3 { font-weight: 600; color: var(--accent-warm); font-size: 1.05rem; }
-        .tl-controls { display: flex; gap: 0.5rem; align-items: center; }
-        .tl-hint { font-size: 0.8rem; color: #8a8178; margin-right: 0.4rem; }
-        .tl-btn { width: 44px; height: 44px; border-radius: 50%; border: 1px solid #e2dbd1; background: #fffdf9; color: #6b4e3a; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .tl-hint { font-size: 0.8rem; color: #8a8178; }
+        .tl-sky { position: relative; height: 320px; border-radius: 22px; overflow: hidden; background: radial-gradient(ellipse at 50% 60%, #2a3550 0%, #1a2133 55%, #10141f 100%); touch-action: pan-y; cursor: grab; transition: height .7s cubic-bezier(.3,.8,.25,1); }
+        .tl-sky:active { cursor: grabbing; }
+        .tl-sky:focus-visible { outline: 3px solid #e8956b; outline-offset: 3px; }
+        .tl-fit { position: absolute; left: 50%; top: 0; width: 1100px; height: 600px; transform-origin: 50% 0; perspective: 1300px; }
+        .tl-stage { position: absolute; inset: 0; transform-style: preserve-3d; transition: transform .9s cubic-bezier(.3,.8,.25,1); }
+        .tl-stage > div, .tl-layer > div { position: absolute; }
+        .tl-layer { position: absolute; left: 0; top: 0; width: 0; height: 0; }
+        .tl-star { border-radius: 50%; background: #f6efe1; }
+        .tl-tk { left: 0; top: 0; width: 2px; transform-origin: 0 0; }
+        .tl-arc { inset: 0; }
+        .tl-arc svg { position: absolute; left: 0; top: 0; overflow: visible; }
+        .tl-disc { border-radius: 50%; background: #f4ecdf; border: 2px solid #c9b391; box-sizing: border-box; box-shadow: 0 0 0 6px rgba(244,236,223,0.10), 0 0 60px rgba(232,149,107,0.18); }
+        .tl-ring { border-radius: 50%; border: 1px dashed #d8c6aa; box-sizing: border-box; }
+        .tl-lbl { transform: translate(-50%, -50%); font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+        .tl-ev { width: 12px; height: 12px; margin: -6px 0 0 -6px; border: 2px solid #fefcf8; box-sizing: border-box; }
+        .tl-nm { transform: translate(-50%, -50%); font-size: 11px; font-weight: 600; letter-spacing: 0.05em; white-space: nowrap; }
+        .tl-line { left: 549px; width: 2px; height: 60px; background: #e8956b; }
+        .tl-tri { left: 540px; width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; }
+        .tl-readout { position: absolute; right: 18px; top: 14px; padding: 3px 10px; border: 1px solid #e8956b; border-radius: 6px; background: rgba(16,20,31,0.7); font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #f0b48f; letter-spacing: 0.06em; }
+        .tl-controls { display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+        .tl-btn { height: 44px; min-width: 44px; padding: 0 16px; border-radius: 22px; border: 1px solid #e2dbd1; background: #fffdf9; color: #6b4e3a; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; font: inherit; font-size: 14px; }
         .tl-btn:hover { border-color: #c9b896; color: var(--accent-warm); }
-        .tl-panel { position: relative; height: 230px; background: #f4ecdf; border: 1px solid #e2d3bc; border-radius: 22px; overflow: hidden; box-shadow: inset 0 2px 10px rgba(107,78,58,0.12); touch-action: pan-y; cursor: grab; }
-        .tl-panel:active { cursor: grabbing; }
-        .tl-panel:focus-visible { outline: 3px solid var(--accent-warm); outline-offset: 3px; }
-        .tl-mask { position: absolute; inset: 0; -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 18%, #000 82%, transparent 100%); mask-image: linear-gradient(90deg, transparent 0, #000 18%, #000 82%, transparent 100%); }
-        .tl-axis { position: absolute; left: 0; right: 0; bottom: 58px; height: 1px; background: #c9b391; }
-        .tl-strip { position: absolute; left: 50%; top: 0; bottom: 0; width: 0; will-change: transform; }
-        .tl-tick { position: absolute; bottom: 58px; width: 2px; background: #b9a383; height: 13px; }
-        .tl-tick.major { background: #6b4e3a; height: 30px; }
-        .tl-tick.future { background: #ddd0bc; }
-        .tl-year { position: absolute; bottom: 26px; transform: translateX(-50%); font-family: 'JetBrains Mono', monospace; font-size: 15px; color: #6b4e3a; letter-spacing: 0.04em; }
-        .tl-year.future { color: #a99a86; }
-        .tl-event { position: absolute; bottom: 104px; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 6px; }
-        .tl-event b { font-size: 11px; font-weight: 600; white-space: nowrap; letter-spacing: 0.04em; }
-        .tl-event i { width: 10px; height: 10px; transform: rotate(45deg); display: block; }
-        .tl-readout { position: absolute; left: 50%; top: 12px; transform: translateX(-50%); min-width: 100px; padding: 3px 10px; border: 1px solid var(--accent-warm); border-radius: 6px; background: var(--parchment); text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 14px; color: var(--accent-warm); letter-spacing: 0.06em; }
-        .tl-pointer { position: absolute; left: calc(50% - 10px); top: 40px; width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 14px solid var(--accent-warm); }
-        .tl-needle { position: absolute; left: calc(50% - 1px); top: 52px; bottom: 50px; width: 2px; background: var(--accent-warm); }
-        .tl-card { margin: 16px auto 0; width: 480px; max-width: 100%; background: white; border: 1px solid #efe6db; border-radius: 16px; padding: 14px 18px; box-shadow: 0 10px 24px -14px rgba(0,0,0,0.25); display: flex; gap: 16px; align-items: baseline; }
+        .tl-card { margin: 16px auto 0; width: 480px; max-width: 100%; background: white; border: 1px solid #efe6db; border-radius: 16px; padding: 14px 18px; box-shadow: 0 10px 24px -14px rgba(0,0,0,0.25); display: flex; gap: 16px; align-items: baseline; box-sizing: border-box; }
         .tl-card .d { font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 600; color: #9a5f38; white-space: nowrap; }
         .tl-card .k { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
         .tl-card .t { font-weight: 600; color: #2b2a27; }
         .tl-card .s { font-size: 14px; color: #5a544c; }
-        @media (max-width: 600px) { .tl-hint { display: none; } .tl-card { flex-direction: column; gap: 4px; } }
+        @media (max-width: 600px) { .tl-hint { display: none; } .tl-card { flex-direction: column; gap: 4px; } .tl-readout { font-size: 12px; right: 10px; top: 10px; } .tl-controls { flex-wrap: nowrap; gap: 6px; } .tl-btn { padding: 0 12px; font-size: 13px; } .tl-box { padding: 1rem 0.8rem 1.1rem; } }
 
-        /* ── Sognetti flipbook ── */
-        .sg-card { grid-column: 1 / -1; }
-        .sg-layout { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(280px, 1fr); }
-        .sg-stage { background: #efe9df; background-image: radial-gradient(circle at 50% 45%, rgba(255,255,255,0.55), transparent 70%); padding: 2rem 1.5rem 1.4rem; display: flex; flex-direction: column; align-items: center; gap: 1rem; }
-        .sg-book { display: flex; justify-content: center; align-items: center; min-height: 470px; filter: drop-shadow(0 18px 22px rgba(70,45,20,.20)) drop-shadow(0 2px 3px rgba(70,45,20,.15)); }
-        .sg-book { width: 100%; }
-        .sg-book img { width: 50%; max-width: 330px; height: auto; display: block; background: #fbfaf6; cursor: zoom-in; }
-        .sg-book img.single { width: auto; max-width: 100%; max-height: 460px; border-radius: 4px; }
-        .sg-book img.left { border-right: 1px solid #e4dccf; }
-        .sg-nav { display: flex; align-items: center; gap: 14px; }
-        .sg-nav span { font-size: 0.82rem; color: #6f6458; min-width: 160px; text-align: center; }
+        /* ── Drawings: sliding-card drum, and a focus view with the same drum ── */
+        .dr-drum { position: relative; height: 340px; margin: 0.5rem 0 0; perspective: 900px; overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent); mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent); touch-action: pan-y; }
+        .dr-card { position: absolute; left: 50%; top: 50%; border-radius: 14px; overflow: hidden; box-sizing: border-box; box-shadow: 0 18px 30px -18px rgba(60,40,20,.45); transition: transform .65s cubic-bezier(.25,.8,.25,1), opacity .5s ease; cursor: pointer; background: #f3efe9; }
+        .dr-card img { display: block; width: 100%; height: 100%; object-fit: cover; }
+        .dr-card.on { box-shadow: 0 24px 40px -18px rgba(60,40,20,.6); cursor: zoom-in; }
+        .dr-card:focus-visible { outline: 3px solid var(--accent-warm); outline-offset: 3px; }
+        .dr-bar { display: flex; justify-content: center; align-items: center; gap: 12px; margin: 0.4rem 0 0.6rem; }
+        .dr-nav { width: 44px; height: 44px; border-radius: 50%; border: 1px solid #e2dbd1; background: #fffdf9; color: #6b4e3a; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .dr-nav:hover { border-color: #c9b896; color: var(--accent-warm); }
+        .dr-count { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #8a8178; min-width: 64px; text-align: center; }
+        .fv { position: fixed; inset: 0; z-index: 1500; background: rgba(31,30,28,.86); display: none; }
+        .fv.active { display: block; }
+        .fv-stage { position: absolute; left: 0; right: 0; perspective: 1100px; overflow: hidden; touch-action: pan-y; }
+        .fv .dr-card { overflow: visible; border-radius: 0; box-shadow: none; background: transparent; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .fv .dr-card.on { cursor: default; }
+        .fv .dr-card img { width: auto; height: auto; max-width: 100%; max-height: 100%; border-radius: 14px; box-shadow: 0 30px 50px -20px rgba(0,0,0,.6); }
+        .fv-bar { position: absolute; left: 0; right: 0; display: flex; justify-content: center; align-items: center; gap: 14px; }
+        .fv-bar .dr-count { color: #e9dcc6; font-size: 13px; min-width: 70px; }
+        .fv-close { position: absolute; top: 18px; right: 24px; width: 48px; height: 48px; border: 0; background: none; color: #fefcf8; font-size: 2.6rem; line-height: 1; cursor: pointer; z-index: 2; }
+        .fv-close:hover { color: #e8956b; }
+
+        /* ── Fortune teller: pick a flap, it spells the word, pick a pocket, it unfolds into the page ── */
+        .ft-section { display: flex; justify-content: center; padding: 3rem 1rem 5rem; }
+        .ft-wrap { display: flex; flex-direction: column; align-items: center; gap: 18px; }
+        .ft-step { font-size: 0.9rem; color: #6f6458; min-height: 24px; font-weight: 500; }
+        .ft-letters { display: flex; gap: 6px; justify-content: center; min-height: 40px; }
+        .ft-letter { width: 30px; height: 38px; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700; border-bottom: 2px solid #d9cdbb; color: #d0c3b0; transition: color .15s, border-color .15s; }
+        .ft-letter.on { color: var(--accent-warm); border-color: var(--accent-warm); }
+        .ft-zoomwrap { transition: transform 1.1s cubic-bezier(.55,0,.2,1), opacity .9s ease; transform-origin: 50% 50%; }
+        .ft-sheet { position: relative; width: min(440px, 86vw); aspect-ratio: 1 / 1; perspective: 1600px; filter: drop-shadow(0 22px 26px rgba(70,45,20,.22)) drop-shadow(0 3px 4px rgba(70,45,20,.18)); }
+        .ft-inside { position: absolute; inset: 0; background: #f4ece0; background-image: radial-gradient(circle at 50% 50%, rgba(120,80,40,.10), transparent 60%), repeating-linear-gradient(37deg, rgba(120,90,60,.025) 0 2px, transparent 2px 5px); }
+        .ft-crease { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(45deg, transparent calc(50% - .6px), rgba(110,80,50,.28) 50%, transparent calc(50% + .6px)), linear-gradient(-45deg, transparent calc(50% - .6px), rgba(110,80,50,.28) 50%, transparent calc(50% + .6px)), linear-gradient(90deg, transparent calc(50% - .5px), rgba(110,80,50,.12) 50%, transparent calc(50% + .5px)), linear-gradient(0deg, transparent calc(50% - .5px), rgba(110,80,50,.12) 50%, transparent calc(50% + .5px)); }
+        .ft-pocket { position: absolute; inset: 0; pointer-events: none; }
+        .ft-in { position: absolute; inset: 0; border: 0; padding: 0; margin: 0; cursor: pointer; background: transparent; pointer-events: auto; }
+        .ft-in:hover { background: rgba(180,95,59,.08); }
+        .ft-in:focus-visible { outline: none; background: rgba(180,95,59,.14); }
+        .ft-in[tabindex="-1"] { pointer-events: none; }
+        .ft-in-L { clip-path: polygon(0 0, 50% 50%, 0 100%); } .ft-in-R { clip-path: polygon(100% 0, 50% 50%, 100% 100%); }
+        .ft-in-T { clip-path: polygon(0 0, 100% 0, 50% 50%); } .ft-in-B { clip-path: polygon(0 100%, 100% 100%, 50% 50%); }
+        .ft-in-label { position: absolute; transform: translate(-50%, -50%); width: 120px; text-align: center; font-size: 12px; line-height: 1.3; font-weight: 600; color: #6b4e3a; pointer-events: none; transition: opacity .2s; opacity: 0; }
+        .ft-flap { position: absolute; inset: 0; transform-style: preserve-3d; transition: transform .95s cubic-bezier(.25,.1,.15,1); pointer-events: none; }
+        .ft-pump .ft-flap { transition-duration: .2s; transition-timing-function: cubic-bezier(.3,.1,.3,1); }
+        .ft-face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; pointer-events: auto; cursor: pointer; }
+        .ft-face:focus-visible { outline: none; filter: brightness(1.05); }
+        .ft-off .ft-face { pointer-events: none; }
+        .ft-L { transform-origin: 0 50%; } .ft-T { transform-origin: 50% 0; } .ft-R { transform-origin: 100% 50%; } .ft-B { transform-origin: 50% 100%; }
+        .ft-L .ft-front { clip-path: polygon(0 0, 50% 50%, 0 100%); } .ft-L .ft-back { clip-path: polygon(100% 0, 50% 50%, 100% 100%); transform: rotateY(180deg); }
+        .ft-R .ft-front { clip-path: polygon(100% 0, 50% 50%, 100% 100%); } .ft-R .ft-back { clip-path: polygon(0 0, 50% 50%, 0 100%); transform: rotateY(180deg); }
+        .ft-T .ft-front { clip-path: polygon(0 0, 100% 0, 50% 50%); } .ft-T .ft-back { clip-path: polygon(0 100%, 100% 100%, 50% 50%); transform: rotateX(180deg); }
+        .ft-B .ft-front { clip-path: polygon(0 100%, 100% 100%, 50% 50%); } .ft-B .ft-back { clip-path: polygon(0 0, 100% 0, 50% 50%); transform: rotateX(180deg); }
+        .ft-L.ft-idle:hover { transform: rotateY(-16deg); } .ft-R.ft-idle:hover { transform: rotateY(16deg); }
+        .ft-T.ft-idle:hover { transform: rotateX(16deg); } .ft-B.ft-idle:hover { transform: rotateX(-16deg); }
+        .ft-L.ft-lift { transform: rotateY(-68deg); } .ft-R.ft-lift { transform: rotateY(68deg); }
+        .ft-T.ft-lift { transform: rotateX(68deg); } .ft-B.ft-lift { transform: rotateX(-68deg); }
+        .ft-L.ft-open { transform: rotateY(-180deg); } .ft-R.ft-open { transform: rotateY(180deg); }
+        .ft-T.ft-open { transform: rotateX(180deg); } .ft-B.ft-open { transform: rotateX(-180deg); }
+        .ft-label { position: absolute; transform: translate(-50%, -50%); background: rgba(255,255,255,.72); padding: .45rem .95rem; border-radius: 40px; font-size: .9rem; font-weight: 600; color: #4a3b2e; white-space: nowrap; }
+        .ft-btn { min-height: 44px; padding: 0 18px; border-radius: 40px; border: 1px solid #e2dbd1; background: #fffdf9; color: #3d3a35; font: inherit; font-weight: 500; cursor: pointer; }
+        .ft-btn:hover { border-color: #c9b896; color: var(--accent-warm); }
+        .ft-btn[hidden] { display: none; }
+        .ft-fortune { animation: ftGlow 2.6s ease; }
+        @keyframes ftGlow { 0%, 60% { box-shadow: 0 0 0 4px rgba(180,95,59,.35), 0 12px 28px -8px rgba(0,0,0,0.1); } 100% { box-shadow: 0 12px 28px -8px rgba(0,0,0,0.05); } }
+        @media (max-width: 600px) { .ft-label { font-size: .72rem; padding: .35rem .7rem; } .ft-in-label { width: 86px; font-size: 11px; } }
+        /* ── Sognetti: closed shows the cover, opens downward into the flipbook ── */
+        .sg-stage { background: #efe9df; background-image: radial-gradient(circle at 50% 45%, rgba(255,255,255,0.55), transparent 70%); }
+        .sg-cover { display: flex; width: 100%; border: 0; padding: 1.6rem 1rem; cursor: pointer; background: transparent; align-items: center; justify-content: center; }
+        .sg-cover img { height: 300px; max-width: 100%; width: auto; display: block; border-radius: 4px; box-shadow: 0 14px 22px -10px rgba(70,45,20,.35), 0 2px 3px rgba(70,45,20,.15); transition: transform .3s; }
+        .sg-cover:hover img { transform: translateY(-3px); }
+        .sg-open { padding: 1.4rem 1rem 1rem; display: none; flex-direction: column; align-items: center; gap: 0.8rem; }
+        .sg-card.is-open .sg-cover { display: none; }
+        .sg-card.is-open .sg-open { display: flex; }
+        .sg-book { display: flex; justify-content: center; align-items: center; width: 100%; min-height: 300px; filter: drop-shadow(0 14px 18px rgba(70,45,20,.20)) drop-shadow(0 2px 3px rgba(70,45,20,.15)); }
+        .sg-book img { width: 50%; max-width: 200px; height: auto; display: block; background: #fbfaf6; cursor: zoom-in; }
+        .sg-book img.single { width: auto; max-width: 100%; max-height: 300px; border-radius: 4px; }
+        .sg-book img.left { box-shadow: inset -18px 0 22px -14px rgba(60,40,20,.28); border-right: 1px solid #e4dccf; }
+        .sg-nav { display: flex; align-items: center; gap: 12px; }
+        .sg-nav span { font-size: 0.8rem; color: #6f6458; min-width: 140px; text-align: center; }
         .sg-btn { width: 44px; height: 44px; border-radius: 50%; border: 1px solid #d9cdbb; background: #fffdf9; color: #5a4636; display: flex; align-items: center; justify-content: center; cursor: pointer; }
         .sg-btn:hover { border-color: var(--accent-warm); color: var(--accent-warm); }
         .sg-btn[disabled] { opacity: .35; cursor: default; }
-        .sg-text { padding: 1.4rem 0 0 0; }
         .sg-ex { margin-top: 1.2rem; border-top: 1px solid #ece3da; padding-top: 0.9rem; }
         .sg-ex summary { cursor: pointer; font-size: 0.85rem; color: #8a6a50; font-weight: 500; }
         .sg-ex figure { margin: 0.9rem 0 0 0; }
         .sg-ex blockquote { font-family: Georgia, 'Times New Roman', serif; font-size: 0.95rem; line-height: 1.45; color: #2b2a27; }
         .sg-ex figcaption { margin-top: 0.3rem; font-size: 0.78rem; color: #6f6458; }
-        .pt-gallery { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.6rem; margin-top: 0.8rem; }
-        .pt-gallery img { width: 100%; height: 150px; object-fit: cover; border-radius: 14px; border: 1px solid #f0eae2; display: block; }
-        .pt-gallery img.wide { grid-column: 1 / -1; height: 210px; }
-        @media (max-width: 760px) {
-            .sg-layout { grid-template-columns: 1fr; }
-            .sg-book { min-height: 0; }
-        }
+        /* ── Passage technique: one large frame and six thumbnails ── */
+        .pt-main { border-radius: 14px; overflow: hidden; background: #1d2026; aspect-ratio: 16 / 9; border: 1px solid #f0eae2; }
+        .pt-main video, .pt-main img { width: 100%; height: 100%; object-fit: contain; display: block; }
+        .pt-cap { font-size: 0.8rem; color: #6f6458; margin: 0.45rem 0 0.5rem; min-height: 1.2em; }
+        .pt-thumbs { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 0.4rem; }
+        .pt-thumbs button { padding: 0; border: 2px solid transparent; border-radius: 8px; overflow: hidden; aspect-ratio: 16 / 9; background: #1d2026; cursor: pointer; }
+        .pt-thumbs button[aria-pressed="true"] { border-color: var(--accent-warm); }
+        .pt-thumbs img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        /* ── Scientific: a cover figure on every card ── */
+        .sci-cover { height: 190px; display: flex; align-items: center; justify-content: center; overflow: hidden; border-bottom: 1px solid #f0eae2; padding: 10px; box-sizing: border-box; background: #fff; cursor: pointer; }
+        .sci-cover img { width: 100%; height: 100%; display: block; object-fit: contain; }
+        .sci-cover.fill { padding: 0; }
+        .sci-cover.fill img { object-fit: cover; }
+        .sci-cover.video { height: auto; aspect-ratio: 16 / 9; padding: 0; background: #000; cursor: default; }
+        .sci-cover.video iframe { width: 100%; height: 100%; border: 0; display: block; }
+        .sci-cover + .card-header { border-radius: 0; }
         .project-meta { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; color: #b87c54; font-weight: 600; margin-bottom: 1rem; }
         .project-desc { color: #3b3a37; margin-bottom: 1.4rem; font-size: 0.95rem; }
         .image-placeholder { background: #f3efe9; min-height: 180px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
@@ -671,10 +742,11 @@
         <!-- Hero -->
         <section class="hero">
             <div class="container">
-                <div class="banner-container">
-                    <img src="web/banner1.jpg" alt="Illustration by Stefano Tiso" class="banner-image"
-                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                    <div class="banner-placeholder" style="display:none;">📖 narrative design · interactive storytelling · playful learning</div>
+                <div class="dr-drum" id="drDrum" aria-roledescription="carousel" aria-label="Drawings"></div>
+                <div class="dr-bar">
+                    <button type="button" class="dr-nav" id="drPrev" aria-label="Previous drawing"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button>
+                    <span class="dr-count" id="drCount"></span>
+                    <button type="button" class="dr-nav" id="drNext" aria-label="Next drawing"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg></button>
                 </div>
                 <div class="hero-grid">
                     <div class="hero-content">
@@ -690,8 +762,8 @@
                             <span class="pill">Dialogue trees</span>
                         </div>
                     </div>
-                    <div class="hero-portrait">
-                        <img src="web/portrait1.jpg" alt="Stefano Tiso" class="portrait-img"
+                    <div class="hero-portrait" id="heroPortrait" role="button" tabindex="0" aria-label="Open the portraits">
+                        <img src="web/portrait1.jpg" alt="Portrait sketch of Stefano Tiso" class="portrait-img"
                              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                         <div class="portrait-placeholder" style="display:none;">📷</div>
                     </div>
@@ -699,79 +771,51 @@
             </div>
         </section>
 
-        <!-- ═══ TIMELINE (heading-tape dial) ═══ -->
+        <!-- ═══ TIMELINE (flat dial under the night sky) ═══ -->
         <section class="timeline-section">
             <div class="container">
                 <div class="tl-box">
                     <div class="tl-head">
                         <h3>Timeline: what I did, when</h3>
-                        <div class="tl-controls">
-                            <span class="tl-hint">Scroll, drag or use the arrows</span>
-                            <button type="button" class="tl-btn" id="tlPrev" aria-label="Earlier"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button>
-                            <button type="button" class="tl-btn" id="tlNext" aria-label="Later"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg></button>
-                        </div>
+                        <span class="tl-hint">Scroll, drag or use the arrows</span>
                     </div>
-                    <div class="tl-panel" id="tlPanel" tabindex="0" role="slider" aria-label="Timeline" aria-valuemin="2015" aria-valuemax="2027">
-                        <div class="tl-mask" aria-hidden="true">
-                            <div class="tl-axis"></div>
-                            <div class="tl-strip" id="tlStrip"></div>
-                        </div>
+                    <div class="tl-sky" id="tlPanel" tabindex="0" role="slider" aria-label="Timeline" aria-valuemin="2015" aria-valuemax="2027">
+                        <div class="tl-fit" id="tlFit" aria-hidden="true"><div class="tl-stage" id="tlStage"></div></div>
                         <div class="tl-readout" id="tlReadout" aria-hidden="true"></div>
-                        <div class="tl-pointer" id="tlPointer" aria-hidden="true"></div>
-                        <div class="tl-needle" aria-hidden="true"></div>
+                    </div>
+                    <div class="tl-controls">
+                        <button type="button" class="tl-btn" id="tlPrev" aria-label="Earlier"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button>
+                        <button type="button" class="tl-btn" id="tlMode" aria-pressed="false">Open the full dial (3D)</button>
+                        <button type="button" class="tl-btn" id="tlNext" aria-label="Later"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg></button>
                     </div>
                     <div class="tl-card" id="tlCard" aria-live="polite"></div>
                 </div>
             </div>
         </section>
 
-        <!-- ═══ ORIGAMI 2x2 GRID ═══ -->
-        <div class="origami-stage">
-            <div id="origami-grid">
-                <div class="origami-mask" aria-hidden="true"></div>
-                <div class="quarter q1" data-section="scientific" onclick="openQuarter('scientific', this)">
-                    <span class="jaffee" style="--bg:transparent;">
-                        <span class="a"></span>
-                        <span class="bc">
-                            <span class="b"></span>
-                            <span class="c"></span>
-                        </span>
-                    </span>
-                    <span class="quarter-label">🔬 Scientific Work</span>
+        <!-- ═══ FORTUNE TELLER (pick a flap, then a pocket) ═══ -->
+        <section class="ft-section" aria-label="Sections">
+            <div class="ft-wrap">
+                <div class="ft-step" id="ftStep">1 · Pick a flap</div>
+                <div class="ft-letters" id="ftLetters" aria-hidden="true"></div>
+                <div class="ft-zoomwrap" id="ftZoom">
+                    <div class="ft-sheet" id="ftSheet"></div>
                 </div>
-                <div class="quarter q2" data-section="creative" onclick="openQuarter('creative', this)">
-                    <span class="jaffee" style="--bg:transparent;">
-                        <span class="a"></span>
-                        <span class="bc">
-                            <span class="b"></span>
-                            <span class="c"></span>
-                        </span>
-                    </span>
-                    <span class="quarter-label">🎨 Creative Work</span>
-                </div>
-                <div class="quarter q3" data-section="practice" onclick="openQuarter('practice', this)">
-                    <span class="jaffee" style="--bg:transparent;">
-                        <span class="a"></span>
-                        <span class="bc">
-                            <span class="b"></span>
-                            <span class="c"></span>
-                        </span>
-                    </span>
-                    <span class="quarter-label">🎭 Practice</span>
-                </div>
-                <div class="quarter q4" data-section="skills" onclick="openQuarter('skills', this)">
-                    <span class="jaffee" style="--bg:transparent;">
-                        <span class="a"></span>
-                        <span class="bc">
-                            <span class="b"></span>
-                            <span class="c"></span>
-                        </span>
-                    </span>
-                    <span class="quarter-label">📋 Skills & Contact</span>
-                </div>
+                <button type="button" class="ft-btn" id="ftReset" hidden>Fold it back</button>
             </div>
-        </div>
+        </section>
     </main>
+
+    <!-- Focus view for drawings and portraits -->
+    <div class="fv" id="fv" role="dialog" aria-modal="true" aria-label="Drawings" tabindex="-1">
+        <button type="button" class="fv-close" id="fvClose" aria-label="Close">&times;</button>
+        <div class="fv-stage" id="fvStage"></div>
+        <div class="fv-bar" id="fvBar">
+            <button type="button" class="dr-nav" id="fvPrev" aria-label="Previous"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button>
+            <span class="dr-count" id="fvCount"></span>
+            <button type="button" class="dr-nav" id="fvNext" aria-label="Next"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg></button>
+        </div>
+    </div>
 
     <!-- ═══ SECTION OVERLAY (hidden until unfolded) ═══ -->
     <div id="section-overlay">
@@ -783,9 +827,10 @@
                     <h2 class="section-title">Creative work</h2>
                     <div class="projects-grid">
                         <!-- Sognetti -->
-                        <div class="project-card sg-card">
-                            <div class="sg-layout">
-                                <div class="sg-stage">
+                        <div class="project-card sg-card" id="card-sognetti">
+                            <div class="sg-stage">
+                                <button type="button" class="sg-cover" aria-label="Open Sognetti" onclick="toggleCreativeCard(event, this)"><img src="media/sognetti/sg-001.jpg" alt="Sognetti, cover"></button>
+                                <div class="sg-open">
                                     <div class="sg-book" id="sgBook"></div>
                                     <div class="sg-nav">
                                         <button type="button" class="sg-btn" id="sgPrev" aria-label="Previous pages"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg></button>
@@ -793,15 +838,15 @@
                                         <button type="button" class="sg-btn" id="sgNext" aria-label="Next pages"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg></button>
                                     </div>
                                 </div>
-                                <div style="padding:1.6rem 1.8rem 1.8rem;">
-                                    <div class="card-header-creative" onclick="toggleCreativeCard(event, this)">
-                                        <div style="display:flex; justify-content:space-between; align-items:center;">
-                                            <div class="project-title">Sognetti</div>
-                                            <span class="toggle-icon-creative">▼</span>
-                                        </div>
-                                    </div>
-                                    <div class="card-content-creative expanded">
-                                        <div class="sg-text">
+                            </div>
+                            <div class="card-header-creative" onclick="toggleCreativeCard(event, this)">
+                                <div style="display:flex; justify-content:space-between; align-items:center; padding:0.5rem 1.8rem 1rem 1.8rem;">
+                                    <div class="project-title">Sognetti</div>
+                                    <span class="toggle-icon-creative">▼</span>
+                                </div>
+                            </div>
+                            <div class="card-content-creative collapsed">
+                                <div class="sg-text" style="padding:0 1.8rem 1.8rem 1.8rem;">
                                             <div class="project-meta">2025–present · Author, Editor, Art director</div>
                                             <ul class="project-desc" style="list-style-type:disc; padding-left:1.2rem; margin-bottom:1.4rem;">
                                                 <li>Collective literary anthology</li>
@@ -825,13 +870,11 @@
                                                     <figcaption><em>The statues show apocalyptic beasts: winged bulls with dogs’ muzzles.</em> · Dream, 16 November 2024</figcaption>
                                                 </figure>
                                             </details>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
                         <!-- Passage technique -->
-                        <div class="project-card">
+                        <div class="project-card" id="card-passage">
                             <div class="card-header-creative" onclick="toggleCreativeCard(event, this)">
                                 <div class="image-placeholder">
                                     <img src="GRANDE_CARTE_FINALE_1.png" alt="Passage technique map preview" class="clickable-image"
@@ -852,19 +895,16 @@
                                         <li>Authentic cultural elements</li>
                                         <li>New in 2026: a fog-of-war map that lifts as the dialogue unfolds, 155 inked trails and 161 settlements, radio dialogue on a walkie-talkie, and a cold-open scene in the fog</li>
                                     </ul>
-                                    <div class="pt-gallery">
-                                        <img class="wide" src="media/passage/08_character_walks_trail.gif" alt="The Arpenteur walking an inked trail across the watercolour mountains" loading="lazy">
-                                        <img src="media/passage/03_dialogue_choice_radio.jpg" alt="Radio dialogue: the Arpenteur asks what to do, with three choices" loading="lazy">
-                                        <img src="media/passage/05_coldstart_breathing_choice.jpg" alt="Cold open in the fog: Breathe. You are breathing." loading="lazy">
-                                        <img src="media/passage/10_coldstart_golem_choice.jpg" alt="Cold open dialogue with a mud creature" loading="lazy">
-                                        <img src="media/passage/01_full_map_overview.jpg" alt="The full map: trails and settlements across the valleys, edged in fog" loading="lazy">
-                                        <img class="wide" src="Animation.gif" alt="Characters moving on the map" loading="lazy" onerror="this.style.display='none'">
+                                    <div class="pt-gallery" id="ptGallery">
+                                        <div class="pt-main" id="ptMain"></div>
+                                        <div class="pt-cap" id="ptCap"></div>
+                                        <div class="pt-thumbs" id="ptThumbs"></div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <!-- Count Goes Down and Out (GMTK Game Jam 2026) -->
-                        <div class="project-card">
+                        <div class="project-card" id="card-count">
                             <div class="card-header-creative" onclick="toggleCreativeCard(event, this)">
                                 <div class="image-placeholder" style="background:#0c0c0c;">
                                     <img src="media/count-goes-down-title.png" alt="Count Goes Down and Out title screen: the manor's arched windows and the Descend button" style="image-rendering:pixelated;" loading="lazy">
@@ -896,7 +936,8 @@
                     <h2 class="section-title">Scientific work</h2>
                     <div class="projects-grid">
                         <!-- PhD Thesis -->
-                        <div class="project-card">
+                        <div class="project-card" id="card-thesis">
+                            <div class="sci-cover fill" onclick="toggleCard(this.nextElementSibling)"><img src="media/science/thesis-cover.jpg" alt="Thesis cover: Evolvability and Organismal Architecture, with Bruegel's blind men and Bosch's St. John" loading="lazy"></div>
                             <div class="card-header" onclick="toggleCard(this)">
                                 <div class="project-title">PhD Thesis</div>
                                 <span class="toggle-icon">▶</span>
@@ -914,7 +955,8 @@
                             </div>
                         </div>
                         <!-- GECCO 2023 -->
-                        <div class="project-card">
+                        <div class="project-card" id="card-gecco">
+                            <div class="sci-cover" onclick="toggleCard(this.nextElementSibling)"><img src="media/science/gecco-facilitated-mutation.jpg" alt="Figure 1: original versus facilitated mutation probabilities per grammar non-terminal" loading="lazy"></div>
                             <div class="card-header" onclick="toggleCard(this)">
                                 <div class="project-title">Biological insights on grammar‑structured mutations improve fitness and diversity</div>
                                 <span class="toggle-icon">▶</span>
@@ -930,7 +972,8 @@
                             </div>
                         </div>
                         <!-- TREE 2022 -->
-                        <div class="project-card">
+                        <div class="project-card" id="card-tree">
+                            <div class="sci-cover" onclick="toggleCard(this.nextElementSibling)"><img src="media/science/evolvability-cake.jpg" alt="The evolvability cake: providing variation, shaping its effect, shaping selection" loading="lazy"></div>
                             <div class="card-header" onclick="toggleCard(this)">
                                 <div class="project-title">Capturing the facets of evolvability in a mechanistic framework</div>
                                 <span class="toggle-icon">▶</span>
@@ -946,7 +989,8 @@
                             </div>
                         </div>
                         <!-- Reverse Evolution -->
-                        <div class="project-card">
+                        <div class="project-card" id="card-dollo">
+                            <div class="sci-cover fill" onclick="toggleCard(this.nextElementSibling)"><img src="media/science/dollo-reverse-evolution.jpg" alt="Percentage of correct decisions over a million generations" loading="lazy"></div>
                             <div class="card-header" onclick="toggleCard(this)">
                                 <div class="project-title">Reverse Evolution & Phenotypic Plasticity</div>
                                 <span class="toggle-icon">▶</span>
@@ -962,7 +1006,8 @@
                             </div>
                         </div>
                         <!-- Social Environments -->
-                        <div class="project-card">
+                        <div class="project-card" id="card-crickets">
+                            <div class="sci-cover" onclick="toggleCard(this.nextElementSibling)"><img src="media/science/crickets-attractiveness.jpg" alt="Male cricket attractiveness across population densities" loading="lazy"></div>
                             <div class="card-header" onclick="toggleCard(this)">
                                 <div class="project-title">Social Environments & Mate Attraction</div>
                                 <span class="toggle-icon">▶</span>
@@ -978,7 +1023,8 @@
                             </div>
                         </div>
                         <!-- Google Scholar -->
-                        <div class="project-card">
+                        <div class="project-card" id="card-scholar">
+                            <div class="sci-cover video"><iframe src="https://www.youtube-nocookie.com/embed/53JS9jIaBVI" title="MARM Lab video" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen loading="lazy"></iframe></div>
                             <div class="card-header" onclick="toggleCard(this)">
                                 <div class="project-title">Google Scholar</div>
                                 <span class="toggle-icon">▶</span>
@@ -1001,11 +1047,11 @@
                 <div class="container">
                     <h2 class="section-title">Practice</h2>
                     <div class="two-col">
-                        <div class="practice-card" style="background:white; border-radius:24px; padding:1.8rem; box-shadow:0 6px 12px -6px rgba(0,0,0,0.05);">
+                        <div class="practice-card" id="card-teaching" style="background:white; border-radius:24px; padding:1.8rem; box-shadow:0 6px 12px -6px rgba(0,0,0,0.05);">
                             <h3 style="font-size:1.5rem; margin-bottom:0.5rem;">🧩 Teaching (2021–2023)</h3>
                             <p style="color:#4f4a43;">Volunteer teacher — game programming for children. Weekly Unity/C# workshops for ages 6–12; progressive learning sequences combining craft, curiosity, and play.</p>
                         </div>
-                        <div class="practice-card" style="background:white; border-radius:24px; padding:1.8rem; box-shadow:0 6px 12px -6px rgba(0,0,0,0.05);">
+                        <div class="practice-card" id="card-ttrpg" style="background:white; border-radius:24px; padding:1.8rem; box-shadow:0 6px 12px -6px rgba(0,0,0,0.05);">
                             <h3 style="font-size:1.5rem; margin-bottom:0.5rem;">🎭 TTRPG & theatre (2009–present)</h3>
                             <p style="color:#4f4a43;">Campaign GMing and homebrew worlds; theatre writing, acting, and directing — including immersive one‑spectator performances.</p>
                         </div>
@@ -1019,13 +1065,13 @@
                     <h2 class="section-title">Skills & education</h2>
                     <div class="two-col">
                         <div>
-                            <table class="skill-table">
+                            <table class="skill-table" id="skills-table">
                                 <tr><th>Narrative</th><td>Script editing, dialogue trees, interactive narrative design, worldbuilding, editorial leadership</td></tr>
                                 <tr><th>Technical</th><td>Unity (C#), Python, LangGraph, text-based scripting, multimodal (sound + image)</td></tr>
                                 <tr><th>Collaboration</th><td>Iteration, feedback loops, documentation, cross‑discipline communication</td></tr>
                             </table>
                         </div>
-                        <div>
+                        <div id="skills-edu">
                             <div class="education-item"><strong>PhD in Computational Biology</strong><br>University of Groningen (2019–2024)</div>
                             <div class="education-item"><strong>Erasmus Mundus Master's</strong><br>LMU Munich, Groningen, Montpellier (2016–2018)</div>
                             <div style="margin-top:1rem; font-style:italic; color:#6b5a4b;">📄 References available upon request.</div>
@@ -1034,7 +1080,7 @@
                 </div>
                 <div class="container" style="margin-top:3rem;">
                     <h2 class="section-title">Contact</h2>
-                    <div class="contact-links">
+                    <div class="contact-links" id="contact">
                         <a href="mailto:stefano.tiso.evo@gmail.com">📧 stefano.tiso.evo@gmail.com</a>
                         <a href="https://www.linkedin.com/in/stefano-tiso-evo-data" target="_blank">🔗 LinkedIn</a>
                         <a href="https://github.com/swom" target="_blank">🐙 GitHub</a>
@@ -1043,159 +1089,6 @@
             </section>
         </div>
     </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function(){
-
-            // ORIGAMI: quarter fold -> small center square -> open overlay
-            const origami = document.getElementById('origami-grid');
-            const quarters = Array.from(document.querySelectorAll('.quarter'));
-            const overlay = document.getElementById('section-overlay');
-            function clearActiveSections(){
-                document.querySelectorAll('.overlay-content section').forEach(s=>s.classList.remove('active-section'));
-            }
-
-            // Add folded CSS rules dynamically (3D corner-fold effect)
-            const style = document.createElement('style');
-            style.textContent = `
-                #origami-grid { perspective: 2000px; }
-                .quarter { transform-style: preserve-3d; backface-visibility: visible; transition: transform 0.8s cubic-bezier(.25,.1,.15,1), box-shadow 0.5s; }
-                /* set transform-origin at the midpoint of each outer edge */
-                .quarter.q1 { transform-origin: 0 50%; }   /* left edge midpoint */
-                .quarter.q2 { transform-origin: 50% 0; }   /* top edge midpoint */
-                .quarter.q3 { transform-origin: 100% 50%; } /* right edge midpoint */
-                .quarter.q4 { transform-origin: 50% 100%; } /* bottom edge midpoint */
-                /* folded rotations that bend corners outward from the centre */
-                .quarter.folded.q1 { transform: rotate3d(0, 1, 0, -180deg); box-shadow: 0 28px 56px rgba(0,0,0,0.12); z-index:6; }
-                .quarter.folded.q2 { transform: rotate3d(1, 0, 0, 180deg); box-shadow: 0 28px 56px rgba(0,0,0,0.12); z-index:6; }
-                .quarter.folded.q3 { transform: rotate3d(0, 1, 0, 180deg); box-shadow: 0 28px 56px rgba(0,0,0,0.12); z-index:6; }
-                .quarter.folded.q4 { transform: rotate3d(1, 0, 0, -180deg); box-shadow: 0 28px 56px rgba(0,0,0,0.12); z-index:6; }
-                /* unfolded outward motion when closing overlay */
-                .quarter.unfold-active { transition: transform 0.7s cubic-bezier(.22,.9,.27,1), opacity 0.5s; }
-                /* Jaffee-style split flap structure */
-                .quarter .jaffee { position:absolute; inset:0; display:block; transform-style: preserve-3d; cursor: pointer; }
-                .quarter .jaffee img { opacity:0; }
-                .quarter .jaffee .a,
-                .quarter .jaffee .b,
-                .quarter .jaffee .c { position:absolute; top:0; height:100%; background-size:cover; background-repeat:no-repeat; backface-visibility:visible; }
-                .quarter .jaffee .a { left:0; width:50%; background-color: transparent; }
-                .quarter .jaffee .bc { position:absolute; left:50%; top:0; width:50%; height:100%; display:inline-flex; transform-origin:left center; transform-style:preserve-3d; }
-                .quarter .jaffee .b, .quarter .jaffee .c { position:relative; width:50%; }
-                .quarter .jaffee .b:after { content:""; position:absolute; inset:0; background:rgba(0,0,0,0.08); transform:rotateY(180deg) translateZ(1px); backface-visibility:hidden; }
-
-                /* per-quarter hinge orientations (bc transform-origin and rotation axis) */
-                .quarter.q1 .jaffee .bc { transform-origin: left center; }
-                .quarter.q1.folded .jaffee .bc { transform: rotate3d(0, 1, 0, -180deg); }
-                .quarter.q1.folded .jaffee .c { transform: rotate3d(0, 1, 0, -180deg); }
-
-                .quarter.q2 .jaffee .bc { transform-origin: left center; }
-                .quarter.q2.folded .jaffee .bc { transform: rotate3d(1, 0, 0, 180deg); }
-                .quarter.q2.folded .jaffee .c { transform: rotate3d(1, 0, 0, 180deg); }
-
-                .quarter.q3 .jaffee .bc { transform-origin: left center; }
-                .quarter.q3.folded .jaffee .bc { transform: rotate3d(0, 1, 0, 180deg); }
-                .quarter.q3.folded .jaffee .c { transform: rotate3d(0, 1, 0, 180deg); }
-
-                .quarter.q4 .jaffee .bc { transform-origin: left center; }
-                .quarter.q4.folded .jaffee .bc { transform: rotate3d(1, 0, 0, -180deg); }
-                .quarter.q4.folded .jaffee .c { transform: rotate3d(1, 0, 0, -180deg); }
-                /* color the split pieces with the quarter palette */
-                .quarter.q1 .jaffee .a, .quarter.q1 .jaffee .b, .quarter.q1 .jaffee .c { background: var(--q1); }
-                .quarter.q2 .jaffee .a, .quarter.q2 .jaffee .b, .quarter.q2 .jaffee .c { background: var(--q2); }
-                .quarter.q3 .jaffee .a, .quarter.q3 .jaffee .b, .quarter.q3 .jaffee .c { background: var(--q3); }
-                .quarter.q4 .jaffee .a, .quarter.q4 .jaffee .b, .quarter.q4 .jaffee .c { background: var(--q4); }
-                /* keyframe unfold animations from folded -> outward -> flat */
-                @keyframes unfold-q1 { 
-                    0% { transform: rotate3d(0, 1, 0, -180deg); }
-                    50% { transform: rotate3d(0, 1, 0, -60deg); }
-                    100% { transform: none; }
-                }
-                @keyframes unfold-q2 { 
-                    0% { transform: rotate3d(1, 0, 0, 180deg); }
-                    50% { transform: rotate3d(1, 0, 0, 60deg); }
-                    100% { transform: none; }
-                }
-                @keyframes unfold-q3 { 
-                    0% { transform: rotate3d(0, 1, 0, 180deg); }
-                    50% { transform: rotate3d(0, 1, 0, 60deg); }
-                    100% { transform: none; }
-                }
-                @keyframes unfold-q4 { 
-                    0% { transform: rotate3d(1, 0, 0, -180deg); }
-                    50% { transform: rotate3d(1, 0, 0, -60deg); }
-                    100% { transform: none; }
-                }
-                /* Apply keyframe unfold to the inner .bc element per quarter */
-                .quarter.q1 .jaffee .bc.unfold-anim { animation: unfold-q1 0.85s cubic-bezier(.22,.9,.27,1) forwards; }
-                .quarter.q2 .jaffee .bc.unfold-anim { animation: unfold-q2 0.85s cubic-bezier(.22,.9,.27,1) forwards; }
-                .quarter.q3 .jaffee .bc.unfold-anim { animation: unfold-q3 0.85s cubic-bezier(.22,.9,.27,1) forwards; }
-                .quarter.q4 .jaffee .bc.unfold-anim { animation: unfold-q4 0.85s cubic-bezier(.22,.9,.27,1) forwards; }
-            `;
-            document.head.appendChild(style);
-
-            let activeQuarter = null;
-            window.openQuarter = function(sectionId, el){
-                // only the clicked quarter folds toward the center (tacked)
-                if(origami.dataset.animating === '1') return;
-                origami.dataset.animating = '1';
-                // clear any previous
-                quarters.forEach(q=> q.classList.remove('unfold-active'));
-                // find element if string passed
-                const clicked = (el instanceof Element) ? el : document.querySelector('.quarter[data-section="'+sectionId+'"]');
-                if(!clicked) { origami.dataset.animating = '0'; return; }
-                activeQuarter = clicked;
-                // add folded class to clicked quarter only
-                clicked.classList.add('folded');
-
-                // after fold completes, reveal overlay and show requested section
-                setTimeout(()=>{
-                    clearActiveSections();
-                    const target = document.getElementById(sectionId + '-section');
-                    if(target) target.classList.add('active-section');
-                    overlay.classList.add('active');
-                    // keep grid visible (so the tacked corner remains visible behind overlay)
-                    origami.classList.remove('hidden');
-                    origami.dataset.animating = '0';
-                }, 520);
-            };
-
-            window.closeOverlay = function(){
-                // close overlay and perform per-quarter unfold animation
-                overlay.classList.remove('active');
-                origami.classList.remove('hidden');
-                if(origami.dataset.animating === '1') return;
-                origami.dataset.animating = '1';
-                const q = activeQuarter;
-                if(q){
-                    // trigger keyframe animation on the inner bc element
-                    const inner = q.querySelector('.jaffee .bc');
-                    if(inner){
-                        inner.classList.add('unfold-anim');
-                        const onEnd = function(){
-                            inner.classList.remove('unfold-anim');
-                            q.classList.remove('folded');
-                            inner.removeEventListener('animationend', onEnd);
-                            activeQuarter = null;
-                            origami.dataset.animating = '0';
-                        };
-                        inner.addEventListener('animationend', onEnd);
-                    } else {
-                        q.classList.remove('folded');
-                        activeQuarter = null;
-                        origami.dataset.animating = '0';
-                    }
-                } else {
-                    origami.dataset.animating = '0';
-                }
-                clearActiveSections();
-            };
-
-            // small helpers for lightbox & cards used elsewhere
-            window.closeLightbox = function(){
-                const lb = document.getElementById('lightbox'); if(lb) lb.classList.remove('active');
-            };
-        });
-    </script>
 
     <footer>
         <div class="container">Stefano Tiso — Narrative design · playful learning</div>
@@ -1245,214 +1138,262 @@
             gImg.addEventListener('touchstart', e => { gImg.dataset.startX = e.changedTouches[0].screenX; });
             gImg.addEventListener('touchend', e => { const dx = (gImg.dataset.startX||0) - e.changedTouches[0].screenX; if (dx>50) galleryNext(); if (dx<-50) galleryPrev(); });
 
-            /* ── BANNER & PORTRAIT SLIDERS ── */
-            function setupBannerSlider(images) {
-                const c = document.querySelector('.banner-container'); if (!c||images.length<2) return;
-                galleryState.bannerImages = images; c.innerHTML = ''; c.style.position='relative'; c.style.overflow='hidden';
-                const a = document.createElement('img'), b = document.createElement('img');
-                
-                a.src=images[0]; b.src=images[1]; a.className=b.className='banner-image';
-                const s = {position:'absolute',top:'0',width:'100%',height:'auto',maxHeight:'33vh',objectFit:'contain',display:'block',transition:'transform 0.5s ease-in-out'};
-                Object.assign(a.style,s); Object.assign(b.style,s); a.style.left='0'; b.style.left='-100%'; c.append(a,b);
-                const setH = () => { const h = a.offsetHeight||b.offsetHeight; if(h) c.style.height=h+'px'; };
-                a.onload=setH; b.onload=setH; setH();
-                let active=a, hidden=b, nextIdx=1, total=images.length;
-                setInterval(()=>{
-                    active.style.transform='translateX(100%)'; hidden.style.transform='translateX(100%)';
-                    setTimeout(()=>{
-                        active.style.transition='none'; hidden.style.transition='none'; active.src=images[nextIdx]; nextIdx=(nextIdx+1)%total;
-                        active.style.transform=''; hidden.style.transform=''; active.style.left='-100%'; hidden.style.left='0';
-                        [active,hidden]=[hidden,active]; hidden.src=images[nextIdx]; setH();
-                        setTimeout(()=>{ active.style.transition='transform 0.5s ease-in-out'; hidden.style.transition='transform 0.5s ease-in-out'; },10);
-                    },500);
-                },5000);
-                c.addEventListener('click', e => {
-                    const t = e.target; if (t.tagName==='IMG' && t.classList.contains('banner-image')) {
-                        let idx = galleryState.bannerImages.findIndex(i=>t.src.endsWith(i)); if(idx<0) idx=0;
-                        openGallery(galleryState.bannerImages, idx, 'banner'); e.stopPropagation();
-                    }
+            /* ── DRAWINGS: sliding-card drum, plus a focus view with the same drum ── */
+            // The card facing you is full size; the others turn away and fade, wrapping round
+            function placeDrum(cards, c, step, onEach) {
+                const N = cards.length;
+                cards.forEach((card, i) => {
+                    let d = ((i - c) % N + N) % N; if (d > N / 2) d -= N;
+                    const ad = Math.abs(d), k = Math.min(ad, 3);
+                    card.style.transform = `translateX(${Math.sign(d) * step[k]}px) rotateY(${-d * 32}deg) scale(${[1, 0.86, 0.74, 0.64][k]})`;
+                    card.style.opacity = ad > 3 ? 0 : [1, 0.85, 0.55, 0.25][k];
+                    card.style.zIndex = 10 - k;
+                    card.style.pointerEvents = ad > 3 ? 'none' : 'auto';
+                    card.tabIndex = ad === 0 ? 0 : -1;
+                    card.classList.toggle('on', ad === 0);
+                    // only fetch the drawings that can be seen
+                    const img = card.firstChild;
+                    if (ad <= 3 && !img.getAttribute('src')) img.src = img.dataset.src;
+                    if (onEach) onEach(card, ad);
                 });
             }
-            function setupPortraitSlider(images) {
-                const c = document.querySelector('.hero-portrait');
-                if (!c || images.length < 2) return;
-                
-                galleryState.portraitImages = images;
-                
-                // Clear and set circular container
-                c.innerHTML = '';
-                c.style.position = 'relative';
-                c.style.width = '260px';
-                c.style.height = '260px';
-                c.style.borderRadius = '50%';
-                c.style.overflow = 'visible';
-                c.style.margin = '0 auto';
-                c.style.background = 'transparent';
-                
-                // Create two images
-                const a = document.createElement('img');
-                const b = document.createElement('img');
-                a.src = images[0];
-                b.src = images[1];
-                a.className = b.className = 'portrait-img';
-                
-                const baseStyle = {
-                    position: 'absolute',
-                    width: '220px',
-                    height: '220px',
-                    borderRadius: '50%',
-                    objectFit: 'cover',
-                    boxShadow: '0 12px 24px -8px rgba(0,0,0,0.3)',
-                    top: '50%',
-                    left: '50%',
-                    transition: 'transform 0.4s ease-in-out, opacity 0.4s ease-in-out'
-                };
-                Object.assign(a.style, baseStyle);
-                Object.assign(b.style, baseStyle);
-                
-                // Initially: a centered and opaque, b hidden off‑screen and invisible
-                a.style.transform = 'translate(-50%, -50%)';
-                a.style.opacity = '1';
-                b.style.transform = 'translate(150%, -50%)';  // far right, outside container
-                b.style.opacity = '0';
-                
-                c.appendChild(a);
-                c.appendChild(b);
-                
-                let active = a;
-                let hidden = b;
-                let nextIndex = 2;
-                const total = images.length;
-                
-                setInterval(() => {
-                    // Slide active out to left and fade out
-                    active.style.transform = 'translate(-150%, -50%)';
-                    active.style.opacity = '0';
-                    
-                    // Bring hidden in from right and fade in
-                    hidden.style.transform = 'translate(-50%, -50%)';
-                    hidden.style.opacity = '1';
-                    
-                    setTimeout(() => {
-                        // After transition, swap roles without transition
-                        active.style.transition = 'none';
-                        hidden.style.transition = 'none';
-                        
-                        // Reset active (now the hidden one) to right, invisible
-                        active.src = images[nextIndex];
-                        nextIndex = (nextIndex + 1) % total;
-                        active.style.transform = 'translate(150%, -50%)';
-                        active.style.opacity = '0';
-                        
-                        // Hidden (which became visible) stays centered and opaque
-                        hidden.style.transform = 'translate(-50%, -50%)';
-                        hidden.style.opacity = '1';
-                        
-                        // Swap references
-                        [active, hidden] = [hidden, active];
-                        
-                        // Re‑enable transitions
-                        setTimeout(() => {
-                            active.style.transition = 'transform 0.4s ease-in-out, opacity 0.4s ease-in-out';
-                            hidden.style.transition = 'transform 0.4s ease-in-out, opacity 0.4s ease-in-out';
-                        }, 10);
-                    }, 400); // match transition duration
-                }, 4000); // interval between slides
-                
-                // Lightbox click
-                c.addEventListener('click', (e) => {
-                    const t = e.target;
-                    if (t.tagName === 'IMG' && t.classList.contains('portrait-img')) {
-                        let idx = galleryState.portraitImages.findIndex(img => t.src.endsWith(img));
-                        if (idx < 0) idx = 0;
-                        openGallery(galleryState.portraitImages, idx, 'portrait');
-                        e.stopPropagation();
-                    }
+            function buildCards(host, list, alt) {
+                host.innerHTML = '';
+                return list.map((src, i) => {
+                    const card = document.createElement('div');
+                    card.className = 'dr-card'; card.setAttribute('role', 'button');
+                    const img = document.createElement('img');
+                    img.dataset.src = src; img.alt = `${alt} ${i + 1}`; img.draggable = false;
+                    card.appendChild(img); host.appendChild(card);
+                    return card;
                 });
             }
-            
-            window.openQuarter = function(sectionId) {
-                if (currentSection === sectionId) return;
-                const grid = document.getElementById('origami-grid');
-                const quarterEl = document.querySelector(`.quarter[data-section="${sectionId}"]`);
-                if (!grid || !quarterEl) return;
-
-                // 1. Identify which triangle was clicked and its colour
-                const isQ1 = quarterEl.classList.contains('q1');
-                const isQ2 = quarterEl.classList.contains('q2');
-                const isQ3 = quarterEl.classList.contains('q3');
-                const isQ4 = quarterEl.classList.contains('q4');
-
-                // 2. Create the mirror flap
-                const flap = document.createElement('div');
-                flap.className = 'unfold-flap';
-                flap.style.backgroundColor = getComputedStyle(quarterEl).backgroundColor;
-                grid.appendChild(flap);
-
-                // 3. Set the flap’s clip‑path to the complementary triangle
-                //    (the one that completes the square with the clicked quarter)
-                if (isQ1) {
-                    // q1 is left triangle → complement is right triangle (q3)
-                    flap.style.clipPath = 'polygon(100% 50%, 50% 0%, 50% 50%)';
-                    flap.style.transformOrigin = '0% 50%';    // hinge at the left edge of the flap (the diagonal)
-                    flap.style.transform = 'rotateY(90deg)';  // start folded
-                } else if (isQ2) {
-                    // q2 is top triangle → complement is bottom (q4)
-                    flap.style.clipPath = 'polygon(50% 100%, 100% 50%, 50% 50%)';
-                    flap.style.transformOrigin = '50% 0%';
-                    flap.style.transform = 'rotateX(-90deg)';
-                } else if (isQ3) {
-                    // q3 is right → complement is left (q1)
-                    flap.style.clipPath = 'polygon(0% 50%, 50% 100%, 50% 50%)';
-                    flap.style.transformOrigin = '100% 50%';
-                    flap.style.transform = 'rotateY(-90deg)';
-                } else if (isQ4) {
-                    // q4 is bottom → complement is top (q2)
-                    flap.style.clipPath = 'polygon(50% 0%, 0% 50%, 50% 50%)';
-                    flap.style.transformOrigin = '50% 100%';
-                    flap.style.transform = 'rotateX(90deg)';
+            function onSwipe(el, fn) {
+                let x0 = null;
+                el.addEventListener('touchstart', e => { x0 = e.changedTouches[0].clientX; }, { passive: true });
+                el.addEventListener('touchend', e => {
+                    if (x0 === null) return;
+                    const dx = e.changedTouches[0].clientX - x0; x0 = null;
+                    if (Math.abs(dx) > 40) { e.preventDefault(); fn(dx < 0 ? 1 : -1); }
+                });
+            }
+            function initDrawings(banners, portraits) {
+                const host = document.getElementById('drDrum'); if (!host) return;
+                const count = document.getElementById('drCount');
+                const cards = buildCards(host, banners, 'Drawing');
+                let bi = 0, touched = false;
+                const small = () => host.clientWidth < 600;
+                function show() {
+                    const k = small() ? 0.8 : 1;
+                    cards.forEach(c => { c.style.width = 240 * k + 'px'; c.style.height = 300 * k + 'px'; c.style.margin = `${-150 * k}px 0 0 ${-120 * k}px`; });
+                    placeDrum(cards, bi, [0, 210, 360, 450].map(s => s * k), (card, ad) => card.setAttribute('aria-label', ad === 0 ? 'Open this drawing' : 'Show this drawing'));
+                    count.textContent = `${bi + 1} / ${banners.length}`;
                 }
-
-                // 4. Force a reflow, then open the flap
-                flap.getBoundingClientRect();
-                requestAnimationFrame(() => {
-                    flap.classList.add('open');
+                const move = d => { touched = true; bi = (bi + d + banners.length) % banners.length; show(); };
+                cards.forEach((card, i) => {
+                    card.addEventListener('click', e => { e.stopPropagation(); touched = true; if (i === bi) focusView.open(banners, i, 'Drawing'); else { bi = i; show(); } });
+                    card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click(); } });
                 });
+                document.getElementById('drPrev').addEventListener('click', () => move(-1));
+                document.getElementById('drNext').addEventListener('click', () => move(1));
+                host.addEventListener('keydown', e => { if (e.key === 'ArrowLeft') move(-1); if (e.key === 'ArrowRight') move(1); });
+                onSwipe(host, move);
+                // the drawings turn on their own until someone touches them
+                setInterval(() => { if (!touched && !focusView.isOpen() && !document.hidden) { bi = (bi + 1) % banners.length; show(); } }, 4500);
+                window.addEventListener('resize', show);
+                show();
+                const portrait = document.getElementById('heroPortrait');
+                if (portrait) {
+                    portrait.addEventListener('click', e => { e.stopPropagation(); focusView.open(portraits, 0, 'Portrait'); });
+                    portrait.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); focusView.open(portraits, 0, 'Portrait'); } });
+                }
+            }
+            const focusView = (function () {
+                const fv = document.getElementById('fv'), stage = document.getElementById('fvStage'), bar = document.getElementById('fvBar'), cnt = document.getElementById('fvCount');
+                let list = [], cards = [], fi = 0, kind = '', back = null;
+                function show() {
+                    // fit the big cards to the window, keeping C's proportions
+                    const vw = window.innerWidth, vh = window.innerHeight;
+                    const ratio = kind === 'Portrait' ? 440 / 600 : 480 / 600;
+                    let h = Math.min(600, vh - 190), w = h * ratio;
+                    if (w > vw * 0.8) { w = vw * 0.8; h = w / ratio; }
+                    const k = w / (kind === 'Portrait' ? 440 : 480);
+                    const top = Math.max(70, (vh - h - 80) / 2);
+                    stage.style.top = top + 'px'; stage.style.height = h + 'px';
+                    bar.style.top = (top + h + 20) + 'px';
+                    cards.forEach(c => { c.style.width = w + 'px'; c.style.height = h + 'px'; c.style.margin = `${-h / 2}px 0 0 ${-w / 2}px`; });
+                    placeDrum(cards, fi, [0, 330, 560, 720].map(s => s * k));
+                    cnt.textContent = `${fi + 1} / ${list.length}`;
+                }
+                const move = d => { fi = (fi + d + list.length) % list.length; show(); };
+                function open(l, i, what) {
+                    list = l; fi = i; kind = what; back = document.activeElement;
+                    fv.setAttribute('aria-label', what === 'Portrait' ? 'Portraits' : 'Drawings');
+                    cards = buildCards(stage, list, what);
+                    cards.forEach((card, j) => card.addEventListener('click', e => { e.stopPropagation(); if (j !== fi) { fi = j; show(); } }));
+                    fv.classList.add('active'); document.body.style.overflow = 'hidden';
+                    show(); fv.focus();
+                }
+                function close() {
+                    fv.classList.remove('active'); stage.innerHTML = ''; cards = [];
+                    if (!document.getElementById('section-overlay').classList.contains('active')) document.body.style.overflow = '';
+                    if (back && back.focus) back.focus();
+                }
+                fv.addEventListener('click', close);
+                bar.addEventListener('click', e => e.stopPropagation());
+                document.getElementById('fvClose').addEventListener('click', e => { e.stopPropagation(); close(); });
+                document.getElementById('fvPrev').addEventListener('click', () => move(-1));
+                document.getElementById('fvNext').addEventListener('click', () => move(1));
+                fv.addEventListener('keydown', e => {
+                    if (e.key === 'Escape') { e.stopPropagation(); close(); }
+                    if (e.key === 'ArrowLeft') move(-1);
+                    if (e.key === 'ArrowRight') move(1);
+                });
+                onSwipe(stage, move);
+                window.addEventListener('resize', () => { if (fv.classList.contains('active')) show(); });
+                return { open, close, isOpen: () => fv.classList.contains('active') };
+            })();
 
-                // 5. After the flap has opened, lift the square into the overlay
-                setTimeout(() => {
-                    // Hide the whole grid
-                    grid.classList.add('hidden');
-                    // Show the overlay
-                    Object.values(sections).forEach(s => s.classList.remove('active-section'));
-                    if (sections[sectionId]) {
-                        sections[sectionId].classList.add('active-section');
-                        currentSection = sectionId;
-                    }
-                    overlay.classList.add('active');
-                    document.body.style.overflow = 'hidden';
-                    initPdfPreviews();
-
-                    // Clean up the flap and grid
-                    if (grid.contains(flap)) grid.removeChild(flap);
-                    grid.classList.remove('hidden');
-                }, 650);   // matches the 0.6s transition + small buffer
-            };
-
-            window.closeOverlay = function() {
+            /* ── SECTION OVERLAY: grows out of the paper (or the middle of the window) to fill it ── */
+            const overlay = document.getElementById('section-overlay');
+            let overlayFrom = null, overlayTimer = null;
+            function insetOf(r) { return `inset(${r.top.toFixed(0)}px ${(window.innerWidth - r.right).toFixed(0)}px ${(window.innerHeight - r.bottom).toFixed(0)}px ${r.left.toFixed(0)}px round 24px)`; }
+            function openSection(sectionId, opts) {
+                opts = opts || {};
+                const target = document.getElementById(sectionId + '-section'); if (!target) return;
+                clearTimeout(overlayTimer);
+                const r = opts.from ? opts.from.getBoundingClientRect() : null;
+                overlayFrom = r && r.bottom > 0 && r.top < window.innerHeight ? insetOf(r) : 'inset(35% 35% 35% 35% round 24px)';
+                if (!overlay.classList.contains('active')) {
+                    overlay.style.transition = 'none'; overlay.style.clipPath = overlayFrom;
+                    overlay.getBoundingClientRect(); overlay.style.transition = '';
+                }
+                document.querySelectorAll('.overlay-content section').forEach(s => s.classList.remove('active-section'));
+                target.classList.add('active-section');
+                overlay.classList.add('active'); overlay.style.clipPath = 'inset(0px 0px 0px 0px round 0px)';
+                overlay.scrollTop = 0; document.body.style.overflow = 'hidden';
+                const pick = opts.pick && document.getElementById(opts.pick);
+                if (pick) {
+                    // the fortune: open that card and bring it into view once the page has grown
+                    const sci = pick.querySelector('.card-content-inner.collapsed');
+                    if (sci) toggleCard(sci.previousElementSibling);
+                    const cre = pick.querySelector('.card-content-creative.collapsed');
+                    if (cre) toggleCreativeCard({ stopPropagation() {} }, pick.querySelector('.card-header-creative'));
+                    overlayTimer = setTimeout(() => {
+                        pick.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        pick.classList.remove('ft-fortune'); void pick.offsetWidth; pick.classList.add('ft-fortune');
+                    }, 1000);
+                }
+            }
+            window.openQuarter = function (sectionId) { openSection(sectionId, {}); };
+            window.closeOverlay = function () {
+                if (!overlay.classList.contains('active')) return;
+                clearTimeout(overlayTimer);
+                overlay.style.clipPath = overlayFrom || 'inset(35% 35% 35% 35% round 24px)';
                 overlay.classList.remove('active');
                 document.body.style.overflow = '';
-                currentSection = null;
-
-                const grid = document.getElementById('origami-grid');
-                if (grid) {
-                    // Remove any leftover flaps
-                    grid.querySelectorAll('.unfold-flap').forEach(f => f.remove());
-                    grid.classList.remove('hidden');
-                }
+                overlayTimer = setTimeout(() => {
+                    document.querySelectorAll('.overlay-content section').forEach(s => s.classList.remove('active-section'));
+                    if (window.resetFortune) window.resetFortune();
+                }, 700);
             };
-            // Close with Escape
-            document.addEventListener('keydown', e => { if (e.key==='Escape' && overlay.classList.contains('active')) closeOverlay(); });
+            document.addEventListener('keydown', e => { if (e.key === 'Escape' && overlay.classList.contains('active')) closeOverlay(); });
+
+            /* ── FORTUNE TELLER: pick a flap, it spells the word, pick a pocket, it unfolds and zooms into the page ── */
+            function initFortune() {
+                const sheet = document.getElementById('ftSheet'); if (!sheet) return;
+                const D = [
+                    { k: 'L', word: 'Science', label: '🔬 Scientific Work', section: 'scientific', base: '#e5d8c4', dark: '#d6c5aa', lx: '25%', ly: '50%',
+                      items: [['PhD thesis', 'card-thesis'], ['Grammar mutations', 'card-gecco'], ['Evolvability', 'card-tree'], ['All papers', 'card-scholar']] },
+                    { k: 'T', word: 'Creative', label: '🎨 Creative Work', section: 'creative', base: '#dcccb3', dark: '#cdb995', lx: '50%', ly: '25%',
+                      items: [['Sognetti', 'card-sognetti'], ['Passage technique', 'card-passage'], ['Count Goes Down', 'card-count'], ['All creative work', null]] },
+                    { k: 'R', word: 'Practice', label: '🎭 Practice', section: 'practice', base: '#d3c0a2', dark: '#c3ac88', lx: '75%', ly: '50%',
+                      items: [['Teaching', 'card-teaching'], ['Tabletop RPGs', 'card-ttrpg'], ['Theatre', 'card-ttrpg'], ['All practice', null]] },
+                    { k: 'B', word: 'Skills', label: '📋 Skills & Contact', section: 'skills', base: '#cab491', dark: '#b9a17a', lx: '50%', ly: '75%',
+                      items: [['Narrative', 'skills-table'], ['Technical', 'skills-table'], ['Education', 'skills-edu'], ['Contact', 'contact']] }
+                ];
+                // pockets: top/bottom hold items 0 and 1, left/right hold items 2 and 3
+                const SLOT = { T: 0, B: 1, L: 2, R: 3 };
+                const POS = { T: ['50%', '33%'], B: ['50%', '67%'], L: ['33%', '50%'], R: ['67%', '50%'] };
+                const stepEl = document.getElementById('ftStep'), lettersEl = document.getElementById('ftLetters'), zoom = document.getElementById('ftZoom'), resetBtn = document.getElementById('ftReset');
+                let st = { sec: null, phase: 'closed', n: 0, pumping: false, picked: null, stage: null }, timers = [];
+                const set = patch => { st = Object.assign({}, st, patch); render(); };
+                const stop = () => { timers.forEach(clearTimeout); timers = []; };
+                sheet.innerHTML = '<div class="ft-inside"></div>';
+                const pockets = ['L', 'T', 'R', 'B'].map(k => {
+                    const w = document.createElement('div'); w.className = 'ft-pocket';
+                    const b = document.createElement('button'); b.type = 'button'; b.className = 'ft-in ft-in-' + k; b.tabIndex = -1;
+                    const l = document.createElement('div'); l.className = 'ft-in-label'; l.style.left = POS[k][0]; l.style.top = POS[k][1];
+                    w.append(b, l); sheet.appendChild(w);
+                    b.addEventListener('click', () => pickPocket(k));
+                    return { k, b, l };
+                });
+                const crease = document.createElement('div'); crease.className = 'ft-crease'; sheet.appendChild(crease);
+                const shade = (side, base, dark) => `linear-gradient(${{ L: '90deg', R: '270deg', T: '180deg', B: '0deg' }[side]}, ${base} 0%, ${base} 30%, ${dark} 50%, rgba(0,0,0,0) 50.1%), repeating-linear-gradient(37deg, rgba(255,255,255,0.05) 0 2px, transparent 2px 5px), ${base}`;
+                const flaps = D.map((d, idx) => {
+                    const flap = document.createElement('div'); flap.className = 'ft-flap ft-' + d.k;
+                    const front = document.createElement('div'); front.className = 'ft-face ft-front'; front.setAttribute('role', 'button'); front.tabIndex = 0;
+                    front.setAttribute('aria-label', 'Pick ' + d.label.replace(/^\S+\s/, '')); front.style.background = shade(d.k, d.base, d.dark);
+                    front.innerHTML = `<span class="ft-label" style="left:${d.lx};top:${d.ly}">${d.label.replace('&', '&amp;')}</span>`;
+                    const back = document.createElement('div'); back.className = 'ft-face ft-back'; back.style.background = `linear-gradient(rgba(255,255,255,0.18), rgba(0,0,0,0.04)), ${d.dark}`;
+                    flap.append(front, back); sheet.appendChild(flap);
+                    const pick = () => { if (st.sec === null) spell(idx); };
+                    front.addEventListener('click', pick);
+                    front.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); } });
+                    return { d, flap };
+                });
+                const lifted = k => (st.phase === 'ns' && (k === 'T' || k === 'B')) || (st.phase === 'ew' && (k === 'L' || k === 'R'));
+                function spell(idx) {
+                    stop();
+                    const word = D[idx].word, step = 420;
+                    set({ sec: idx, n: 0, pumping: true, picked: null, phase: 'closed', stage: null });
+                    for (let i = 0; i < word.length; i++) {
+                        const axis = i % 2 === 0 ? 'ns' : 'ew';
+                        timers.push(setTimeout(() => set({ phase: axis, n: i + 1 }), i * step + 80));
+                        if (i < word.length - 1) timers.push(setTimeout(() => set({ phase: 'closed' }), i * step + 300));
+                    }
+                    timers.push(setTimeout(() => set({ pumping: false }), word.length * step));
+                }
+                function pickPocket(k) {
+                    const ready = st.sec !== null && !st.pumping && st.phase !== 'closed';
+                    if (!(ready && lifted(k))) return;
+                    stop();
+                    // 1 the chosen flap unfolds, 2 the whole sheet opens flat, 3 it zooms in and the page fills the window
+                    set({ picked: k, stage: 'open' });
+                    timers.push(setTimeout(() => set({ stage: 'unwrap' }), 900));
+                    timers.push(setTimeout(() => {
+                        const d = D[st.sec], item = d.items[SLOT[k]];
+                        openSection(d.section, { from: sheet, pick: item[1] });
+                        set({ stage: 'zoom' });
+                    }, 1800));
+                }
+                function reset() { stop(); set({ sec: null, phase: 'closed', n: 0, pumping: false, picked: null, stage: null }); }
+                window.resetFortune = reset;
+                resetBtn.addEventListener('click', reset);
+                function render() {
+                    const cur = st.sec === null ? null : D[st.sec], idle = st.sec === null;
+                    const ready = !idle && !st.pumping && st.phase !== 'closed';
+                    const all = st.stage === 'unwrap' || st.stage === 'zoom';
+                    sheet.classList.toggle('ft-pump', st.pumping);
+                    flaps.forEach(({ d, flap }) => {
+                        const open = st.picked === d.k || all, lift = !open && lifted(d.k);
+                        flap.className = `ft-flap ft-${d.k} ${open ? 'ft-open' : lift ? 'ft-lift' : idle ? 'ft-idle' : ''} ${idle ? '' : 'ft-off'}`;
+                        flap.style.zIndex = open ? 5 : lift ? 4 : 2;
+                    });
+                    pockets.forEach(p => {
+                        const it = cur ? cur.items[SLOT[p.k]] : null, visible = ready && (lifted(p.k) || st.picked === p.k);
+                        p.l.textContent = it ? it[0] : ''; p.l.style.opacity = visible ? 1 : 0;
+                        p.b.tabIndex = visible && st.picked === null ? 0 : -1;
+                        p.b.setAttribute('aria-label', it ? 'Open the pocket: ' + it[0] : '');
+                    });
+                    lettersEl.innerHTML = cur ? cur.word.toUpperCase().split('').map((ch, i) => `<span class="ft-letter${i < st.n ? ' on' : ''}">${ch}</span>`).join('') : '';
+                    stepEl.textContent = idle ? '1 · Pick a flap' : st.pumping ? 'Spelling it out…' : st.picked === null ? '2 · Pick one of the open pockets' : '3 · Unfolding…';
+                    const z = st.stage === 'zoom';
+                    zoom.style.transform = z ? 'scale(4.2)' : 'none'; zoom.style.opacity = z ? '0' : '1';
+                    resetBtn.hidden = idle || st.pumping;
+                }
+                render();
+            }
 
             /* ── COLLAPSIBLE CARDS (scientific) ── */
             window.toggleCard = function(header) {
@@ -1469,7 +1410,8 @@
                 event.stopPropagation();
                 const card = header.closest('.project-card');
                 const content = card.querySelector('.card-content-creative');
-                const icon = header.querySelector('.toggle-icon-creative');
+                card.classList.toggle('is-open', content.classList.contains('collapsed'));
+                const icon = card.querySelector('.toggle-icon-creative');
                 if (content.classList.contains('expanded')) {
                     content.classList.remove('expanded'); content.classList.add('collapsed'); icon.textContent='▶';
                 } else {
@@ -1579,56 +1521,169 @@
                 el.addEventListener('animationend', () => el.remove());
             }
 
-            /* ── TIMELINE: heading-tape dial with inertia and notches ── */
+            /* ── TIMELINE: B's flat dial under E's night sky; "Open the full dial" tilts it into a 3D disc ── */
             function initTimeline() {
-                const panel = document.getElementById('tlPanel'), strip = document.getElementById('tlStrip');
-                if (!panel || !strip) return;
+                const panel = document.getElementById('tlPanel'), fit = document.getElementById('tlFit'), stage = document.getElementById('tlStage');
+                if (!panel || !fit || !stage) return;
                 const ITEMS = [
-                    { y: 2016.0, date: '2016–2018', kind: 'Education', cat: 'research', short: 'MASTER', title: 'Erasmus Mundus Master’s', sub: 'LMU Munich, Groningen, Montpellier' },
-                    { y: 2019.0, date: '2019–2024', kind: 'Research', cat: 'research', short: 'PHD', title: 'PhD in Computational Biology', sub: 'University of Groningen' },
-                    { y: 2021.0, date: '2021–2023', kind: 'Teaching', cat: 'teaching', short: 'TEACHING', title: 'Volunteer teacher', sub: 'Game programming for children aged 6–12' },
+                    { y: 2016.0, date: '2016–2018', kind: 'Education', cat: 'research', short: 'MASTER', title: 'Erasmus Mundus Master’s', sub: 'LMU Munich, Groningen, Montpellier', s: 2016.0, e: 2018.5, lane: 0 },
+                    { y: 2019.0, date: '2019–2024', kind: 'Research', cat: 'research', short: 'PHD', title: 'PhD in Computational Biology', sub: 'University of Groningen', s: 2019.0, e: 2024.0, lane: 0 },
+                    { y: 2021.0, date: '2021–2023', kind: 'Teaching', cat: 'teaching', short: 'TEACHING', title: 'Volunteer teacher', sub: 'Game programming for children aged 6–12', s: 2021.0, e: 2023.5, lane: 1 },
                     { y: 2022.0, date: '2022', kind: 'Research', cat: 'research', short: 'TREE PAPER', title: 'Trends in Ecology & Evolution', sub: 'Paper, co-author' },
                     { y: 2023.0, date: '2023', kind: 'Research', cat: 'research', short: 'GECCO', title: 'GECCO 2023', sub: 'Paper, first author' },
-                    { y: 2024.4, date: '2024–2025', kind: 'Work', cat: 'work', short: 'ANOTHERBRAIN', title: 'AI Research Scientist', sub: 'AnotherBrain, Paris' },
-                    { y: 2025.0, date: '2025–NOW', kind: 'Creative', cat: 'creative', short: 'SOGNETTI', title: 'Sognetti', sub: 'Literary anthology (editor and main author)' },
-                    { y: 2026.0, date: '2026–NOW', kind: 'Creative', cat: 'creative', short: 'PASSAGE', title: 'Passage technique', sub: 'Narrative video game' },
+                    { y: 2024.4, date: '2024–2025', kind: 'Work', cat: 'work', short: 'ANOTHERBRAIN', title: 'AI Research Scientist', sub: 'AnotherBrain, Paris', s: 2024.1, e: 2025.95, lane: 0 },
+                    { y: 2025.0, date: '2025–NOW', kind: 'Creative', cat: 'creative', short: 'SOGNETTI', title: 'Sognetti', sub: 'Literary anthology (editor and main author)', s: 2025.0, e: 'now', lane: 1 },
+                    { y: 2026.0, date: '2026–NOW', kind: 'Creative', cat: 'creative', short: 'PASSAGE', title: 'Passage technique', sub: 'Narrative video game', s: 2026.0, e: 'now', lane: 2 },
                     { y: 2026.55, date: 'JUL 2026', kind: 'Creative', cat: 'creative', short: 'GAME JAM', title: 'Count Goes Down and Out', sub: 'GMTK Game Jam 2026 game (Godot)' },
                     { y: 2027.4, date: '2027 → ?', kind: 'Next', cat: 'next', short: '?', title: 'What comes next?', sub: 'Open to new roles, projects and collaborations' }
                 ];
+                const GLOW = { creative: '#f0a77c', research: '#9cc7dc', work: '#e6d2b0', teaching: '#d9d28a', next: '#c8c0b4' };
                 const INK = { creative: '#a8532f', research: '#3f6a80', work: '#6b4e3a', teaching: '#6d6326', next: '#8a8178' };
-                const MIN = 2015, MAX = 2027.6, PPY = panel.clientWidth < 600 ? 120 : 150;
-                const now = new Date(); const NOW = now.getFullYear() + now.getMonth() / 12;
-                const X = y => Math.round((y - MIN) * PPY);
-                // build the strip once; only its offset moves
-                for (let q = MIN * 4; q <= Math.ceil(MAX * 4); q++) {
-                    const t = document.createElement('div');
-                    t.className = 'tl-tick' + (q % 4 === 0 ? ' major' : '') + (q / 4 > NOW ? ' future' : '');
-                    t.style.left = X(q / 4) + 'px'; strip.appendChild(t);
-                    if (q % 4 === 0) {
-                        const y = document.createElement('div'); const yr = q / 4;
-                        y.className = 'tl-year' + (yr > NOW ? ' future' : ''); y.textContent = yr > NOW ? yr + '?' : yr;
-                        y.style.left = X(yr) + 'px'; strip.appendChild(y);
-                    }
-                }
-                const evs = ITEMS.map(it => {
-                    const e = document.createElement('div'); e.className = 'tl-event'; e.style.left = X(it.y) + 'px';
-                    e.innerHTML = `<b style="color:${INK[it.cat]}">${it.short}</b><i style="background:${INK[it.cat]}"></i>`;
-                    strip.appendChild(e); return e;
+                const MIN = 2015, MAX = 2027.6, RAD = Math.PI / 180;
+                const today = new Date(); const NOW = today.getFullYear() + today.getMonth() / 12;
+                // "arc": the flat top of a huge wheel, pointer at 12 o'clock. "disc": the whole disc tilted in 3D, pointer at 6 o'clock.
+                const GEOM = {
+                    arc: { R: 1450, DPY: 5.5, cx: 550, cy: 140 + 1450, base: 0, dir: 1, ph: 320, tilt: 'none', lineT: 92, triT: 76, triTop: 16, triBot: 0, outer: 104 },
+                    disc: { R: 198, DPY: 24, cx: 550, cy: 300, base: 180, dir: -1, ph: 600, tilt: 'rotateX(56deg) translateY(-40px) scale(1.12)', lineT: 446, triT: 504, triTop: 0, triBot: 16, outer: 92 }
+                };
+                const seeded = (n, f) => { let seed = 7; const rnd = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; }; const out = []; for (let k = 0; k < n; k++) out.push(f(rnd)); return out; };
+                const STARS = {
+                    disc: seeded(110, rnd => ({ psi: rnd() * 360, r: 300 + rnd() * 330, d: 1 + rnd() * 2, o: 0.25 + rnd() * 0.6 })),
+                    arc: seeded(150, rnd => ({ psi: -25 + rnd() * 120, r: 1450 + 15 + rnd() * 125, d: 1 + rnd() * 2, o: 0.25 + rnd() * 0.6 }))
+                };
+                const SVG = 'http://www.w3.org/2000/svg';
+                const el = (cls, parent) => { const d = document.createElement('div'); if (cls) d.className = cls; (parent || stage).appendChild(d); return d; };
+                const svgEl = (tag, attrs, parent) => { const n = document.createElementNS(SVG, tag); for (const k in attrs) n.setAttribute(k, attrs[k]); if (parent) parent.appendChild(n); return n; };
+
+                // layers, back to front
+                const starLayer = el('tl-layer');
+                const stars = STARS.arc.map(() => { const s = el('tl-star', starLayer); return s; });
+                const outerLayer = el('tl-layer');
+                const Q = [];
+                for (let q = MIN * 4; q <= Math.floor(MAX * 4); q++) Q.push(q);
+                const isMajor = q => q % 4 === 0, isFuture = q => q / 4 > NOW;
+                const outers = Q.map(q => { const t = el('tl-tk', outerLayer); t.style.height = (isMajor(q) ? 14 : 6) + 'px'; t.style.background = isFuture(q) ? 'rgba(233,220,198,0.35)' : (isMajor(q) ? 'rgba(240,226,204,0.85)' : 'rgba(233,220,198,0.55)'); return t; });
+                const SPANS = ITEMS.filter(it => it.s !== undefined);
+                const arcs = SPANS.map(it => {
+                    const wrap = el('tl-arc');
+                    const svg = svgEl('svg', { width: 1100, height: 600, 'aria-hidden': 'true' }, wrap);
+                    const c = GLOW[it.cat];
+                    return { it, wrap,
+                        d: svgEl('path', { fill: 'none', stroke: c, 'stroke-linecap': 'round' }, svg),
+                        tail: svgEl('path', { fill: 'none', stroke: c, 'stroke-width': 2, 'stroke-linecap': 'round', 'stroke-dasharray': '2 7' }, svg),
+                        dot: svgEl('circle', { r: 3.5, fill: '#fffaf0' }, svg) };
                 });
-                const readout = document.getElementById('tlReadout'), pointer = document.getElementById('tlPointer'), card = document.getElementById('tlCard');
-                const nearest = y => ITEMS.reduce((b, it) => Math.abs(it.y - y) < Math.abs(b.y - y) ? it : b, ITEMS[0]);
-                let pos = 2026.55, vel = 0, target = null, dragging = false, dragX = 0, lastV = 0, lastNotch = Math.round(pos * 4), bump = 0, shown = null;
+                const disc = el('tl-disc'), ring = el('tl-ring');
+                // compass face for the 3D disc: rings, 72 ticks, N E S W, and a fixed needle
+                const compass = el('tl-layer'); compass.style.display = 'none';
+                const rose = document.createElement('div'); rose.style.cssText = 'position:absolute;left:-80px;top:-80px;width:160px;height:160px;';
+                let face = '<svg width="160" height="160" viewBox="-80 -80 160 160"><circle r="74" fill="#fbf6ee" stroke="#b9a383" stroke-width="1.5"/><circle r="70" fill="none" stroke="#6b4e3a"/><circle r="46" fill="none" stroke="#c9b391"/>';
+                for (let i = 0; i < 72; i++) {
+                    const a = i * 5 * RAD, inner = i % 18 === 0 ? 58 : i % 6 === 0 ? 62 : 66;
+                    face += `<line x1="${(70 * Math.sin(a)).toFixed(1)}" y1="${(-70 * Math.cos(a)).toFixed(1)}" x2="${(inner * Math.sin(a)).toFixed(1)}" y2="${(-inner * Math.cos(a)).toFixed(1)}" stroke="#6b4e3a" stroke-width="${i % 18 === 0 ? 1.6 : 1}"/>`;
+                }
+                face += '<text x="0" y="-49" text-anchor="middle" font-family="EB Garamond, Georgia, serif" font-size="15" fill="#a8532f">N</text><text x="52" y="5" text-anchor="middle" font-family="EB Garamond, Georgia, serif" font-size="13" fill="#6b4e3a">E</text><text x="0" y="59" text-anchor="middle" font-family="EB Garamond, Georgia, serif" font-size="13" fill="#6b4e3a">S</text><text x="-52" y="5" text-anchor="middle" font-family="EB Garamond, Georgia, serif" font-size="13" fill="#6b4e3a">W</text></svg>';
+                rose.innerHTML = face; compass.appendChild(rose);
+                const needle = document.createElement('div'); needle.style.cssText = 'position:absolute;left:-80px;top:-80px;';
+                needle.innerHTML = '<svg width="160" height="160" viewBox="-80 -80 160 160"><polygon points="0,40 6,0 0,-4 -6,0" fill="#b45f3b"/><polygon points="0,-40 6,0 0,4 -6,0" fill="#3d3a35"/><circle r="4" fill="#fbf6ee" stroke="#3d3a35" stroke-width="1.5"/></svg>';
+                compass.appendChild(needle);
+                const tickLayer = el('tl-layer');
+                const ticks = Q.map(q => { const t = el('tl-tk', tickLayer); t.style.height = (isMajor(q) ? 22 : 9) + 'px'; t.style.background = isFuture(q) ? '#ddd0bc' : (isMajor(q) ? '#6b4e3a' : '#b9a383'); return t; });
+                const YEARS = []; for (let y = MIN; y <= Math.floor(MAX); y++) YEARS.push(y);
+                const labels = YEARS.map(y => { const l = el('tl-lbl'); l.textContent = '’' + String(y).slice(2) + (y > NOW ? '?' : ''); l.style.color = y > NOW ? '#b9a383' : '#6b4e3a'; return l; });
+                const events = ITEMS.map(it => { const e = el('tl-ev'); e.style.background = INK[it.cat]; return e; });
+                const names = ITEMS.map(it => { const n = el('tl-nm'); n.textContent = it.short; n.style.color = INK[it.cat]; return n; });
+                const line = el('tl-line'), tri = el('tl-tri');
+                const readout = document.getElementById('tlReadout'), card = document.getElementById('tlCard'), modeBtn = document.getElementById('tlMode');
+
+                let mode = 'arc', pos = 2026.55, vel = 0, target = null, dragging = false, dragX = 0, lastV = 0;
+                let lastNotch = Math.round(pos * 4), bump = 0, shown = null, scale = 1, drawn = null;
                 const clamp = v => Math.max(MIN, Math.min(MAX, v));
-                function render() {
-                    strip.style.transform = `translateX(${-X(pos)}px)`;
-                    ITEMS.forEach((it, i) => {
-                        const near = Math.max(0, 1 - Math.abs(it.y - pos) * 3);
-                        evs[i].style.opacity = (0.55 + near * 0.45).toFixed(2);
-                        evs[i].lastChild.style.transform = `rotate(45deg) scale(${(1 + near * 0.6).toFixed(2)})`;
+                const nearest = y => ITEMS.reduce((b, it) => Math.abs(it.y - y) < Math.abs(b.y - y) ? it : b, ITEMS[0]);
+                const f = n => n.toFixed(1);
+
+                function layout() {
+                    const G = GEOM[mode], W = panel.clientWidth;
+                    // the flat dial keeps its size and shows the middle on small screens; the disc shrinks to fit
+                    scale = mode === 'arc' ? Math.max(0.72, Math.min(1, W / 1100)) : Math.min(1, W / 640);
+                    fit.style.transform = `translateX(-50%) scale(${scale})`;
+                    panel.style.height = Math.round(G.ph * scale) + 'px';
+                }
+                function applyMode() {
+                    const G = GEOM[mode], { R, cx, cy } = G;
+                    stage.style.transform = G.tilt; stage.style.transformOrigin = `${cx}px ${cy}px`;
+                    [starLayer, outerLayer, tickLayer, compass].forEach(l => { l.style.left = cx + 'px'; l.style.top = cy + 'px'; });
+                    Object.assign(disc.style, { left: cx - R + 'px', top: cy - R + 'px', width: 2 * R + 'px', height: 2 * R + 'px' });
+                    Object.assign(ring.style, { left: cx - R + 30 + 'px', top: cy - R + 30 + 'px', width: 2 * R - 60 + 'px', height: 2 * R - 60 + 'px' });
+                    compass.style.display = mode === 'disc' ? '' : 'none';
+                    line.style.top = G.lineT + 'px';
+                    Object.assign(tri.style, { top: G.triT + 'px', borderTop: G.triTop ? `${G.triTop}px solid #e8956b` : '0', borderBottom: G.triBot ? `${G.triBot}px solid #e8956b` : '0' });
+                    const list = STARS[mode];
+                    stars.forEach((s, i) => {
+                        const st = list[i];
+                        if (!st) { s.style.display = 'none'; s.dataset.off = '1'; return; }
+                        s.dataset.off = ''; s.style.width = s.style.height = st.d.toFixed(1) + 'px'; s.style.opacity = st.o.toFixed(2);
                     });
-                    readout.textContent = pos.toFixed(2);
-                    pointer.style.transform = `translateY(${bump.toFixed(2)}px)`;
+                    modeBtn.textContent = mode === 'disc' ? 'Back to the flat dial' : 'Open the full dial (3D)';
+                    modeBtn.setAttribute('aria-pressed', mode === 'disc' ? 'true' : 'false');
+                    layout(); drawn = null;
+                }
+                function render() {
+                    const key = pos.toFixed(4) + mode;
+                    tri.style.transform = `translateY(${bump.toFixed(2)}px)`;
+                    if (key === drawn) return;
+                    drawn = key;
+                    const G = GEOM[mode], { R, DPY, cx, cy } = G;
+                    const phi = y => G.base + G.dir * (y - pos) * DPY;
+                    const pt = (y, r) => { const a = phi(y) * RAD; return { x: cx + r * Math.sin(a), y: cy - r * Math.cos(a) }; };
+                    const span = mode === 'arc' ? 11 : 99;
+                    Q.forEach((q, i) => {
+                        const off = Math.abs(q / 4 - pos) > span, a = phi(q / 4).toFixed(3);
+                        ticks[i].style.display = outers[i].style.display = off ? 'none' : '';
+                        if (off) return;
+                        ticks[i].style.transform = `rotate(${a}deg) translate(-1px, -${R - 2}px)`;
+                        outers[i].style.transform = `rotate(${a}deg) translate(-1px, -${R + G.outer}px)`;
+                    });
+                    YEARS.forEach((y, i) => {
+                        const off = Math.abs(y - pos) > span; labels[i].style.display = off ? 'none' : '';
+                        if (off) return;
+                        const p = pt(y, R - 42); labels[i].style.left = f(p.x) + 'px'; labels[i].style.top = f(p.y) + 'px';
+                    });
                     const cur = nearest(pos);
+                    ITEMS.forEach((it, i) => {
+                        const near = Math.max(0, 1 - Math.abs(it.y - pos) * 3), p = pt(it.y, R);
+                        events[i].style.left = f(p.x) + 'px'; events[i].style.top = f(p.y) + 'px';
+                        events[i].style.transform = `rotate(45deg) scale(${(1 + near * 0.6).toFixed(2)})`;
+                        const d = Math.abs(it.y - pos);
+                        names[i].style.display = d < 1.6 ? '' : 'none';
+                        if (d < 1.6) { const n = pt(it.y, R - 70); names[i].style.left = f(n.x) + 'px'; names[i].style.top = f(n.y) + 'px'; names[i].style.opacity = (1 - d / 1.6).toFixed(2); }
+                    });
+                    // light trails for things that lasted, with a white dot where each one ends
+                    const arcPath = (y1, y2, r) => {
+                        const a = pt(y1, r), b = pt(y2, r);
+                        const large = Math.abs(y2 - y1) * DPY > 180 ? 1 : 0;
+                        return `M ${f(a.x)} ${f(a.y)} A ${r} ${r} 0 ${large} ${mode === 'arc' ? 1 : 0} ${f(b.x)} ${f(b.y)}`;
+                    };
+                    arcs.forEach(a => {
+                        const it = a.it, r = R + 26 + it.lane * 22, end = it.e === 'now' ? NOW : it.e, on = cur === it, s = pt(end, r);
+                        a.d.setAttribute('d', arcPath(it.s, end, r)); a.d.setAttribute('stroke-width', on ? 5 : 3);
+                        a.tail.setAttribute('d', it.e === 'now' ? arcPath(NOW, NOW + 0.6, r) : '');
+                        a.dot.setAttribute('cx', f(s.x)); a.dot.setAttribute('cy', f(s.y));
+                        a.wrap.style.opacity = on ? 1 : 0.7;
+                        a.wrap.style.filter = `drop-shadow(0 0 ${on ? 8 : 3}px ${GLOW[it.cat]})`;
+                    });
+                    const turn = (pos - MIN) * DPY;
+                    const list = STARS[mode];
+                    stars.forEach((s, i) => {
+                        const st = list[i]; if (!st) return;
+                        const a = (mode === 'arc' ? st.psi - turn : st.psi + turn) * RAD;
+                        const x = st.r * Math.sin(a), y = -st.r * Math.cos(a);
+                        const off = cx + x < -10 || cx + x > 1110 || cy + y < -10 || cy + y > 610;
+                        s.style.display = off ? 'none' : '';
+                        if (!off) s.style.transform = `translate(${f(x)}px, ${f(y)}px)`;
+                    });
+                    rose.style.transform = `rotate(${turn.toFixed(2)}deg)`;
+                    readout.textContent = pos.toFixed(2);
                     if (cur !== shown) {
                         shown = cur;
                         card.innerHTML = `<div class="d">${cur.date}</div><div><div class="k" style="color:${INK[cur.cat]}">${cur.kind}</div><div class="t">${cur.title}</div><div class="s">${cur.sub}</div></div>`;
@@ -1662,7 +1717,8 @@
                 panel.addEventListener('pointerdown', e => { dragging = true; dragX = e.clientX; lastV = 0; target = null; panel.setPointerCapture(e.pointerId); });
                 panel.addEventListener('pointermove', e => {
                     if (!dragging) return;
-                    const dy = -(e.clientX - dragX) / PPY; dragX = e.clientX;
+                    const G = GEOM[mode], dx = (e.clientX - dragX) / scale; dragX = e.clientX;
+                    const dy = -dx / (G.R * RAD * G.DPY);
                     pos = clamp(pos + dy); lastV = dy;
                 });
                 const up = () => { if (!dragging) return; dragging = false; vel = lastV || 0; };
@@ -1673,7 +1729,40 @@
                 });
                 document.getElementById('tlPrev').addEventListener('click', () => go(-1));
                 document.getElementById('tlNext').addEventListener('click', () => go(1));
-                render(); requestAnimationFrame(tick);
+                modeBtn.addEventListener('click', () => { mode = mode === 'arc' ? 'disc' : 'arc'; applyMode(); });
+                window.addEventListener('resize', layout);
+                applyMode(); render(); requestAnimationFrame(tick);
+            }
+
+            /* ── PASSAGE TECHNIQUE: one large uncropped frame and six thumbnails ── */
+            function initPassage() {
+                const main = document.getElementById('ptMain'), cap = document.getElementById('ptCap'), thumbs = document.getElementById('ptThumbs');
+                if (!main) return;
+                const PT = [
+                    { video: 'media/passage/08_character_walks_trail.mp4', thumb: 'media/passage/08_poster.jpg', alt: 'The Arpenteur walks an inked trail across the watercolour mountains' },
+                    { src: 'media/passage/01_full_map_overview.jpg', alt: 'The full map: trails and settlements across the valleys, edged in fog' },
+                    { src: 'media/passage/03_dialogue_choice_radio.jpg', alt: 'Radio dialogue: the Arpenteur asks what to do, with three choices' },
+                    { src: 'media/passage/06_character_on_trail.jpg', alt: 'The Arpenteur on the trail' },
+                    { src: 'media/passage/05_coldstart_breathing_choice.jpg', alt: 'Cold open in the fog: Breathe. You are breathing. In, out' },
+                    { src: 'media/passage/10_coldstart_golem_choice.jpg', alt: 'Cold open: a mud creature offers its hand' }
+                ];
+                const btns = PT.map((p, k) => {
+                    const b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-label', 'Show: ' + p.alt);
+                    b.innerHTML = `<img src="${p.thumb || p.src}" alt="" loading="lazy">`;
+                    b.addEventListener('click', e => { e.stopPropagation(); show(k); });
+                    thumbs.appendChild(b); return b;
+                });
+                function show(k) {
+                    const p = PT[k];
+                    main.innerHTML = p.video
+                        ? `<video src="${p.video}" poster="${p.thumb}" autoplay muted loop playsinline aria-label="${p.alt}"></video>`
+                        : `<img src="${p.src}" alt="${p.alt}" class="clickable-image">`;
+                    const img = main.querySelector('img');
+                    if (img) img.addEventListener('click', e => { e.stopPropagation(); openLightbox(img.src); });
+                    cap.textContent = p.alt;
+                    btns.forEach((b, j) => b.setAttribute('aria-pressed', j === k ? 'true' : 'false'));
+                }
+                show(0);
             }
 
             /* ── SOGNETTI: flipbook of book pages ── */
@@ -1720,17 +1809,17 @@
                 document.querySelectorAll('#scientific-section .card-content-inner').forEach(c => { c.classList.add('collapsed'); c.classList.remove('expanded'); });
                 document.querySelectorAll('#scientific-section .toggle-icon').forEach(i => i.textContent='▶');
                 // Creative cards collapsed
-                document.querySelectorAll('.project-card:not(.sg-card) .card-content-creative').forEach(c => { c.classList.add('collapsed'); c.classList.remove('expanded'); });
-                document.querySelectorAll('.project-card:not(.sg-card) .toggle-icon-creative').forEach(i => i.textContent='▶');
+                document.querySelectorAll('#creative-section .card-content-creative').forEach(c => { c.classList.add('collapsed'); c.classList.remove('expanded'); });
+                document.querySelectorAll('#creative-section .toggle-icon-creative').forEach(i => i.textContent='▶');
                 // Fallbacks
-                document.querySelector('.banner-image')?.addEventListener('error', function(){ this.style.display='none'; this.nextElementSibling.style.display='flex'; });
                 document.querySelector('.portrait-img')?.addEventListener('error', function(){ this.style.display='none'; this.nextElementSibling.style.display='flex'; });
                 // Sliders
                 // Web-sized copies live in web/ (make them from the big PNGs when adding a new one)
                 const range = (n, base) => Array.from({length:n}, (_, i) => `web/${base}${i+1}.jpg`);
-                setupBannerSlider(range(19, 'banner'));
-                setupPortraitSlider(range(18, 'portrait'));
+                initDrawings(range(19, 'banner'), range(18, 'portrait'));
                 initTimeline();
+                initFortune();
+                initPassage();
                 initSognetti();
                 initCursorTrail();
                 attachClickableImages();
@@ -1738,7 +1827,7 @@
             }
 
             function attachClickableImages() {
-                document.querySelectorAll('.image-placeholder img, .card-content img').forEach(img => {
+                document.querySelectorAll('.image-placeholder img, .card-content img:not(.pt-gallery img)').forEach(img => {
                     if (img.src && !img.src.includes('placehold')) {
                         img.classList.add('clickable-image');
                         img.addEventListener('click', e => { e.stopPropagation(); openLightbox(img.src); });
