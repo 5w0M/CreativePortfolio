@@ -499,7 +499,13 @@
         .tl-head { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; padding: 0 0.4rem 0.9rem; }
         .tl-head h3 { font-weight: 600; color: var(--accent-warm); font-size: 1.05rem; }
         .tl-hint { font-size: 0.8rem; color: #8a8178; }
-        .tl-sky { position: relative; height: 320px; border-radius: 22px; overflow: hidden; background: radial-gradient(ellipse at 50% 60%, #2a3550 0%, #1a2133 55%, #10141f 100%); touch-action: pan-y; cursor: grab; transition: height .7s cubic-bezier(.3,.8,.25,1); }
+        .tl-sky { --ptr: #b45f3b; position: relative; height: 320px; border-radius: 22px; overflow: hidden; background: #fbf6ee; box-shadow: inset 0 0 0 1px #ece2d4; touch-action: pan-y; cursor: grab; transition: height .7s cubic-bezier(.3,.8,.25,1); }
+        /* at rest it is the parchment wheel; hovering (or touching) brings up the night sky */
+        .tl-skybg { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 60%, #2a3550 0%, #1a2133 55%, #10141f 100%); }
+        .tl-skybg, .tl-fx, .tl-readout { opacity: 0; transition: opacity .6s ease; }
+        .tl-sky.lit { --ptr: #e8956b; }
+        .tl-sky.lit .tl-skybg, .tl-sky.lit .tl-fx, .tl-sky.lit .tl-readout { opacity: 1; }
+        .tl-fx { position: absolute; inset: 0; }
         .tl-sky:active { cursor: grabbing; }
         .tl-sky:focus-visible { outline: 3px solid #e8956b; outline-offset: 3px; }
         .tl-fit { position: absolute; left: 50%; top: 0; width: 1100px; height: 600px; transform-origin: 50% 0; perspective: 1300px; }
@@ -515,18 +521,20 @@
         .tl-lbl { transform: translate(-50%, -50%); font-family: 'JetBrains Mono', monospace; font-size: 13px; }
         .tl-ev { width: 12px; height: 12px; margin: -6px 0 0 -6px; border: 2px solid #fefcf8; box-sizing: border-box; }
         .tl-nm { transform: translate(-50%, -50%); font-size: 11px; font-weight: 600; letter-spacing: 0.05em; white-space: nowrap; }
-        .tl-line { left: 549px; width: 2px; height: 60px; background: #e8956b; }
-        .tl-tri { left: 540px; width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; }
+        .tl-line { left: 549px; width: 2px; height: 60px; background: var(--ptr); transition: background .6s ease; }
+        .tl-tri { left: 540px; width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; transition: border-color .6s ease; }
         .tl-readout { position: absolute; right: 18px; top: 14px; padding: 3px 10px; border: 1px solid #e8956b; border-radius: 6px; background: rgba(16,20,31,0.7); font-family: 'JetBrains Mono', monospace; font-size: 14px; color: #f0b48f; letter-spacing: 0.06em; }
         .tl-controls { display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
         .tl-btn { height: 44px; min-width: 44px; padding: 0 16px; border-radius: 22px; border: 1px solid #e2dbd1; background: #fffdf9; color: #6b4e3a; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; font: inherit; font-size: 14px; }
         .tl-btn:hover { border-color: #c9b896; color: var(--accent-warm); }
-        .tl-card { margin: 16px auto 0; width: 480px; max-width: 100%; background: white; border: 1px solid #efe6db; border-radius: 16px; padding: 14px 18px; box-shadow: 0 10px 24px -14px rgba(0,0,0,0.25); display: flex; gap: 16px; align-items: baseline; box-sizing: border-box; }
+        .tl-card { margin: 16px auto 0; width: 560px; max-width: 100%; background: white; border: 1px solid #efe6db; border-radius: 16px; padding: 14px 18px; box-shadow: 0 10px 24px -14px rgba(0,0,0,0.25); display: flex; gap: 16px; align-items: center; box-sizing: border-box; }
+        .tl-card .p { width: 132px; height: 88px; flex: none; border-radius: 10px; overflow: hidden; border: 1px solid #f0eae2; }
+        .tl-card .p img { width: 100%; height: 100%; display: block; }
         .tl-card .d { font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 600; color: #9a5f38; white-space: nowrap; }
         .tl-card .k { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
         .tl-card .t { font-weight: 600; color: #2b2a27; }
         .tl-card .s { font-size: 14px; color: #5a544c; }
-        @media (max-width: 600px) { .tl-hint { display: none; } .tl-card { flex-direction: column; gap: 4px; } .tl-readout { font-size: 12px; right: 10px; top: 10px; } .tl-controls { flex-wrap: nowrap; gap: 6px; } .tl-btn { padding: 0 12px; font-size: 13px; } .tl-box { padding: 1rem 0.8rem 1.1rem; } }
+        @media (max-width: 600px) { .tl-hint { display: none; } .tl-card { flex-direction: column; align-items: flex-start; gap: 4px; } .tl-card .p { width: 100%; height: 120px; } .tl-readout { font-size: 12px; right: 10px; top: 10px; } .tl-controls { flex-wrap: nowrap; gap: 6px; } .tl-btn { padding: 0 12px; font-size: 13px; } .tl-box { padding: 1rem 0.8rem 1.1rem; } }
 
         /* ── Drawings: sliding-card drum, and a focus view with the same drum ── */
         .dr-drum { position: relative; height: 340px; margin: 0.5rem 0 0; perspective: 900px; overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent); mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent); touch-action: pan-y; }
@@ -780,9 +788,10 @@
                 <div class="tl-box">
                     <div class="tl-head">
                         <h3>Timeline: what I did, when</h3>
-                        <span class="tl-hint">Scroll, drag or use the arrows</span>
+                        <span class="tl-hint">Hover to light up the sky · scroll, drag or use the arrows</span>
                     </div>
                     <div class="tl-sky" id="tlPanel" tabindex="0" role="slider" aria-label="Timeline" aria-valuemin="2015" aria-valuemax="2027">
+                        <div class="tl-skybg" aria-hidden="true"></div>
                         <div class="tl-fit" id="tlFit" aria-hidden="true"><div class="tl-stage" id="tlStage"></div></div>
                         <div class="tl-readout" id="tlReadout" aria-hidden="true"></div>
                     </div>
@@ -1534,6 +1543,7 @@
                     { y: 2021.0, date: '2021–2023', kind: 'Teaching', cat: 'teaching', short: 'TEACHING', title: 'Volunteer teacher', sub: 'Game programming for children aged 6–12', s: 2021.0, e: 2023.5, lane: 1 },
                     { y: 2022.0, date: '2022', kind: 'Research', cat: 'research', short: 'TREE PAPER', title: 'Trends in Ecology & Evolution', sub: 'Paper, co-author' },
                     { y: 2023.0, date: '2023', kind: 'Research', cat: 'research', short: 'GECCO', title: 'GECCO 2023', sub: 'Paper, first author' },
+                    { y: 2024.05, date: 'JAN 2024', kind: 'Research', cat: 'research', short: 'PHD DEFENCE', title: 'PhD defence', sub: 'University of Groningen', nr: 88 },
                     { y: 2024.4, date: '2024–2025', kind: 'Work', cat: 'work', short: 'ANOTHERBRAIN', title: 'AI Research Scientist', sub: 'AnotherBrain, Paris', s: 2024.1, e: 2025.95, lane: 0 },
                     { y: 2025.0, date: '2025–NOW', kind: 'Creative', cat: 'creative', short: 'SOGNETTI', title: 'Sognetti', sub: 'Literary anthology (editor and main author)', s: 2025.0, e: 'now', lane: 1 },
                     { y: 2026.0, date: '2026–NOW', kind: 'Creative', cat: 'creative', short: 'PASSAGE', title: 'Passage technique', sub: 'Narrative video game', s: 2026.0, e: 'now', lane: 2 },
@@ -1543,6 +1553,13 @@
                 const GLOW = { creative: '#f0a77c', research: '#9cc7dc', work: '#e6d2b0', teaching: '#d9d28a', next: '#c8c0b4' };
                 const INK = { creative: '#a8532f', research: '#3f6a80', work: '#6b4e3a', teaching: '#6d6326', next: '#8a8178' };
                 const MIN = 2015, MAX = 2027.6, RAD = Math.PI / 180;
+                // the same pictures as on the section pages
+                const PIC = {
+                    PHD: ['media/science/thesis-cover.jpg', '#fff', 'cover'], 'PHD DEFENCE': ['media/science/thesis-cover.jpg', '#fff', 'cover'],
+                    'TREE PAPER': ['media/science/evolvability-cake.jpg', '#fff', 'contain'], GECCO: ['media/science/gecco-facilitated-mutation.jpg', '#fff', 'contain'],
+                    SOGNETTI: ['media/sognetti/sg-001.jpg', '#efe9df', 'contain'], PASSAGE: ['GRANDE_CARTE_FINALE_1.png', '#f3efe9', 'cover'],
+                    'GAME JAM': ['media/count-goes-down-title.png', '#0c0c0c', 'cover']
+                };
                 const today = new Date(); const NOW = today.getFullYear() + today.getMonth() / 12;
                 // "arc": the flat top of a huge wheel, pointer at 12 o'clock. "disc": the whole disc tilted in 3D, pointer at 6 o'clock.
                 const GEOM = {
@@ -1559,16 +1576,17 @@
                 const svgEl = (tag, attrs, parent) => { const n = document.createElementNS(SVG, tag); for (const k in attrs) n.setAttribute(k, attrs[k]); if (parent) parent.appendChild(n); return n; };
 
                 // layers, back to front
-                const starLayer = el('tl-layer');
+                const fx = el('tl-fx');
+                const starLayer = el('tl-layer', fx);
                 const stars = STARS.arc.map(() => { const s = el('tl-star', starLayer); return s; });
-                const outerLayer = el('tl-layer');
+                const outerLayer = el('tl-layer', fx);
                 const Q = [];
                 for (let q = MIN * 4; q <= Math.floor(MAX * 4); q++) Q.push(q);
                 const isMajor = q => q % 4 === 0, isFuture = q => q / 4 > NOW;
                 const outers = Q.map(q => { const t = el('tl-tk', outerLayer); t.style.height = (isMajor(q) ? 14 : 6) + 'px'; t.style.background = isFuture(q) ? 'rgba(233,220,198,0.35)' : (isMajor(q) ? 'rgba(240,226,204,0.85)' : 'rgba(233,220,198,0.55)'); return t; });
                 const SPANS = ITEMS.filter(it => it.s !== undefined);
                 const arcs = SPANS.map(it => {
-                    const wrap = el('tl-arc');
+                    const wrap = el('tl-arc', fx);
                     const svg = svgEl('svg', { width: 1100, height: 600, 'aria-hidden': 'true' }, wrap);
                     const c = GLOW[it.cat];
                     return { it, wrap,
@@ -1582,10 +1600,10 @@
                 const rose = document.createElement('div'); rose.style.cssText = 'position:absolute;left:-80px;top:-80px;width:160px;height:160px;';
                 let face = '<svg width="160" height="160" viewBox="-80 -80 160 160"><circle r="74" fill="#fbf6ee" stroke="#b9a383" stroke-width="1.5"/><circle r="70" fill="none" stroke="#6b4e3a"/><circle r="46" fill="none" stroke="#c9b391"/>';
                 for (let i = 0; i < 72; i++) {
-                    const a = i * 5 * RAD, inner = i % 18 === 0 ? 58 : i % 6 === 0 ? 62 : 66;
-                    face += `<line x1="${(70 * Math.sin(a)).toFixed(1)}" y1="${(-70 * Math.cos(a)).toFixed(1)}" x2="${(inner * Math.sin(a)).toFixed(1)}" y2="${(-inner * Math.cos(a)).toFixed(1)}" stroke="#6b4e3a" stroke-width="${i % 18 === 0 ? 1.6 : 1}"/>`;
+                    const a = i * 5 * RAD, inner = i === 0 ? 58 : i % 6 === 0 ? 62 : 66;
+                    face += `<line x1="${(70 * Math.sin(a)).toFixed(1)}" y1="${(-70 * Math.cos(a)).toFixed(1)}" x2="${(inner * Math.sin(a)).toFixed(1)}" y2="${(-inner * Math.cos(a)).toFixed(1)}" stroke="#6b4e3a" stroke-width="${i === 0 ? 1.6 : 1}"/>`;
                 }
-                face += '<text x="0" y="-49" text-anchor="middle" font-family="EB Garamond, Georgia, serif" font-size="15" fill="#a8532f">N</text><text x="52" y="5" text-anchor="middle" font-family="EB Garamond, Georgia, serif" font-size="13" fill="#6b4e3a">E</text><text x="0" y="59" text-anchor="middle" font-family="EB Garamond, Georgia, serif" font-size="13" fill="#6b4e3a">S</text><text x="-52" y="5" text-anchor="middle" font-family="EB Garamond, Georgia, serif" font-size="13" fill="#6b4e3a">W</text></svg>';
+                face += '<text x="0" y="-49" text-anchor="middle" font-family="EB Garamond, Georgia, serif" font-size="15" fill="#a8532f">N</text></svg>';
                 rose.innerHTML = face; compass.appendChild(rose);
                 const needle = document.createElement('div'); needle.style.cssText = 'position:absolute;left:-80px;top:-80px;';
                 needle.innerHTML = '<svg width="160" height="160" viewBox="-80 -80 160 160"><polygon points="0,40 6,0 0,-4 -6,0" fill="#b45f3b"/><polygon points="0,-40 6,0 0,4 -6,0" fill="#3d3a35"/><circle r="4" fill="#fbf6ee" stroke="#3d3a35" stroke-width="1.5"/></svg>';
@@ -1599,6 +1617,8 @@
                 const line = el('tl-line'), tri = el('tl-tri');
                 const readout = document.getElementById('tlReadout'), card = document.getElementById('tlCard'), modeBtn = document.getElementById('tlMode');
 
+                let hover = false, touchLit = false, touchT = null;
+                const lightUp = () => panel.classList.toggle('lit', hover || touchLit || mode === 'disc');
                 let mode = 'arc', pos = 2026.55, vel = 0, target = null, dragging = false, dragX = 0, lastV = 0;
                 let lastNotch = Math.round(pos * 4), bump = 0, shown = null, scale = 1, drawn = null;
                 const clamp = v => Math.max(MIN, Math.min(MAX, v));
@@ -1620,13 +1640,14 @@
                     Object.assign(ring.style, { left: cx - R + 30 + 'px', top: cy - R + 30 + 'px', width: 2 * R - 60 + 'px', height: 2 * R - 60 + 'px' });
                     compass.style.display = mode === 'disc' ? '' : 'none';
                     line.style.top = G.lineT + 'px';
-                    Object.assign(tri.style, { top: G.triT + 'px', borderTop: G.triTop ? `${G.triTop}px solid #e8956b` : '0', borderBottom: G.triBot ? `${G.triBot}px solid #e8956b` : '0' });
+                    Object.assign(tri.style, { top: G.triT + 'px', borderTop: G.triTop ? `${G.triTop}px solid var(--ptr)` : '0', borderBottom: G.triBot ? `${G.triBot}px solid var(--ptr)` : '0' });
                     const list = STARS[mode];
                     stars.forEach((s, i) => {
                         const st = list[i];
                         if (!st) { s.style.display = 'none'; s.dataset.off = '1'; return; }
                         s.dataset.off = ''; s.style.width = s.style.height = st.d.toFixed(1) + 'px'; s.style.opacity = st.o.toFixed(2);
                     });
+                    lightUp();
                     modeBtn.textContent = mode === 'disc' ? 'Back to the flat dial' : 'Open the full dial (3D)';
                     modeBtn.setAttribute('aria-pressed', mode === 'disc' ? 'true' : 'false');
                     layout(); drawn = null;
@@ -1659,7 +1680,7 @@
                         events[i].style.transform = `rotate(45deg) scale(${(1 + near * 0.6).toFixed(2)})`;
                         const d = Math.abs(it.y - pos);
                         names[i].style.display = d < 1.6 ? '' : 'none';
-                        if (d < 1.6) { const n = pt(it.y, R - 70); names[i].style.left = f(n.x) + 'px'; names[i].style.top = f(n.y) + 'px'; names[i].style.opacity = (1 - d / 1.6).toFixed(2); }
+                        if (d < 1.6) { const n = pt(it.y, R - (it.nr || 70)); names[i].style.left = f(n.x) + 'px'; names[i].style.top = f(n.y) + 'px'; names[i].style.opacity = (1 - d / 1.6).toFixed(2); }
                     });
                     // light trails for things that lasted, with a white dot where each one ends
                     const arcPath = (y1, y2, r) => {
@@ -1689,7 +1710,8 @@
                     readout.textContent = pos.toFixed(2);
                     if (cur !== shown) {
                         shown = cur;
-                        card.innerHTML = `<div class="d">${cur.date}</div><div><div class="k" style="color:${INK[cur.cat]}">${cur.kind}</div><div class="t">${cur.title}</div><div class="s">${cur.sub}</div></div>`;
+                        const pic = PIC[cur.short];
+                        card.innerHTML = (pic ? `<div class="p" style="background:${pic[1]}"><img src="${pic[0]}" alt="" style="object-fit:${pic[2]}"></div>` : '') + `<div class="d">${cur.date}</div><div><div class="k" style="color:${INK[cur.cat]}">${cur.kind}</div><div class="t">${cur.title}</div><div class="s">${cur.sub}</div></div>`;
                         panel.setAttribute('aria-valuenow', Math.round(pos));
                         panel.setAttribute('aria-valuetext', `${cur.date}: ${cur.title}`);
                     }
@@ -1733,6 +1755,10 @@
                 document.getElementById('tlPrev').addEventListener('click', () => go(-1));
                 document.getElementById('tlNext').addEventListener('click', () => go(1));
                 modeBtn.addEventListener('click', () => { mode = mode === 'arc' ? 'disc' : 'arc'; applyMode(); });
+                // leaving with the mouse settles the dial back to the flat parchment, even from the 3D view
+                panel.addEventListener('mouseenter', () => { hover = true; lightUp(); });
+                panel.addEventListener('mouseleave', () => { hover = false; if (dragging) return; if (mode !== 'arc') { mode = 'arc'; applyMode(); } else lightUp(); });
+                panel.addEventListener('pointerdown', e => { if (e.pointerType === 'mouse') return; touchLit = true; lightUp(); clearTimeout(touchT); touchT = setTimeout(() => { touchLit = false; lightUp(); }, 4000); });
                 window.addEventListener('resize', layout);
                 applyMode(); render(); requestAnimationFrame(tick);
             }
