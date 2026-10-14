@@ -87,6 +87,9 @@
         }
 
         /* Header & nav */
+        /* Scrolling settles softly on the intro, the timeline and the fortune teller */
+        html { scroll-snap-type: y proximity; scroll-padding-top: var(--header-h, 72px); }
+        .hero, .timeline-section, .ft-section { scroll-snap-align: start; }
         header {
             background: rgba(254,252,248,0.85);
             backdrop-filter: blur(12px);
@@ -1805,6 +1808,10 @@
 
             /* ── INIT ── */
             function init() {
+                // snap points sit just under the sticky header, whatever its height
+                const hdr = document.querySelector('header');
+                const setHeaderH = () => document.documentElement.style.setProperty('--header-h', (hdr ? hdr.offsetHeight : 72) + 'px');
+                setHeaderH(); window.addEventListener('resize', setHeaderH);
                 // Scientific cards collapsed
                 document.querySelectorAll('#scientific-section .card-content-inner').forEach(c => { c.classList.add('collapsed'); c.classList.remove('expanded'); });
                 document.querySelectorAll('#scientific-section .toggle-icon').forEach(i => i.textContent='▶');
