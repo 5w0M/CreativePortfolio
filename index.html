@@ -1982,7 +1982,9 @@
                         if (!off) s.style.transform = `translate(${f(x)}px, ${f(y)}px)`;
                     });
                     rose.style.transform = `rotate(${turn.toFixed(2)}deg)`;
-                    readout.textContent = pos.toFixed(2);
+                    // a month and year a person can read, e.g. "JUL 2026"
+                    { const yr = Math.floor(pos + 1e-6), mo = Math.min(11, Math.max(0, Math.floor((pos - yr) * 12 + 1e-6)));
+                      readout.textContent = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'][mo] + ' ' + yr; }
                     if (cur !== shown) {
                         shown = cur;
                         const pic = PIC[cur.short];
