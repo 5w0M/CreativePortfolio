@@ -883,6 +883,7 @@
         .bt-all { border: 0; background: none; padding: 0; font: inherit; font-size: .8rem; font-weight: 500; color: #b45f3b; cursor: pointer; }
         .bt-all:hover { color: #8a4426; }
         .bt-scroll { overflow-x: auto; padding: 1.5rem .25rem 1rem; }
+        .bt-over .bt-scroll { -webkit-mask-image: linear-gradient(90deg, transparent, #000 36px, #000 calc(100% - 36px), transparent); mask-image: linear-gradient(90deg, transparent, #000 36px, #000 calc(100% - 36px), transparent); }
         .bt-wrap { position: relative; margin: 0 auto; width: max-content; min-width: 100%; display: flex; flex-direction: column; align-items: center; }
         .bt-lines { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
         .bt-lines path { fill: none; stroke-linecap: round; }
@@ -2187,29 +2188,32 @@
             const SG = n => `media/sognetti/sg-${String(n).padStart(3, '0')}.jpg`;
             const sgPages = (a, b, what) => [{ src: SG(a), alt: 'Sognetti, ' + what }, { src: SG(b), alt: 'Sognetti, ' + what }];
             const TREES = {
-                'card-passage': { ink: '#b45f3b', prompt: 'A narrative game set in a parallel Briançon after climatic collapse. You cross it as the Arpenteur.', children: [
-                    { id: 'pt-map', label: 'The map', says: 'Watercolour valleys with 155 inked trails and 161 settlements. Characters move across it.', children: [
-                        { id: 'pt-map-full', label: 'The full map', media: { type: 'image', src: 'media/passage/01_full_map_overview.jpg', alt: 'The full map: trails and settlements across the valleys, edged in fog' } },
-                        { id: 'pt-fog', label: 'Fog of war', media: { type: 'video', src: 'media/passage/passage-header.mp4', alt: 'The fog lifts while the radio dialogue runs, then the Arpenteur walks an inked trail' }, body: 'The fog clears as the dialogue goes on.' }] },
-                    { id: 'pt-dialogue', label: 'The dialogue', says: 'Hand-written dialogue trees. Choices arrive over a walkie-talkie radio.', children: [
-                        { id: 'pt-radio', label: 'A radio choice', media: { type: 'image', src: 'media/passage/03_dialogue_choice_radio.jpg', alt: 'Radio dialogue: the Arpenteur asks what to do, with three choices' }, body: 'The Arpenteur asks what to do, and there are three answers to pick from.' }] },
-                    { id: 'pt-open', label: 'The opening', says: 'A cold open set in the fog.', children: [
-                        { id: 'pt-breathe', label: '“Breathe”', media: { type: 'image', src: 'media/passage/05_coldstart_breathing_choice.jpg', alt: 'Cold open in the fog: Breathe. You are breathing. In, out' } },
-                        { id: 'pt-mud', label: 'The mud creature', media: { type: 'image', src: 'media/passage/10_coldstart_golem_choice.jpg', alt: 'Cold open: a mud creature offers its hand' } }] },
-                    { id: 'pt-setting', label: 'The setting', body: 'Briançon after climatic collapse, built on authentic cultural elements of the region.' }] },
-                'card-sognetti': { ink: '#7a6a58', prompt: 'A collective anthology of dreams, written down and drawn.', children: [
-                    { id: 'sg-writers', label: 'The writers', says: 'Texts curated from several writers. I wrote most of the stories.', children: [
-                        { id: 'sg-portraits', label: 'Author portraits', wide: true, media: { type: 'spread', pages: sgPages(12, 13, 'author portrait') } }] },
-                    { id: 'sg-dreams', label: 'The dreams', says: 'Each dream is set beside a drawing.', children: [
-                        { id: 'sg-dream-1', label: 'Dream pages', wide: true, media: { type: 'spread', pages: sgPages(34, 50, 'dream with drawing') } },
-                        { id: 'sg-dream-2', label: 'Text over a drawing', wide: true, media: { type: 'spread', pages: sgPages(58, 75, 'text over a full-page drawing') } }] },
-                    { id: 'sg-drawings', label: 'Full-page drawings', wide: true, media: { type: 'spread', pages: sgPages(91, 103, 'full-page drawing') } },
-                    { id: 'sg-book', label: 'Editing & typography', says: 'I edited the texts, set the type and art-directed the book.', children: [
-                        { id: 'sg-preface', label: 'The preface', wide: true, media: { type: 'spread', pages: sgPages(8, 9, 'preface') }, link: { href: 'media/sognetti/Sognetti-excerpt.pdf', text: 'Open the 22-page PDF excerpt →' } }] }] },
-                'card-count': { ink: '#b45f3b', prompt: 'A GMTK Game Jam 2026 game: Count Dracula has to get down his manor before sunrise.', children: [
-                    { id: 'cg-games', label: 'The minigames', media: { type: 'video', src: 'media/count-minigames.mp4', alt: 'The minigames: climbing down, deflecting, counting bullets, scrounging and the number pad', pixel: true }, body: 'Five WarioWare-style minigames, built in Godot.' },
-                    { id: 'cg-pun', label: 'The theme', body: 'A pun on the jam theme: Count, Counter, Countdown, Down.' },
-                    { id: 'cg-play', label: 'Play it', body: 'Jam build, still a work in progress.', link: { href: 'https://swommy.itch.io/count-goes-down-and-out', text: 'Play on itch.io →' } }] }
+                'card-passage': { ink: '#b45f3b', prompt: 'Briançon, in a world next to ours, after the climate broke. You are the Arpenteur, and the valley is waiting. Where do you start?', children: [
+                    { id: 'pt-map', label: 'Unfold the map', says: 'Watercolour valleys, 155 inked trails and 161 settlements. People move across it while you travel.', children: [
+                        { id: 'pt-map-full', label: 'Take in the whole valley', media: { type: 'image', src: 'media/passage/01_full_map_overview.jpg', alt: 'The full map: trails and settlements across the valleys, edged in fog' }, body: 'The whole map, painted by hand and edged in fog.' },
+                        { id: 'pt-fog', label: 'Walk into the fog', media: { type: 'video', src: 'media/passage/passage-header.mp4', alt: 'The fog lifts while the radio dialogue runs, then the Arpenteur walks an inked trail' }, body: 'The fog of war lifts as the conversation goes on, then the Arpenteur sets off down a trail.' }] },
+                    { id: 'pt-dialogue', label: 'Pick up the radio', says: 'Every dialogue tree is written by hand. Your choices reach you over a walkie-talkie.', children: [
+                        { id: 'pt-radio', label: 'Answer the call', media: { type: 'image', src: 'media/passage/03_dialogue_choice_radio.jpg', alt: 'Radio dialogue: the Arpenteur asks what to do, with three choices' }, body: 'The Arpenteur asks what to do next, and you have three answers to choose from.' }] },
+                    { id: 'pt-open', label: 'Wake up in the fog', says: 'The game begins before the map: only fog, and a few words.', children: [
+                        { id: 'pt-breathe', label: 'Breathe', media: { type: 'image', src: 'media/passage/05_coldstart_breathing_choice.jpg', alt: 'Cold open in the fog: Breathe. You are breathing. In, out' }, body: 'The first choice is the smallest one there is: in, then out.' },
+                        { id: 'pt-mud', label: 'Take the creature’s hand', media: { type: 'image', src: 'media/passage/10_coldstart_golem_choice.jpg', alt: 'Cold open: a mud creature offers its hand' }, body: 'Something made of mud holds out its hand. Whether you take it is up to you.' }] },
+                    { id: 'pt-setting', label: 'Ask where you are', body: 'A parallel Briançon after climatic collapse, built on authentic cultural elements of the region.' }] },
+                'card-sognetti': { ink: '#7a6a58', prompt: 'Five writers, one book of dreams: 160 pages of what we saw with our eyes closed, written down and drawn. Which page do you open?', children: [
+                    { id: 'sg-writers', label: 'Meet the dreamers', says: 'Texts gathered from five writers. I wrote most of the stories.', children: [
+                        { id: 'sg-portraits', label: 'See their portraits', wide: true, media: { type: 'spread', pages: sgPages(12, 13, 'author portrait') } }] },
+                    { id: 'sg-dreams', label: 'Read a dream', says: 'Dreams are dated like diary entries and set beside drawings.', children: [
+                        { id: 'sg-dream-1', label: 'A dream and its drawing', wide: true, media: { type: 'spread', pages: sgPages(34, 50, 'dream with drawing') } },
+                        { id: 'sg-dream-2', label: 'Words over a drawing', wide: true, media: { type: 'spread', pages: sgPages(58, 75, 'text over a full-page drawing') } }] },
+                    { id: 'sg-drawings', label: 'Look at the drawings', wide: true, media: { type: 'spread', pages: sgPages(91, 103, 'full-page drawing') } },
+                    { id: 'sg-book', label: 'How it was made', says: 'I edited the texts, set the type and art-directed the whole book.', children: [
+                        { id: 'sg-line', label: 'A line from the foreword', body: '“The dream is the mind’s coherence at the world’s expense; waking is the world’s coherence at the mind’s expense.”' },
+                        { id: 'sg-preface', label: 'Read the preface', wide: true, media: { type: 'spread', pages: sgPages(8, 9, 'preface') }, link: { href: 'media/sognetti/Sognetti-excerpt.pdf', text: 'Open the 22-page PDF excerpt →' } }] }] },
+                'card-count': { ink: '#b45f3b', prompt: 'Night is ending. Count Dracula is at the top of his manor and the sun is on its way. Can you get him down in time?', children: [
+                    { id: 'cg-run', label: 'Run down the manor', says: 'Three floors of three rooms, one minigame per room, all against the clock of the coming day.', children: [
+                        { id: 'cg-games', label: 'Play through the rooms', media: { type: 'video', src: 'media/count-minigames.mp4', alt: 'The minigames: climbing down, deflecting, counting bullets, scrounging and the number pad', pixel: true }, body: 'Five WarioWare-style minigames: climbing down, deflecting, counting bullets, scrounging, and a number pad.' }] },
+                    { id: 'cg-make', label: 'Ask who made it', says: 'A solo entry to GMTK Game Jam 2026, designed and built in Godot.', children: [
+                        { id: 'cg-pun', label: 'Why that name?', body: 'A pun on the jam theme, stacked four ways: Count, Counter, Countdown, Down.' }] },
+                    { id: 'cg-play', label: 'Play it yourself', body: 'The jam build is on itch.io. It is still a work in progress.', link: { href: 'https://swommy.itch.io/count-goes-down-and-out', text: 'Play on itch.io →' } }] }
             };
             const FORK = '<svg class="bt-fork" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><path d="M18 9v2c0 .6-.4 1-1 1H7c-.6 0-1-.4-1-1V9"/><path d="M12 12v3"/></svg>';
             const PEEK = '<svg class="bt-peek" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>';
@@ -2311,6 +2315,7 @@
                 function measure() {
                     if (scroller.clientWidth) root.style.setProperty('--bt-w', scroller.clientWidth + 'px');
                     root.classList.toggle('bt-narrow', scroller.clientWidth > 0 && scroller.clientWidth < 560);
+                    root.classList.toggle('bt-over', scroller.scrollWidth > scroller.clientWidth + 2);
                     const box = wrap.getBoundingClientRect(); if (!box.width) return;
                     const NS = 'http://www.w3.org/2000/svg';
                     svg.innerHTML = '';
